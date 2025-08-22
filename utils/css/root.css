@@ -1,0 +1,238 @@
+@font-face {
+  font-family: "Inter";
+  src: url("../../assets/fonts/Inter/inter.ttf") format("truetype");
+}
+
+:root {
+  /* hsl (fallback color) */
+  --bg-dark: hsl(336 0% 1%);
+  --bg: hsl(300 0% 4%);
+  --bg-light: hsl(0 0% 9%);
+  --text: hsl(300 0% 95%);
+  --text-muted: hsl(300 0% 69%);
+  --highlight: hsl(330 0% 39%);
+  --border: hsl(0 0% 28%);
+  --border-muted: hsl(300 0% 18%);
+  --primary: hsl(220 78% 76%);
+  --secondary: hsl(40 53% 60%);
+  --danger: hsl(9 26% 64%);
+  --warning: hsl(52 19% 57%);
+  --success: hsl(146 17% 59%);
+  --info: hsl(217 28% 65%);
+  /* oklch */
+  --bg-dark: oklch(0.1 0 264);
+  --bg: oklch(0.15 0 264);
+  --bg-light: oklch(0.2 0 264);
+  --text: oklch(0.96 0 264);
+  --text-muted: oklch(0.76 0 264);
+  --highlight: oklch(0.5 0 264);
+  --border: oklch(0.4 0 264);
+  --border-muted: oklch(0.3 0 264);
+  --primary: oklch(0.76 0.1 264);
+  --secondary: oklch(0.76 0.1 84);
+  --danger: oklch(0.7 0.05 30);
+  --warning: oklch(0.7 0.05 100);
+  --success: oklch(0.7 0.05 160);
+  --info: oklch(0.7 0.05 260);
+}
+
+body.light {
+  /* hsl (fallback color) */
+  --bg-dark: hsl(0 0% 90%);
+  --bg: hsl(300 0% 95%);
+  --bg-light: hsl(300 50% 100%);
+  --text: hsl(300 0% 4%);
+  --text-muted: hsl(0 0% 28%);
+  --highlight: hsl(300 50% 100%);
+  --border: hsl(NaN 0% 50%);
+  --border-muted: hsl(340 0% 62%);
+  --primary: hsl(221 49% 33%);
+  --secondary: hsl(44 100% 14%);
+  --danger: hsl(9 21% 41%);
+  --warning: hsl(52 23% 34%);
+  --success: hsl(147 19% 36%);
+  --info: hsl(217 22% 41%);
+  /* oklch */
+  --bg-dark: oklch(0.92 0 264);
+  --bg: oklch(0.96 0 264);
+  --bg-light: oklch(1 0 264);
+  --text: oklch(0.15 0 264);
+  --text-muted: oklch(0.4 0 264);
+  --highlight: oklch(1 0 264);
+  --border: oklch(0.6 0 264);
+  --border-muted: oklch(0.7 0 264);
+  --primary: oklch(0.4 0.1 264);
+  --secondary: oklch(0.4 0.1 84);
+  --danger: oklch(0.5 0.05 30);
+  --warning: oklch(0.5 0.05 100);
+  --success: oklch(0.5 0.05 160);
+  --info: oklch(0.5 0.05 260);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* hsl (fallback color) */
+    --bg-dark: hsl(0 0% 90%);
+    --bg: hsl(300 0% 95%);
+    --bg-light: hsl(300 50% 100%);
+    --text: hsl(300 0% 4%);
+    --text-muted: hsl(0 0% 28%);
+    --highlight: hsl(300 50% 100%);
+    --border: hsl(NaN 0% 50%);
+    --border-muted: hsl(340 0% 62%);
+    --primary: hsl(264 34% 34%);
+    --secondary: hsl(69 100% 14%);
+    --danger: hsl(9 21% 41%);
+    --warning: hsl(52 23% 34%);
+    --success: hsl(147 19% 36%);
+    --info: hsl(217 22% 41%);
+    /* oklch */
+    --bg-dark: oklch(0.92 0 300);
+    --bg: oklch(0.96 0 300);
+    --bg-light: oklch(1 0 300);
+    --text: oklch(0.15 0 300);
+    --text-muted: oklch(0.4 0 300);
+    --highlight: oklch(1 0 300);
+    --border: oklch(0.6 0 300);
+    --border-muted: oklch(0.7 0 300);
+    --primary: oklch(0.4 0.1 300);
+    --secondary: oklch(0.4 0.1 120);
+    --danger: oklch(0.5 0.05 30);
+    --warning: oklch(0.5 0.05 100);
+    --success: oklch(0.5 0.05 160);
+    --info: oklch(0.5 0.05 260);
+  }
+}
+
+/* Default for very large screens (8K and above) */
+html {
+  font-size: 24px;
+}
+
+/* 8K screens (max-width: 7680px) */
+@media (max-width: 7680px) {
+  html {
+    font-size: 32px;
+  }
+}
+
+/* Slightly smaller screens */
+@media (max-width: 6000px) {
+  html {
+    font-size: 30px;
+  }
+}
+
+/* 4K screens */
+@media (max-width: 4800px) {
+  html {
+    font-size: 28px;
+  }
+}
+
+/* High-resolution desktops */
+@media (max-width: 3600px) {
+  html {
+    font-size: 26px;
+  }
+}
+
+/* Wide monitors / ultrawide */
+@media (max-width: 2560px) {
+  html {
+    font-size: 24px;
+  }
+}
+
+/* Standard large desktop screens */
+@media (max-width: 1920px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+/* Smaller desktops/laptops – letting the font be set to 16px here */
+@media (max-width: 1440px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1200px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Medium screens */
+@media (max-width: 720px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+/* Small devices */
+@media (max-width: 375px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+/* 
+*   Kevin Powell Reset
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+body {
+  min-height: 100vh;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+p {
+  max-width: 75ch;
+  text-wrap: pretty;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :has(:target) {
+    scroll-behavior: smooth;
+    scroll-padding-top: 3rem;
+  }
+}
