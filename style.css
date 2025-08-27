@@ -1,6 +1,73 @@
 @import url("./utils/css/root.css");
 
 body {
-  background-color: var(--bg-dark);
   font-family: Inter;
+  color: var(--text);
+  background-color: var(--bg-dark);
+  display: flex;
+}
+
+svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.svg-button {
+  background-color: transparent;
+  border: none;
+}
+
+nav {
+  width: 15vw;
+  border-right: 1px solid var(--border);
+  height: 100vh;
+}
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 1.25rem;
+}
+
+.nav-header .text {
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+main {
+  width: 85vw;
+  height: 100vh;
+}
+
+.directory-display {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.25rem;
+  text-align: right;
+}
+
+.parent-dir {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.parent-dir .file-folder-name {
+  margin-left: 0.25rem;
+}
+
+.parent-dir .file-folder-name:hover {
+  cursor: default;
+}
+
+.parent-dir:hover {
+  background-color: var(--bg-light);
+}
+
+.child-dir {
+  margin-left: 0.75rem;
 }

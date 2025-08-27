@@ -13,22 +13,12 @@ const directory = {
             {
               type: "folder",
               name: "lessons",
-              children: [{ type: "content", name: "lesson1" }],
+              children: [{ type: "file", name: "lesson1" }],
             },
           ],
         },
       ],
     },
-    { type: "content", name: "welcome" },
+    { type: "file", name: "welcome" },
   ],
 };
-
-function themeHandler(currentTheme) {
-  if (currentTheme == "dark") {
-    document.body.classList.add("light");
-    currentTheme = "light";
-  } else {
-    document.body.classList.remove("light");
-    currentTheme = "dark";
-  }
-}
