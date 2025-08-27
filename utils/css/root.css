@@ -204,13 +204,13 @@ body {
   min-height: 100vh;
 }
 
-img,
-picture,
-svg,
-video {
-  display: block;
-  max-width: 100%;
-}
+/* img, */
+/* picture, */
+/* svg, */
+/* video { */
+/*   display: block; */
+/*   max-width: 100%; */
+/* } */
 
 h1,
 h2,
@@ -228,6 +228,24 @@ p {
 
 button:hover {
   cursor: pointer;
+}
+
+/* Scrollbar for Chromium */
+nav::-webkit-scrollbar {
+  height: 5px;
+}
+
+nav::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+nav::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+}
+
+nav::-webkit-scrollbar-thumb:hover {
+  background: var(--text);
 }
 
 @media (prefers-reduced-motion: no-preference) {
