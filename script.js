@@ -49,7 +49,6 @@ const resize = (e) => {
   const newNavWidth = e.clientX;
   nav.style.width = `${newNavWidth}px`;
   main.style.width = `calc(100vw - ${newNavWidth}px)`;
-  checkOverflow();
 };
 
 resizer.addEventListener("mousedown", (e) => {
@@ -57,23 +56,5 @@ resizer.addEventListener("mousedown", (e) => {
   document.addEventListener("mousemove", resize);
   document.addEventListener("mouseup", () => {
     document.removeEventListener("mousemove", resize);
-  });
-});
-
-document.querySelectorAll(".filetree .expand-collapse").forEach((button) => {
-  button.addEventListener("click", () => {
-    const parentDir = button.closest(".current-dir");
-    if (parentDir) {
-      const dir = parentDir.parentElement;
-      const childDir = dir.querySelector(".child-dir");
-      if (childDir) {
-        childDir.classList.toggle("collapsed");
-      }
-      const icon = button.querySelector(".exp-icon");
-      if (icon) {
-        icon.classList.toggle("collapsed");
-      }
-      checkOverflow();
-    }
   });
 });
