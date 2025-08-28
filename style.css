@@ -19,10 +19,12 @@ svg {
 .svg-button {
   background-color: transparent;
   border: none;
+  display: grid;
+  place-content: center;
 }
 
 nav {
-  width: 15vw;
+  width: 20vw;
   border-right: 1px solid var(--border);
   height: 100vh;
   position: relative;
@@ -36,8 +38,8 @@ nav {
   align-items: center;
   justify-content: center;
   gap: 2.5rem;
-  padding: 1.25rem;
-  margin: 0.5rem;
+  padding: 0.75em 2.25em;
+  margin: 1rem;
   width: calc(4ch + 8rem);
   border-radius: 100vw;
 }
@@ -94,10 +96,12 @@ button.three-dot-button {
 .file-container {
   display: flex;
   align-items: center;
-  transition: background-color 0.2s ease-in-out;
-  padding-block: 0.25rem;
   justify-content: space-between;
-  padding-inline: 0.25rem;
+  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  margin-inline: 0.25rem;
+  border-radius: 100vw;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .file-folder-info {

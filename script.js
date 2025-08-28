@@ -33,7 +33,6 @@ const mainElement = document.querySelector("main");
 const fileContnet = document.querySelector(".file-content");
 const dirDisplay = document.querySelector(".directory-display");
 const navToggleBtn = document.querySelector(".nav-expand-collapse");
-let popupMenu = null;
 
 navToggleBtn.addEventListener("click", navToggleHandler);
 function navToggleHandler() {
@@ -41,54 +40,6 @@ function navToggleHandler() {
   document.querySelector("nav").classList.toggle("collapsed");
   navToggleBtn.closest(".nav-header").classList.toggle("collapsed");
   dirDisplay.classList.toggle("collapsed");
-}
-
-function closePopupMenu() {
-  if (popupMenu) {
-    popupMenu.remove();
-    popupMenu = null;
-  }
-}
-
-function showPopupMenu(button) {
-  closePopupMenu(); // Close any existing menu
-
-  const parent = button.parentElement;
-  const isFolder = parent.classList.contains("current-dir");
-
-  popupMenu = document.createElement("div");
-  popupMenu.className = "popup-menu visible";
-  const menuList = document.createElement("ul");
-
-  if (isFolder) {
-    menuList.innerHTML = `
-            <li data-action=\"create-file\">Create File</li>
-            <li data-action=\"create-folder\">Create Folder</li>
-            <li data-action=\"delete-dir\">Delete Folder</li>
-        `;
-  } else {
-    // It's a file
-    menuList.innerHTML = `
-            <li data-action=\"edit-file\">Edit File</li>
-            <li data-action=\"delete-file\">Delete File</li>
-        `;
-  }
-
-  popupMenu.appendChild(menuList);
-  document.body.appendChild(popupMenu);
-
-  const rect = button.getBoundingClientRect();
-  popupMenu.style.top = `${rect.bottom}px`;
-  popupMenu.style.left = `${rect.left}px`;
-
-  menuList.addEventListener("click", (e) => {
-    const action = e.target.dataset.action;
-    if (action) {
-      console.log(`Action: ${action} on`, parent);
-      // TODO: Implement actions
-    }
-    closePopupMenu();
-  });
 }
 
 function createFileTree(data, parent, path = "") {
@@ -241,10 +192,6 @@ filetreeContainer.addEventListener("click", (e) => {
       dirDisplay.innerHTML = path;
       fileContnet.innerHTML = `<p>${content[path]}</p>`;
     }
-  } else if (target.closest(".three-dot-button")) {
-    e.stopPropagation();
-    const button = target.closest(".three-dot-button");
-    showPopupMenu(button);
   }
 });
 
