@@ -37,15 +37,26 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.5rem;
+  gap: 2rem;
   padding: 0.75em 2.25em;
   margin: 1rem;
   width: calc(4ch + 8rem);
   border-radius: 100vw;
 }
 
+.nav-header .text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
 .nav-header.collapsed {
   background-color: var(--bg);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.nav-header.collapsed:hover {
+  background-color: var(--highlight);
 }
 
 nav.collapsed {
@@ -56,14 +67,12 @@ nav.collapsed {
   background-color: transparent;
 }
 
-.directory-display.collapsed {
-  border: none;
+nav.collapsed .resizer {
+  display: none;
 }
 
-.nav-header .text {
-  text-transform: uppercase;
-  font-size: 1.25rem;
-  font-weight: bold;
+.directory-display.collapsed {
+  border: none;
 }
 
 main {
@@ -77,6 +86,7 @@ main {
   height: 4rem;
   padding: 1.25rem;
   font-size: 1.25rem;
+  color: var(--text);
   text-align: right;
   display: flex;
   justify-content: flex-end;
@@ -302,8 +312,8 @@ button.three-dot-button {
   height: 60%;
 }
 
-.no-file-selected p {
+.no-file-selected span {
   color: var(--info);
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
