@@ -4,6 +4,7 @@
 }
 
 :root {
+  --shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
   /* hsl (fallback color) */
   --bg-dark: hsl(336 0% 1%);
   --bg: hsl(300 0% 4%);

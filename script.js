@@ -65,133 +65,19 @@ function navToggleHandler() {
   dirDisplay.classList.toggle("collapsed");
 }
 
-function createFileTree(data, parent, path = "") {
-  if (!data) return;
-
-  data.forEach((item) => {
-    const currentPath = path ? `${path}/${item.name}` : item.name;
-    if (item.type === "folder") {
-      const dirDiv = document.createElement("div");
-      dirDiv.className = "dir";
-
-      const currentDirDiv = document.createElement("div");
-      currentDirDiv.className = "current-dir";
-      currentDirDiv.dataset.path = currentPath;
-
-      const fileFolderInfo = document.createElement("div");
-      fileFolderInfo.className = "file-folder-info";
-
-      const expandButton = document.createElement("button");
-      expandButton.className = "svg-button expand-collapse";
-      const expandSvg = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg",
-      );
-      expandSvg.classList.add("exp-icon");
-      const expandUse = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "use",
-      );
-      expandUse.setAttribute("href", "#right-arrow");
-      expandSvg.appendChild(expandUse);
-      expandButton.appendChild(expandSvg);
-
-      const folderIcon = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg",
-      );
-      folderIcon.classList.add("file-folder-icon");
-      const folderUse = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "use",
-      );
-      folderUse.setAttribute("href", "#folder");
-      folderIcon.appendChild(folderUse);
-
-      const folderName = document.createElement("span");
-      folderName.className = "file-folder-name";
-      folderName.textContent = item.name;
-
-      fileFolderInfo.appendChild(expandButton);
-      fileFolderInfo.appendChild(folderIcon);
-      fileFolderInfo.appendChild(folderName);
-
-      const threeDotButton = document.createElement("button");
-      threeDotButton.className = "svg-button three-dot-button";
-      const threeDotSvg = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg",
-      );
-      const threeDotUse = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "use",
-      );
-      threeDotUse.setAttribute("href", "#three-dot");
-      threeDotSvg.appendChild(threeDotUse);
-      threeDotButton.appendChild(threeDotSvg);
-
-      currentDirDiv.appendChild(fileFolderInfo);
-      currentDirDiv.appendChild(threeDotButton);
-
-      const childDirDiv = document.createElement("div");
-      childDirDiv.className = "child-dir collapsed";
-
-      dirDiv.appendChild(currentDirDiv);
-      dirDiv.appendChild(childDirDiv);
-
-      parent.appendChild(dirDiv);
-
-      createFileTree(item.children, childDirDiv, currentPath);
-    } else {
-      const fileContainer = document.createElement("div");
-      fileContainer.className = "file-container";
-      fileContainer.dataset.path = currentPath;
-
-      const fileFolderInfo = document.createElement("div");
-      fileFolderInfo.className = "file-folder-info";
-
-      const fileIcon = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg",
-      );
-      fileIcon.classList.add("file-folder-icon");
-      const fileUse = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "use",
-      );
-      fileUse.setAttribute("href", "#file");
-      fileIcon.appendChild(fileUse);
-
-      const fileName = document.createElement("span");
-      fileName.className = "file-folder-name";
-      fileName.textContent = item.name;
-
-      fileFolderInfo.appendChild(fileIcon);
-      fileFolderInfo.appendChild(fileName);
-
-      const threeDotButton = document.createElement("button");
-      threeDotButton.className = "svg-button three-dot-button";
-      const threeDotSvg = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg",
-      );
-      const threeDotUse = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "use",
-      );
-      threeDotUse.setAttribute("href", "#three-dot");
-      threeDotSvg.appendChild(threeDotUse);
-      threeDotButton.appendChild(threeDotSvg);
-
-      fileContainer.appendChild(fileFolderInfo);
-      fileContainer.appendChild(threeDotButton);
-
-      parent.appendChild(fileContainer);
-    }
-  });
+function displayFileContent(path) {
+  if (path && content[path]) {
+    dirDisplay.innerHTML = `<span>${path}</span>`;
+    fileContentDisplay.innerHTML = `<p>${content[path]}</p>`;
+    noFileSelected.style.display = "none";
+    fileContentDisplay.style.display = "block";
+  } else {
+    dirDisplay.innerHTML = "";
+    fileContentDisplay.innerHTML = "";
+    noFileSelected.style.display = "flex";
+    fileContentDisplay.style.display = "none";
+  }
 }
-
-createFileTree([directory], filetreeContainer);
 
 function saveState() {
   localStorage.setItem("openFolders", JSON.stringify(openFolders));
@@ -205,8 +91,6 @@ function loadState() {
   }
   selectedItem = localStorage.getItem("selectedItem");
 }
-
-loadState();
 
 let backdrop = null;
 
@@ -243,8 +127,20 @@ function findParentFolder(path, dir, currentPath = "root") {
   return null;
 }
 
+function expandToPath(path) {
+  const pathParts = path.split("/");
+  pathParts.pop();
+  let currentPath = "";
+  for (const part of pathParts) {
+    currentPath += (currentPath ? "/" : "") + part;
+    if (!openFolders.includes(currentPath)) {
+      openFolders.push(currentPath);
+    }
+  }
+}
+
 function showCreationPopup(type, parentPath, rect) {
-  closePopupMenu();
+  closePopupMenu(true);
 
   const creationPopup = document.createElement("div");
   creationPopup.className = "creation-popup";
@@ -269,6 +165,13 @@ function showCreationPopup(type, parentPath, rect) {
     closePopupMenu();
   });
   buttonContainer.appendChild(cancelButton);
+
+  const createButton = document.createElement("button");
+  createButton.textContent = "Create";
+  createButton.addEventListener("click", () => {
+    createFileOrFolder(input.value, type, parentPath, errorContainer);
+  });
+  buttonContainer.appendChild(createButton);
 
   creationPopup.appendChild(buttonContainer);
 
@@ -307,7 +210,24 @@ function createFileOrFolder(name, type, parentPath, errorContainer) {
       newItem.children = [];
     }
     parentFolder.children.push(newItem);
+
+    const newItemPath = parentPath ? `${parentPath}/${name}` : name;
+
+    expandToPath(newItemPath);
+
+    if (type === "folder") {
+      if (!openFolders.includes(newItemPath)) {
+        openFolders.push(newItemPath);
+      }
+    }
+
+    if (type === "file") {
+      selectedItem = newItemPath;
+    }
+
     saveDirectory(directory);
+    saveState();
+
     filetreeContainer.innerHTML = "";
     createFileTree([directory], filetreeContainer);
     closePopupMenu();
@@ -319,6 +239,7 @@ function createFileOrFolder(name, type, parentPath, errorContainer) {
 }
 
 function deleteItem(path, isFolder) {
+  if (path === "root") return;
   const parentFolder = findParentFolder(path, directory);
   if (parentFolder) {
     const itemName = path.split("/").pop();
@@ -336,6 +257,182 @@ function deleteItem(path, isFolder) {
   }
 }
 
+function showDeleteConfirmationPopup(path, isFolder) {
+  if (popupMenu) {
+    popupMenu.remove();
+    popupMenu = null;
+  }
+
+  const confirmationPopup = document.createElement("div");
+  confirmationPopup.className = "creation-popup";
+
+  const warningMessage = document.createElement("p");
+  warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"}?`;
+  warningMessage.style.color = "var(--warning)";
+  confirmationPopup.appendChild(warningMessage);
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "button-container";
+
+  const cancelButton = document.createElement("button");
+  cancelButton.textContent = "Cancel";
+  cancelButton.addEventListener("click", () => {
+    document.body.removeChild(confirmationPopup);
+    closePopupMenu();
+  });
+  buttonContainer.appendChild(cancelButton);
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.addEventListener("click", () => {
+    deleteItem(path, isFolder);
+    document.body.removeChild(confirmationPopup);
+    closePopupMenu();
+  });
+  buttonContainer.appendChild(deleteButton);
+
+  confirmationPopup.appendChild(buttonContainer);
+
+  document.body.appendChild(confirmationPopup);
+
+  if (backdrop) {
+    backdrop.onclick = () => {
+      document.body.removeChild(confirmationPopup);
+      closePopupMenu();
+    };
+  }
+
+  const highlightedItem = document.querySelector(".highlighted");
+  if (highlightedItem) {
+    const rect = highlightedItem.getBoundingClientRect();
+    confirmationPopup.style.top = `${rect.bottom}px`;
+    confirmationPopup.style.left = `${rect.left}px`;
+  }
+}
+
+function showRenamePopup(itemToRename, rect) {
+  closePopupMenu(true);
+
+  const renamePopup = document.createElement("div");
+  renamePopup.className = "creation-popup";
+  renamePopup.style.top = `${rect.bottom}px`;
+  renamePopup.style.left = `${rect.left}px`;
+
+  const label = document.createElement("label");
+  label.textContent = "New Name";
+  renamePopup.appendChild(label);
+
+  const input = document.createElement("input");
+  input.type = "text";
+  const oldName = itemToRename.dataset.path.split("/").pop();
+  input.value = oldName;
+  renamePopup.appendChild(input);
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "button-container";
+
+  const cancelButton = document.createElement("button");
+  cancelButton.textContent = "Cancel";
+  cancelButton.addEventListener("click", () => {
+    document.body.removeChild(renamePopup);
+    closePopupMenu();
+  });
+  buttonContainer.appendChild(cancelButton);
+
+  const renameButton = document.createElement("button");
+  renameButton.textContent = "Rename";
+  renameButton.addEventListener("click", () => {
+    renameItem(itemToRename.dataset.path, input.value, errorContainer);
+  });
+  buttonContainer.appendChild(renameButton);
+
+  renamePopup.appendChild(buttonContainer);
+
+  const errorContainer = document.createElement("div");
+  errorContainer.className = "error-container";
+  renamePopup.appendChild(errorContainer);
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      renameItem(itemToRename.dataset.path, input.value, errorContainer);
+    }
+  });
+
+  document.body.appendChild(renamePopup);
+  input.focus();
+}
+
+function renameItem(path, newName, errorContainer) {
+  if (path === "root") return;
+  if (newName.length < 3) {
+    errorContainer.textContent = "Name must be at least 3 characters long";
+    return;
+  }
+
+  const parentFolder = findParentFolder(path, directory);
+  if (parentFolder) {
+    const nameExists = parentFolder.children.some(
+      (child) => child.name === newName,
+    );
+    if (nameExists) {
+      errorContainer.textContent = "Name already exists";
+      return;
+    }
+
+    const oldName = path.split("/").pop();
+    const itemToRename = parentFolder.children.find(
+      (child) => child.name === oldName,
+    );
+
+    if (itemToRename) {
+      const oldPath = path;
+      const newPath = path.substring(0, path.lastIndexOf("/")) + "/" + newName;
+
+      const affectedPaths = [];
+      function collectPaths(item, currentPath) {
+        affectedPaths.push(currentPath);
+        if (item.type === "folder" && item.children) {
+          item.children.forEach((child) => {
+            collectPaths(child, `${currentPath}/${child.name}`);
+          });
+        }
+      }
+
+      collectPaths(itemToRename, oldPath);
+
+      itemToRename.name = newName;
+
+      affectedPaths.forEach((p) => {
+        const newP = p.replace(oldPath, newPath);
+        if (content[p]) {
+          content[newP] = content[p];
+          delete content[p];
+        }
+      });
+
+      openFolders = openFolders.map((p) =>
+        p.startsWith(oldPath) ? p.replace(oldPath, newPath) : p,
+      );
+
+      if (selectedItem && selectedItem.startsWith(oldPath)) {
+        selectedItem = selectedItem.replace(oldPath, newPath);
+      }
+
+      saveDirectory(directory);
+      saveContent(content);
+      saveState();
+
+      filetreeContainer.innerHTML = "";
+      createFileTree([directory], filetreeContainer);
+      const renamePopup = document.querySelector(".creation-popup");
+      if (renamePopup) {
+        document.body.removeChild(renamePopup);
+      }
+      closePopupMenu();
+    }
+  }
+}
+
 function createPopupMenu(target, isFolder) {
   closePopupMenu();
 
@@ -348,6 +445,8 @@ function createPopupMenu(target, isFolder) {
     isFolder ? ".current-dir" : ".file-container",
   );
   highlightedItem.classList.add("highlighted");
+
+  const isRoot = highlightedItem.dataset.path === "root";
 
   popupMenu = document.createElement("div");
   popupMenu.className = "popup-menu visible";
@@ -371,13 +470,22 @@ function createPopupMenu(target, isFolder) {
     ul.appendChild(createFolder);
   }
 
-  const deleteItemLi = document.createElement("li");
-  deleteItemLi.textContent = "Delete";
-  deleteItemLi.className = "delete-item";
-  deleteItemLi.addEventListener("click", () =>
-    deleteItem(highlightedItem.dataset.path, isFolder),
-  );
-  ul.appendChild(deleteItemLi);
+  if (!isRoot) {
+    const renameItemLi = document.createElement("li");
+    renameItemLi.textContent = "Rename";
+    renameItemLi.addEventListener("click", () =>
+      showRenamePopup(highlightedItem, rect),
+    );
+    ul.appendChild(renameItemLi);
+
+    const deleteItemLi = document.createElement("li");
+    deleteItemLi.textContent = "Delete";
+    deleteItemLi.className = "delete-item";
+    deleteItemLi.addEventListener("click", () =>
+      showDeleteConfirmationPopup(highlightedItem.dataset.path, isFolder),
+    );
+    ul.appendChild(deleteItemLi);
+  }
 
   popupMenu.appendChild(ul);
   document.body.appendChild(popupMenu);
@@ -386,14 +494,16 @@ function createPopupMenu(target, isFolder) {
   popupMenu.style.left = `${rect.left}px`;
 }
 
-function closePopupMenu() {
+function closePopupMenu(keepHighlight = false) {
   if (popupMenu) {
     popupMenu.remove();
     popupMenu = null;
   }
-  const highlightedItem = document.querySelector(".highlighted");
-  if (highlightedItem) {
-    highlightedItem.classList.remove("highlighted");
+  if (!keepHighlight) {
+    const highlightedItem = document.querySelector(".highlighted");
+    if (highlightedItem) {
+      highlightedItem.classList.remove("highlighted");
+    }
   }
   if (backdrop) {
     backdrop.remove();
@@ -413,9 +523,6 @@ function createFileTree(data, parent, path = "") {
       const currentDirDiv = document.createElement("div");
       currentDirDiv.className = "current-dir";
       currentDirDiv.dataset.path = currentPath;
-      if (selectedItem === currentPath) {
-        currentDirDiv.classList.add("highlighted");
-      }
 
       const fileFolderInfo = document.createElement("div");
       fileFolderInfo.className = "file-folder-info";
@@ -443,14 +550,20 @@ function createFileTree(data, parent, path = "") {
         "svg",
       );
       folderIcon.classList.add("file-folder-icon");
-      if (openFolders.includes(currentPath)) {
-        folderIcon.classList.add("expanded");
-      }
       const folderUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "use",
       );
-      folderUse.setAttribute("href", "#folder");
+      if (openFolders.includes(currentPath)) {
+        folderIcon.classList.add("expanded");
+        folderUse.setAttribute("href", "#folder-open");
+      } else {
+        if (item.children && item.children.length > 0) {
+          folderUse.setAttribute("href", "#folder-with-files");
+        } else {
+          folderUse.setAttribute("href", "#folder");
+        }
+      }
       folderIcon.appendChild(folderUse);
 
       const folderName = document.createElement("span");
@@ -494,9 +607,6 @@ function createFileTree(data, parent, path = "") {
       const fileContainer = document.createElement("div");
       fileContainer.className = "file-container";
       fileContainer.dataset.path = currentPath;
-      if (currentPath === selectedItem) {
-        fileContainer.classList.add("highlighted");
-      }
 
       const fileFolderInfo = document.createElement("div");
       fileFolderInfo.className = "file-folder-info";
@@ -569,13 +679,11 @@ filetreeContainer.addEventListener("click", (e) => {
     const fileContainer = target.closest(".file-container");
     const path = fileContainer.dataset.path;
     selectedItem = path;
+    expandToPath(path);
     saveState();
     filetreeContainer.innerHTML = "";
     createFileTree([directory], filetreeContainer);
-    if (path && content[path]) {
-      dirDisplay.innerHTML = path;
-      fileContnet.innerHTML = `<p>${content[path]}</p>`;
-    }
+    displayFileContent(path);
   }
 });
 
@@ -595,3 +703,9 @@ resizer.addEventListener("mousedown", (e) => {
     document.removeEventListener("mousemove", resize);
   });
 });
+
+loadState();
+createFileTree([directory], filetreeContainer);
+displayFileContent(selectedItem);
+e([directory], filetreeContainer);
+displayFileContent(selectedItem);
