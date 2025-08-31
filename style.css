@@ -129,8 +129,8 @@ button.three-dot-button {
   justify-content: space-between;
   padding-block: 0.25rem;
   padding-inline: 0.5rem;
-  margin-inline: 0.25rem;
-  border-radius: 100vw;
+  margin: 0.25rem;
+  border-radius: 0.25rem;
   transition: background-color 0.2s ease-in-out;
   overflow: hidden;
 }
@@ -165,7 +165,7 @@ button.three-dot-button {
 .file-container:hover,
 .current-dir.highlighted,
 .file-container.highlighted {
-  background-color: var(--bg-light);
+  background-color: var(--highlight);
 }
 
 .child-dir {

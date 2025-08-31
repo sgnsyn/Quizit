@@ -57,15 +57,15 @@ function syncContentWithDirectory() {
   function collectFilePaths(folder, currentPath) {
     for (const item of folder.children) {
       const itemPath = `${currentPath}/${item.name}`;
-      if (item.type === 'file') {
+      if (item.type === "file") {
         allFilePaths.push(itemPath);
-      } else if (item.type === 'folder') {
+      } else if (item.type === "folder") {
         collectFilePaths(item, itemPath);
       }
     }
   }
 
-  collectFilePaths(directory, 'root');
+  collectFilePaths(directory, "root");
 
   let contentChanged = false;
   for (const contentPath in content) {
@@ -103,7 +103,7 @@ function displayFileContent(path) {
     fileContnet.removeChild(existingContent);
   }
 
-  const pathSpan = dirDisplay.querySelector('.path');
+  const pathSpan = dirDisplay.querySelector(".path");
 
   if (path && content.hasOwnProperty(path)) {
     pathSpan.textContent = path;
@@ -114,7 +114,7 @@ function displayFileContent(path) {
 
     noFileSelected.classList.add("disabled");
   } else {
-    pathSpan.textContent = '';
+    pathSpan.textContent = "";
     noFileSelected.classList.remove("disabled");
   }
 }
@@ -180,7 +180,7 @@ function expandToPath(path) {
 }
 
 function showCreationPopup(type, parentPath, rect) {
-  closePopupMenu(true);
+  closePopupMenu(true, true);
 
   const creationPopup = document.createElement("div");
   creationPopup.className = "creation-popup";
@@ -227,6 +227,12 @@ function showCreationPopup(type, parentPath, rect) {
 
   document.body.appendChild(creationPopup);
   input.focus();
+  if (backdrop) {
+    backdrop.onclick = () => {
+      document.body.removeChild(creationPopup);
+      closePopupMenu();
+    };
+  }
 }
 
 function createFileOrFolder(name, type, parentPath, errorContainer) {
@@ -334,10 +340,7 @@ function deleteItem(path, isFolder) {
 }
 
 function showDeleteConfirmationPopup(path, isFolder) {
-  if (popupMenu) {
-    popupMenu.remove();
-    popupMenu = null;
-  }
+  closePopupMenu(true, true);
 
   const confirmationPopup = document.createElement("div");
   confirmationPopup.className = "creation-popup";
@@ -370,7 +373,6 @@ function showDeleteConfirmationPopup(path, isFolder) {
   confirmationPopup.appendChild(buttonContainer);
 
   document.body.appendChild(confirmationPopup);
-
   if (backdrop) {
     backdrop.onclick = () => {
       document.body.removeChild(confirmationPopup);
@@ -387,7 +389,7 @@ function showDeleteConfirmationPopup(path, isFolder) {
 }
 
 function showRenamePopup(itemToRename, rect) {
-  closePopupMenu(true);
+  closePopupMenu(true, true);
 
   const renamePopup = document.createElement("div");
   renamePopup.className = "creation-popup";
@@ -436,6 +438,12 @@ function showRenamePopup(itemToRename, rect) {
 
   document.body.appendChild(renamePopup);
   input.focus();
+  if (backdrop) {
+    backdrop.onclick = () => {
+      document.body.removeChild(renamePopup);
+      closePopupMenu();
+    };
+  }
 }
 
 function renameItem(path, newName, errorContainer) {
@@ -570,18 +578,18 @@ function createPopupMenu(target, isFolder) {
   popupMenu.style.left = `${rect.left}px`;
 }
 
-function closePopupMenu(keepHighlight = false) {
+function closePopupMenu(keepHighlight = false, keepBackdrop = false) {
   if (popupMenu) {
     popupMenu.remove();
     popupMenu = null;
   }
+  const highlightedItem = document.querySelector(".highlighted");
   if (!keepHighlight) {
-    const highlightedItem = document.querySelector(".highlighted");
     if (highlightedItem) {
       highlightedItem.classList.remove("highlighted");
     }
   }
-  if (backdrop) {
+  if (backdrop && !keepBackdrop) {
     backdrop.remove();
     backdrop = null;
   }
