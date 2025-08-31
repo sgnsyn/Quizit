@@ -1,103 +1,41 @@
-let selectedItem = null;
-let activeFileIcon = null;
-let popupMenu = null;
-let openFolders = [];
+import {
+  openFolders,
+  getSelectedItem,
+  setSelectedItem,
+  setPopupMenu,
+  setBackdrop,
+  getPopupMenu,
+  getBackdrop,
+  getActiveFileIcon,
+  setActiveFileIcon,
+  saveState,
+  getDirectory,
+  getContent,
+} from "./state.js";
+import * as fileSystem from "./fileSystem.js";
 
-function getDefaultDirectory() {
-  return {
-    type: "folder",
-    name: "root",
-    children: [],
-  };
-}
+const uiFunctions = {
+  createFileTree,
+  displayFileContent,
+  closePopupMenu,
+};
 
-function getDirectory() {
-  const directory = localStorage.getItem("directory");
-  if (directory) {
-    return JSON.parse(directory);
-  }
-  return null;
-}
+export function navToggleHandler() {
+  const filetreeContainer = document.querySelector(".filetree");
+  const dirDisplay = document.querySelector(".directory-display");
+  const navToggleBtn = document.querySelector(".nav-expand-collapse");
 
-function saveDirectory(directory) {
-  localStorage.setItem("directory", JSON.stringify(directory));
-}
-
-let directory = getDirectory();
-if (!directory) {
-  directory = getDefaultDirectory();
-  saveDirectory(directory);
-}
-
-function getDefaultContent() {
-  return {};
-}
-
-function getContent() {
-  const content = localStorage.getItem("content");
-  if (content) {
-    return JSON.parse(content);
-  }
-  return null;
-}
-
-function saveContent(content) {
-  localStorage.setItem("content", JSON.stringify(content));
-}
-
-let content = getContent();
-if (!content) {
-  content = getDefaultContent();
-  saveContent(content);
-}
-
-function syncContentWithDirectory() {
-  const allFilePaths = [];
-
-  function collectFilePaths(folder, currentPath) {
-    for (const item of folder.children) {
-      const itemPath = `${currentPath}/${item.name}`;
-      if (item.type === "file") {
-        allFilePaths.push(itemPath);
-      } else if (item.type === "folder") {
-        collectFilePaths(item, itemPath);
-      }
-    }
-  }
-
-  collectFilePaths(directory, "root");
-
-  let contentChanged = false;
-  for (const contentPath in content) {
-    if (!allFilePaths.includes(contentPath)) {
-      delete content[contentPath];
-      contentChanged = true;
-    }
-  }
-
-  if (contentChanged) {
-    saveContent(content);
-  }
-}
-
-syncContentWithDirectory();
-
-const filetreeContainer = document.querySelector(".filetree");
-const mainElement = document.querySelector("main");
-const fileContnet = document.querySelector(".file-content");
-const noFileSelected = document.querySelector(".no-file-selected");
-const dirDisplay = document.querySelector(".directory-display");
-const navToggleBtn = document.querySelector(".nav-expand-collapse");
-
-navToggleBtn.addEventListener("click", navToggleHandler);
-function navToggleHandler() {
   filetreeContainer.classList.toggle("disabled");
   document.querySelector("nav").classList.toggle("collapsed");
   navToggleBtn.closest(".nav-header").classList.toggle("collapsed");
   dirDisplay.classList.toggle("collapsed");
 }
 
-function displayFileContent(path) {
+export function displayFileContent(path) {
+  const fileContnet = document.querySelector(".file-content");
+  const noFileSelected = document.querySelector(".no-file-selected");
+  const dirDisplay = document.querySelector(".directory-display");
+
   const existingContent = fileContnet.querySelector(":scope > p");
   if (existingContent) {
     fileContnet.removeChild(existingContent);
@@ -105,11 +43,11 @@ function displayFileContent(path) {
 
   const pathSpan = dirDisplay.querySelector(".path");
 
-  if (path && content.hasOwnProperty(path)) {
+  if (path && getContent().hasOwnProperty(path)) {
     pathSpan.textContent = path;
 
     const p = document.createElement("p");
-    p.textContent = content[path];
+    p.textContent = getContent()[path];
     fileContnet.appendChild(p);
 
     noFileSelected.classList.add("disabled");
@@ -119,67 +57,7 @@ function displayFileContent(path) {
   }
 }
 
-function saveState() {
-  localStorage.setItem("openFolders", JSON.stringify(openFolders));
-  localStorage.setItem("selectedItem", selectedItem);
-}
-
-function loadState() {
-  const savedOpenFolders = localStorage.getItem("openFolders");
-  if (savedOpenFolders) {
-    openFolders = JSON.parse(savedOpenFolders);
-  }
-  selectedItem = localStorage.getItem("selectedItem");
-}
-
-let backdrop = null;
-
-function findFolder(path, dir, currentPath = "root") {
-  if (dir.type === "folder" && currentPath === path) {
-    return dir;
-  }
-
-  if (dir.children) {
-    for (const child of dir.children) {
-      const found = findFolder(path, child, `${currentPath}/${child.name}`);
-      if (found) {
-        return found;
-      }
-    }
-  }
-
-  return null;
-}
-
-function findParentFolder(path, dir, currentPath = "root") {
-  for (const child of dir.children) {
-    const childPath = `${currentPath}/${child.name}`;
-    if (childPath === path) {
-      return dir;
-    }
-    if (child.children) {
-      const found = findParentFolder(path, child, childPath);
-      if (found) {
-        return found;
-      }
-    }
-  }
-  return null;
-}
-
-function expandToPath(path) {
-  const pathParts = path.split("/");
-  pathParts.pop();
-  let currentPath = "";
-  for (const part of pathParts) {
-    currentPath += (currentPath ? "/" : "") + part;
-    if (!openFolders.includes(currentPath)) {
-      openFolders.push(currentPath);
-    }
-  }
-}
-
-function showCreationPopup(type, parentPath, rect) {
+export function showCreationPopup(type, parentPath, rect) {
   closePopupMenu(true, true);
 
   const creationPopup = document.createElement("div");
@@ -209,7 +87,15 @@ function showCreationPopup(type, parentPath, rect) {
   const createButton = document.createElement("button");
   createButton.textContent = "Create";
   createButton.addEventListener("click", () => {
-    createFileOrFolder(input.value, type, parentPath, errorContainer);
+    fileSystem.createFileOrFolder(
+      input.value,
+      type,
+      parentPath,
+      errorContainer,
+      getDirectory(),
+      getContent(),
+      uiFunctions,
+    );
   });
   buttonContainer.appendChild(createButton);
 
@@ -221,132 +107,38 @@ function showCreationPopup(type, parentPath, rect) {
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      createFileOrFolder(input.value, type, parentPath, errorContainer);
+      fileSystem.createFileOrFolder(
+        input.value,
+        type,
+        parentPath,
+        errorContainer,
+        getDirectory(),
+        getContent(),
+        uiFunctions,
+      );
     }
   });
 
   document.body.appendChild(creationPopup);
   input.focus();
-  if (backdrop) {
-    backdrop.onclick = () => {
+  if (getBackdrop()) {
+    getBackdrop().onclick = () => {
       document.body.removeChild(creationPopup);
       closePopupMenu();
     };
   }
 }
 
-function createFileOrFolder(name, type, parentPath, errorContainer) {
-  if (name.length < 1) {
-    errorContainer.textContent = "Name must be at least 1 character long";
-    return;
-  }
-
-  const parentFolder = findFolder(parentPath, directory);
-  if (parentFolder) {
-    const nameExists = parentFolder.children.some(
-      (child) => child.name === name,
-    );
-    if (nameExists) {
-      errorContainer.textContent = "Name already exists";
-      return;
-    }
-
-    const newItem = { type, name };
-    const newItemPath = parentPath ? `${parentPath}/${name}` : name;
-
-    if (type === "folder") {
-      newItem.children = [];
-    } else {
-      content[newItemPath] = "";
-      saveContent(content);
-    }
-    parentFolder.children.push(newItem);
-
-    expandToPath(newItemPath);
-
-    if (type === "folder") {
-      if (!openFolders.includes(newItemPath)) {
-        openFolders.push(newItemPath);
-      }
-    }
-
-    if (type === "file") {
-      selectedItem = newItemPath;
-    }
-
-    saveDirectory(directory);
-    saveState();
-
-    filetreeContainer.innerHTML = "";
-    createFileTree([directory], filetreeContainer);
-    displayFileContent(selectedItem);
-    closePopupMenu();
-    const creationPopup = document.querySelector(".creation-popup");
-    if (creationPopup) {
-      document.body.removeChild(creationPopup);
-    }
-  }
-}
-
-function deleteItem(path, isFolder) {
-  if (path === "root") return;
-  const parentFolder = findParentFolder(path, directory);
-  if (parentFolder) {
-    const itemName = path.split("/").pop();
-    const itemIndex = parentFolder.children.findIndex(
-      (c) => c.name === itemName,
-    );
-    if (itemIndex === -1) return;
-
-    const itemToDelete = parentFolder.children[itemIndex];
-
-    parentFolder.children.splice(itemIndex, 1);
-
-    if (itemToDelete.type === "folder") {
-      const pathsToDelete = [];
-      function collectPaths(item, currentPath) {
-        if (item.type === "file") {
-          pathsToDelete.push(currentPath);
-        } else if (item.type === "folder" && item.children) {
-          item.children.forEach((child) => {
-            collectPaths(child, `${currentPath}/${child.name}`);
-          });
-        }
-      }
-      collectPaths(itemToDelete, path);
-
-      pathsToDelete.forEach((p) => delete content[p]);
-
-      if (selectedItem && selectedItem.startsWith(path + "/")) {
-        selectedItem = null;
-      }
-    } else {
-      // file
-      delete content[path];
-      if (selectedItem === path) {
-        selectedItem = null;
-      }
-    }
-
-    saveDirectory(directory);
-    saveContent(content);
-    saveState();
-
-    filetreeContainer.innerHTML = "";
-    createFileTree([directory], filetreeContainer);
-    displayFileContent(selectedItem);
-    closePopupMenu();
-  }
-}
-
-function showDeleteConfirmationPopup(path, isFolder) {
+export function showDeleteConfirmationPopup(path, isFolder) {
   closePopupMenu(true, true);
 
   const confirmationPopup = document.createElement("div");
   confirmationPopup.className = "creation-popup";
 
   const warningMessage = document.createElement("p");
-  warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"}?`;
+  warningMessage.textContent = `Are you sure you want to delete this ${
+    isFolder ? "folder" : "file"
+  }?`;
   warningMessage.style.color = "var(--warning)";
   confirmationPopup.appendChild(warningMessage);
 
@@ -364,7 +156,7 @@ function showDeleteConfirmationPopup(path, isFolder) {
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
   deleteButton.addEventListener("click", () => {
-    deleteItem(path, isFolder);
+    fileSystem.deleteItem(path, isFolder, getDirectory(), getContent(), uiFunctions);
     document.body.removeChild(confirmationPopup);
     closePopupMenu();
   });
@@ -373,8 +165,8 @@ function showDeleteConfirmationPopup(path, isFolder) {
   confirmationPopup.appendChild(buttonContainer);
 
   document.body.appendChild(confirmationPopup);
-  if (backdrop) {
-    backdrop.onclick = () => {
+  if (getBackdrop()) {
+    getBackdrop().onclick = () => {
       document.body.removeChild(confirmationPopup);
       closePopupMenu();
     };
@@ -388,7 +180,7 @@ function showDeleteConfirmationPopup(path, isFolder) {
   }
 }
 
-function showRenamePopup(itemToRename, rect) {
+export function showRenamePopup(itemToRename, rect) {
   closePopupMenu(true, true);
 
   const renamePopup = document.createElement("div");
@@ -420,7 +212,14 @@ function showRenamePopup(itemToRename, rect) {
   const renameButton = document.createElement("button");
   renameButton.textContent = "Rename";
   renameButton.addEventListener("click", () => {
-    renameItem(itemToRename.dataset.path, input.value, errorContainer);
+    fileSystem.renameItem(
+      itemToRename.dataset.path,
+      input.value,
+      errorContainer,
+      getDirectory(),
+      getContent(),
+      uiFunctions,
+    );
   });
   buttonContainer.appendChild(renameButton);
 
@@ -432,98 +231,35 @@ function showRenamePopup(itemToRename, rect) {
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      renameItem(itemToRename.dataset.path, input.value, errorContainer);
+      fileSystem.renameItem(
+        itemToRename.dataset.path,
+        input.value,
+        errorContainer,
+        getDirectory(),
+        getContent(),
+        uiFunctions,
+      );
     }
   });
 
   document.body.appendChild(renamePopup);
   input.focus();
-  if (backdrop) {
-    backdrop.onclick = () => {
+  if (getBackdrop()) {
+    getBackdrop().onclick = () => {
       document.body.removeChild(renamePopup);
       closePopupMenu();
     };
   }
 }
 
-function renameItem(path, newName, errorContainer) {
-  if (path === "root") return;
-  if (newName.length < 1) {
-    errorContainer.textContent = "Name must be at least 1 character long";
-    return;
-  }
-
-  const parentFolder = findParentFolder(path, directory);
-  if (parentFolder) {
-    const nameExists = parentFolder.children.some(
-      (child) => child.name === newName,
-    );
-    if (nameExists) {
-      errorContainer.textContent = "Name already exists";
-      return;
-    }
-
-    const oldName = path.split("/").pop();
-    const itemToRename = parentFolder.children.find(
-      (child) => child.name === oldName,
-    );
-
-    if (itemToRename) {
-      const oldPath = path;
-      const newPath = path.substring(0, path.lastIndexOf("/")) + "/" + newName;
-
-      const affectedPaths = [];
-      function collectPaths(item, currentPath) {
-        affectedPaths.push(currentPath);
-        if (item.type === "folder" && item.children) {
-          item.children.forEach((child) => {
-            collectPaths(child, `${currentPath}/${child.name}`);
-          });
-        }
-      }
-
-      collectPaths(itemToRename, oldPath);
-
-      itemToRename.name = newName;
-
-      affectedPaths.forEach((p) => {
-        const newP = p.replace(oldPath, newPath);
-        if (content[p]) {
-          content[newP] = content[p];
-          delete content[p];
-        }
-      });
-
-      openFolders = openFolders.map((p) =>
-        p.startsWith(oldPath) ? p.replace(oldPath, newPath) : p,
-      );
-
-      if (selectedItem && selectedItem.startsWith(oldPath)) {
-        selectedItem = selectedItem.replace(oldPath, newPath);
-      }
-
-      saveDirectory(directory);
-      saveContent(content);
-      saveState();
-
-      filetreeContainer.innerHTML = "";
-      createFileTree([directory], filetreeContainer);
-      const renamePopup = document.querySelector(".creation-popup");
-      if (renamePopup) {
-        document.body.removeChild(renamePopup);
-      }
-      closePopupMenu();
-    }
-  }
-}
-
-function createPopupMenu(target, isFolder) {
+export function createPopupMenu(target, isFolder) {
   closePopupMenu();
 
-  backdrop = document.createElement("div");
+  const backdrop = document.createElement("div");
   backdrop.className = "popup-backdrop";
   backdrop.addEventListener("click", closePopupMenu);
   document.body.appendChild(backdrop);
+  setBackdrop(backdrop);
 
   const highlightedItem = target.closest(
     isFolder ? ".current-dir" : ".file-container",
@@ -532,8 +268,9 @@ function createPopupMenu(target, isFolder) {
 
   const isRoot = highlightedItem.dataset.path === "root";
 
-  popupMenu = document.createElement("div");
+  const popupMenu = document.createElement("div");
   popupMenu.className = "popup-menu visible";
+  setPopupMenu(popupMenu);
 
   const ul = document.createElement("ul");
   const rect = target.getBoundingClientRect();
@@ -571,17 +308,17 @@ function createPopupMenu(target, isFolder) {
     ul.appendChild(deleteItemLi);
   }
 
-  popupMenu.appendChild(ul);
-  document.body.appendChild(popupMenu);
+  getPopupMenu().appendChild(ul);
+  document.body.appendChild(getPopupMenu());
 
-  popupMenu.style.top = `${rect.bottom}px`;
-  popupMenu.style.left = `${rect.left}px`;
+  getPopupMenu().style.top = `${rect.bottom}px`;
+  getPopupMenu().style.left = `${rect.left}px`;
 }
 
-function closePopupMenu(keepHighlight = false, keepBackdrop = false) {
-  if (popupMenu) {
-    popupMenu.remove();
-    popupMenu = null;
+export function closePopupMenu(keepHighlight = false, keepBackdrop = false) {
+  if (getPopupMenu()) {
+    getPopupMenu().remove();
+    setPopupMenu(null);
   }
   const highlightedItem = document.querySelector(".highlighted");
   if (!keepHighlight) {
@@ -589,13 +326,13 @@ function closePopupMenu(keepHighlight = false, keepBackdrop = false) {
       highlightedItem.classList.remove("highlighted");
     }
   }
-  if (backdrop && !keepBackdrop) {
-    backdrop.remove();
-    backdrop = null;
+  if (getBackdrop() && !keepBackdrop) {
+    getBackdrop().remove();
+    setBackdrop(null);
   }
 }
 
-function createFileTree(data, parent, path = "") {
+export function createFileTree(data, parent, path = "") {
   if (!data) return;
 
   data.forEach((item) => {
@@ -700,9 +437,9 @@ function createFileTree(data, parent, path = "") {
         "svg",
       );
       fileIcon.classList.add("file-folder-icon");
-      if (currentPath === selectedItem) {
+      if (currentPath === getSelectedItem()) {
         fileIcon.classList.add("active");
-        activeFileIcon = fileIcon;
+        setActiveFileIcon(fileIcon);
       }
       const fileUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -739,55 +476,3 @@ function createFileTree(data, parent, path = "") {
     }
   });
 }
-
-filetreeContainer.addEventListener("click", (e) => {
-  const target = e.target;
-  if (target.closest(".three-dot-button")) {
-    const isFolder = target.closest(".current-dir");
-    createPopupMenu(target, isFolder);
-  } else if (target.closest(".current-dir")) {
-    if (target.closest(".three-dot-button")) {
-      return;
-    }
-    const parentDir = target.closest(".current-dir");
-    const path = parentDir.dataset.path;
-    if (openFolders.includes(path)) {
-      openFolders = openFolders.filter((p) => p !== path);
-    } else {
-      openFolders.push(path);
-    }
-    saveState();
-    filetreeContainer.innerHTML = "";
-    createFileTree([directory], filetreeContainer);
-  } else if (target.closest(".file-container")) {
-    const fileContainer = target.closest(".file-container");
-    const path = fileContainer.dataset.path;
-    selectedItem = path;
-    expandToPath(path);
-    saveState();
-    filetreeContainer.innerHTML = "";
-    createFileTree([directory], filetreeContainer);
-    displayFileContent(path);
-  }
-});
-
-const nav = document.querySelector("nav");
-const resizer = document.querySelector(".resizer");
-
-const resize = (e) => {
-  const newNavWidth = e.clientX;
-  nav.style.width = `${newNavWidth}px`;
-  mainElement.style.width = `calc(100vw - ${newNavWidth}px)`;
-};
-
-resizer.addEventListener("mousedown", (e) => {
-  e.preventDefault();
-  document.addEventListener("mousemove", resize);
-  document.addEventListener("mouseup", () => {
-    document.removeEventListener("mousemove", resize);
-  });
-});
-
-loadState();
-createFileTree([directory], filetreeContainer);
-displayFileContent(selectedItem);
