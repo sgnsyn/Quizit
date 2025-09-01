@@ -11,6 +11,7 @@ import {
   saveState,
   getDirectory,
   getContent,
+  saveContent,
 } from "./state.js";
 import * as fileSystem from "./fileSystem.js";
 
@@ -32,28 +33,57 @@ export function navToggleHandler() {
 }
 
 export function displayFileContent(path) {
-  const fileContnet = document.querySelector(".file-content");
-  const noFileSelected = document.querySelector(".no-file-selected");
-  const dirDisplay = document.querySelector(".directory-display");
+  const fileContentDiv = document.querySelector(".file-content");
+  const fileView = fileContentDiv.querySelector(".file-view");
+  const noFileContent = fileContentDiv.querySelector(".no-file-content");
+  const noFileSelected = fileContentDiv.querySelector(".no-file-selected");
+  const textArea = noFileContent.querySelector("textarea");
+  const clearButton = noFileContent.querySelector("#clear-btn");
+  const saveButton = noFileContent.querySelector("#save-btn");
+  const fileContentDisplay = fileView.querySelector(".file-content-display");
 
-  const existingContent = fileContnet.querySelector(":scope > p");
-  if (existingContent) {
-    fileContnet.removeChild(existingContent);
-  }
-
-  const pathSpan = dirDisplay.querySelector(".path");
+  const pathSpan = document.querySelector(".directory-display .path");
 
   if (path && getContent().hasOwnProperty(path)) {
     pathSpan.textContent = path;
+    const fileContent = getContent()[path];
 
-    const p = document.createElement("p");
-    p.textContent = getContent()[path];
-    fileContnet.appendChild(p);
+    if (fileContent === "") {
+      noFileSelected.classList.add("disabled");
+      fileView.classList.add("disabled");
+      noFileContent.classList.remove("disabled");
 
-    noFileSelected.classList.add("disabled");
+      textArea.value = "";
+      textArea.focus();
+
+      const newClearButton = clearButton.cloneNode(true);
+      clearButton.parentNode.replaceChild(newClearButton, clearButton);
+      const newSaveButton = saveButton.cloneNode(true);
+      saveButton.parentNode.replaceChild(newSaveButton, saveButton);
+
+      newClearButton.addEventListener("click", () => {
+        textArea.value = "";
+      });
+
+      newSaveButton.addEventListener("click", () => {
+        const newContent = textArea.value;
+        const currentContent = getContent();
+        currentContent[path] = newContent;
+        saveContent(currentContent);
+        displayFileContent(path);
+      });
+    } else {
+      noFileSelected.classList.add("disabled");
+      noFileContent.classList.add("disabled");
+      fileView.classList.remove("disabled");
+
+      fileContentDisplay.textContent = fileContent;
+    }
   } else {
     pathSpan.textContent = "";
     noFileSelected.classList.remove("disabled");
+    noFileContent.classList.add("disabled");
+    fileView.classList.add("disabled");
   }
 }
 
@@ -257,7 +287,7 @@ export function createPopupMenu(target, isFolder) {
 
   const backdrop = document.createElement("div");
   backdrop.className = "popup-backdrop";
-  backdrop.addEventListener("click", closePopupMenu);
+  backdrop.addEventListener("click", () => closePopupMenu());
   document.body.appendChild(backdrop);
   setBackdrop(backdrop);
 
@@ -334,6 +364,13 @@ export function closePopupMenu(keepHighlight = false, keepBackdrop = false) {
 
 export function createFileTree(data, parent, path = "") {
   if (!data) return;
+
+  data.sort((a, b) => {
+    if (a.type === b.type) {
+      return a.name.localeCompare(b.name);
+    }
+    return a.type === "folder" ? -1 : 1;
+  });
 
   data.forEach((item) => {
     const currentPath = path ? `${path}/${item.name}` : item.name;

@@ -40,6 +40,12 @@ const navToggleBtn = document.querySelector(".nav-expand-collapse");
 
 navToggleBtn.addEventListener("click", navToggleHandler);
 
+function renderFileTree() {
+  const directory = getDirectory();
+  filetreeContainer.innerHTML = "";
+  createFileTree([directory], filetreeContainer);
+}
+
 filetreeContainer.addEventListener("click", (e) => {
   const target = e.target;
   if (target.closest(".three-dot-button")) {
@@ -58,16 +64,15 @@ filetreeContainer.addEventListener("click", (e) => {
       openFolders.push(path);
     }
     saveState();
-    filetreeContainer.innerHTML = "";
-    createFileTree([directory], filetreeContainer);
+    renderFileTree();
   } else if (target.closest(".file-container")) {
+    e.preventDefault();
     const fileContainer = target.closest(".file-container");
     const path = fileContainer.dataset.path;
     setSelectedItem(path);
     expandToPath(path);
     saveState();
-    filetreeContainer.innerHTML = "";
-    createFileTree([directory], filetreeContainer);
+    renderFileTree();
     displayFileContent(path);
   }
 });
@@ -90,5 +95,5 @@ resizer.addEventListener("mousedown", (e) => {
 });
 
 loadState();
-createFileTree([directory], filetreeContainer);
+renderFileTree();
 displayFileContent(getSelectedItem());

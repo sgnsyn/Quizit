@@ -176,6 +176,19 @@
         <span class="title"></span><span class="path"></span>
       </div>
       <div class="file-content">
+        <div class="file-view disabled">
+          <div class="file-content-display"></div>
+        </div>
+        <div class="no-file-content disabled">
+          <textarea
+            class="content-textarea"
+            placeholder="no content"
+          ></textarea>
+          <div class="button-container">
+            <button id="clear-btn">Clear</button>
+            <button id="save-btn">Save</button>
+          </div>
+        </div>
         <div class="no-file-selected">
           <svg>
             <use href="#opace"></use>
@@ -184,6 +197,6 @@
         </div>
       </div>
     </main>
-        <script type="module" src="scripts/main.js"></script>
+    <script type="module" src="scripts/main.js"></script>
   </body>
 </html>

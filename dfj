@@ -1,0 +1,14 @@
+[33mb477617[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m modulrized script.js
+[33m4da38bd[m fixed backdrop issue for the second popup
+[33m8ecc537[m completed working on filetree, everything works as expected
+[33m752743e[m changed some sprites and add functionality to change folder based on folder state, added shadows and cancel and confirm as well
+[33mf41c994[m implemented popup for file and folder menu
+[33m88d6402[m removed the three dot popup test
+[33m671a1c8[m implementing popup menu for folder and file
+[33mb4744ae[m fixed filetree not collapsing
+[33m3bb389d[m file tree completed
+[33m5ab14ac[m changed element structur for filetree
+[33m87a015c[m creating filetree
+[33mbf4dec3[m Set color palet for light and dark
+[33me212911[m addes svg sprites
+[33m2da0e09[m Initial commit
