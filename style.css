@@ -89,15 +89,21 @@ main {
   color: var(--text);
   text-align: right;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .directory-display span {
   white-space: nowrap;
+}
+
+.directory-display .title {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.directory-display .path {
   direction: rtl;
   text-align: left;
 }
@@ -336,4 +342,17 @@ button.three-dot-button {
   color: var(--info);
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.question-container {
+  margin-bottom: 1rem;
+}
+
+.answers-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.answer-wrapper {
+  margin-bottom: 0.5rem;
 }

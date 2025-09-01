@@ -40,7 +40,8 @@ export function displayFileContent(path) {
   const textArea = noFileContent.querySelector("textarea");
   const clearButton = noFileContent.querySelector("#clear-btn");
   const saveButton = noFileContent.querySelector("#save-btn");
-  const fileContentDisplay = fileView.querySelector(".file-content-display");
+  const testDisplay = fileView.querySelector(".test-display");
+  const titleSpan = document.querySelector(".directory-display .title");
 
   const pathSpan = document.querySelector(".directory-display .path");
 
@@ -73,18 +74,80 @@ export function displayFileContent(path) {
         displayFileContent(path);
       });
     } else {
-      noFileSelected.classList.add("disabled");
-      noFileContent.classList.add("disabled");
-      fileView.classList.remove("disabled");
+      try {
+        const quizData = JSON.parse(fileContent);
+        if (quizData.questions) {
+          noFileSelected.classList.add("disabled");
+          noFileContent.classList.add("disabled");
+          fileView.classList.remove("disabled");
+          renderQuiz(quizData, testDisplay);
+          if (quizData.title) {
+            titleSpan.textContent = quizData.title.length > 12 ? quizData.title.substring(0, 12) + "..." : quizData.title;
+          } else {
+            titleSpan.textContent = "";
+          }
+        } else {
+          throw new Error("Invalid JSON structure");
+        }
+      } catch (error) {
+        noFileSelected.classList.add("disabled");
+        noFileContent.classList.add("disabled");
+        fileView.classList.remove("disabled");
 
-      fileContentDisplay.textContent = fileContent;
+        testDisplay.textContent = fileContent;
+        titleSpan.textContent = "";
+      }
     }
   } else {
     pathSpan.textContent = "";
+    titleSpan.textContent = "";
     noFileSelected.classList.remove("disabled");
-    noFileContent.classList.add("disabled");
     fileView.classList.add("disabled");
   }
+}
+
+function renderQuiz(quizData, container) {
+  container.innerHTML = "";
+
+  if(quizData.title){
+    const title = document.createElement("h2");
+    title.textContent = quizData.title;
+    container.appendChild(title);
+  }
+
+  quizData.questions.forEach((question, index) => {
+    const questionContainer = document.createElement("div");
+    questionContainer.className = "question-container";
+
+    const questionText = document.createElement("p");
+    questionText.textContent = `${index + 1}. ${question.question}`;
+    questionContainer.appendChild(questionText);
+
+    const answersContainer = document.createElement("div");
+    answersContainer.className = "answers-container";
+
+    question.answers.forEach((answer, answerIndex) => {
+      const answerWrapper = document.createElement("div");
+      answerWrapper.className = "answer-wrapper";
+
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = `question-${index}`;
+      radio.value = answerIndex;
+      radio.id = `q${index}a${answerIndex}`;
+
+      const label = document.createElement("label");
+      label.textContent = answer;
+      label.htmlFor = `q${index}a${answerIndex}`;
+
+      answerWrapper.appendChild(radio);
+      answerWrapper.appendChild(label);
+      answersContainer.appendChild(answerWrapper);
+    });
+
+    questionContainer.appendChild(answersContainer);
+    container.appendChild(questionContainer);
+  });
 }
 
 export function showCreationPopup(type, parentPath, rect) {
