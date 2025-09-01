@@ -103,7 +103,7 @@ export function syncContentWithDirectory(directory, content) {
 
 export function saveState() {
   localStorage.setItem("openFolders", JSON.stringify(openFolders));
-  localStorage.setItem("selectedItem", selectedItem);
+  localStorage.setItem("selectedItem", selectedItem || "");
 }
 
 export function loadState() {
@@ -111,5 +111,5 @@ export function loadState() {
   if (savedOpenFolders) {
     openFolders.push(...JSON.parse(savedOpenFolders));
   }
-  selectedItem = localStorage.getItem("selectedItem");
+  selectedItem = localStorage.getItem("selectedItem") || null;
 }

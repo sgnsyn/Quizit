@@ -43,6 +43,8 @@ export function displayFileContent(path) {
   const testDisplay = fileView.querySelector(".test-display");
   const titleSpan = document.querySelector(".directory-display .title");
 
+  titleSpan.textContent = "";
+
   const pathSpan = document.querySelector(".directory-display .path");
 
   if (path && getContent().hasOwnProperty(path)) {
@@ -82,9 +84,7 @@ export function displayFileContent(path) {
           fileView.classList.remove("disabled");
           renderQuiz(quizData, testDisplay);
           if (quizData.title) {
-            titleSpan.textContent = quizData.title.length > 12 ? quizData.title.substring(0, 12) + "..." : quizData.title;
-          } else {
-            titleSpan.textContent = "";
+            titleSpan.textContent = quizData.title;
           }
         } else {
           throw new Error("Invalid JSON structure");
@@ -95,14 +95,13 @@ export function displayFileContent(path) {
         fileView.classList.remove("disabled");
 
         testDisplay.textContent = fileContent;
-        titleSpan.textContent = "";
       }
     }
   } else {
     pathSpan.textContent = "";
-    titleSpan.textContent = "";
     noFileSelected.classList.remove("disabled");
     fileView.classList.add("disabled");
+    noFileContent.classList.add("disabled");
   }
 }
 
@@ -179,7 +178,8 @@ export function showCreationPopup(type, parentPath, rect) {
 
   const createButton = document.createElement("button");
   createButton.textContent = "Create";
-  createButton.addEventListener("click", () => {
+  createButton.addEventListener("click", (e) => {
+    e.preventDefault();
     fileSystem.createFileOrFolder(
       input.value,
       type,

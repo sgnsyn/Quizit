@@ -92,6 +92,7 @@ main {
   justify-content: space-between;
   overflow: hidden;
   flex-shrink: 0;
+  gap: 2rem;
 }
 
 .directory-display span {
@@ -101,11 +102,15 @@ main {
 .directory-display .title {
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .directory-display .path {
   direction: rtl;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .file-content {
