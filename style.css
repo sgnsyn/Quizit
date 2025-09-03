@@ -411,7 +411,7 @@ button.three-dot-button {
   border: 1px solid var(--border);
   padding: 0.5rem 1rem;
   border-radius: 100vw;
-  background-color: transparent;
+  background-color: var(--bg);
   color: var(--text);
 }
 
@@ -434,7 +434,7 @@ button.three-dot-button {
   height: 2rem;
   display: grid;
   place-content: center;
-  background-color: transparent;
+  background-color: var(--bg);
   color: var(--text);
 }
 

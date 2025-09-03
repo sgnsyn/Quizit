@@ -18,6 +18,7 @@ import { validateQuizJSON } from "./jsonParse.js";
 
 let currentQuizData = null;
 let currentQuestionIndex = 0;
+let currentPageWindow = 0;
 
 const uiFunctions = {
   createFileTree,
@@ -116,6 +117,7 @@ export function displayFileContent(path) {
           
           currentQuizData = quizData;
           currentQuestionIndex = 0;
+          currentPageWindow = 0;
           renderQuiz(questionDisplay);
 
           if (quizData.title) {
@@ -142,12 +144,6 @@ export function displayFileContent(path) {
 
 function renderQuiz(container) {
   container.innerHTML = "";
-
-  if (currentQuizData.title) {
-    const title = document.createElement("h2");
-    title.textContent = currentQuizData.title;
-    container.appendChild(title);
-  }
 
   const question = currentQuizData.questions[currentQuestionIndex];
 
@@ -188,6 +184,34 @@ function renderQuiz(container) {
 
   prevButton.disabled = currentQuestionIndex === 0;
   nextButton.disabled = currentQuestionIndex === currentQuizData.questions.length - 1;
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const pageNumbersContainer = document.querySelector('.page-numbers');
+  pageNumbersContainer.innerHTML = '';
+
+  const totalQuestions = currentQuizData.questions.length;
+  const start = currentPageWindow * 10;
+  const end = Math.min(start + 10, totalQuestions);
+
+  for (let i = start; i < end; i++) {
+    const pageNumberButton = document.createElement('button');
+    pageNumberButton.className = 'page-number';
+    pageNumberButton.textContent = i + 1;
+    pageNumberButton.addEventListener('click', () => {
+      currentQuestionIndex = i;
+      renderQuiz(document.querySelector('.question-display'));
+    });
+    pageNumbersContainer.appendChild(pageNumberButton);
+  }
+
+  const leftArrow = document.querySelector('.pagination-display .page-arrow:first-child');
+  const rightArrow = document.querySelector('.pagination-display .page-arrow:last-child');
+
+  leftArrow.disabled = currentPageWindow === 0;
+  rightArrow.disabled = end >= totalQuestions;
 }
 
 export function initializeQuizView() {
@@ -206,6 +230,24 @@ export function initializeQuizView() {
         if (currentQuizData && currentQuestionIndex < currentQuizData.questions.length - 1) {
             currentQuestionIndex++;
             renderQuiz(questionDisplay);
+        }
+    });
+
+    const leftArrow = document.querySelector('.pagination-display .page-arrow:first-child');
+    const rightArrow = document.querySelector('.pagination-display .page-arrow:last-child');
+
+    leftArrow.addEventListener('click', () => {
+        if (currentPageWindow > 0) {
+            currentPageWindow--;
+            renderPagination();
+        }
+    });
+
+    rightArrow.addEventListener('click', () => {
+        const totalPages = Math.ceil(currentQuizData.questions.length / 10);
+        if (currentPageWindow < totalPages - 1) {
+            currentPageWindow++;
+            renderPagination();
         }
     });
 }
