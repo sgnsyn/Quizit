@@ -17,6 +17,7 @@ import {
   displayFileContent,
   navToggleHandler,
   createPopupMenu,
+  initializeQuizView,
 } from "./ui.js";
 import { expandToPath } from "./fileSystem.js";
 
@@ -120,6 +121,7 @@ resizer.addEventListener("mousedown", (e) => {
   });
 });
 
+initializeQuizView();
 loadState();
 renderFileTree();
 displayFileContent(getSelectedItem());

@@ -144,12 +144,24 @@ main {
 }
 
 .code-block {
+  position: relative;
   background-color: var(--bg);
   padding: 1rem;
   border-radius: 0.25rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  transition: transform 0.1s ease-in-out;
+}
+
+.copy-button:active {
+  transform: scale(0.8);
 }
 
 pre {
@@ -382,4 +394,67 @@ button.three-dot-button {
 
 .answer-wrapper {
   margin-bottom: 0.5rem;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4rem;
+  margin-block: 1rem;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 100vw;
+  background-color: transparent;
+  color: var(--text);
+}
+
+.pagination-display {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.page-number {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-content: center;
+  background-color: transparent;
+  color: var(--text);
+}
+
+.total-score {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  align-items: center;
+}
+
+.total-score span {
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.test-navigation {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+ze: 2rem;
 }
