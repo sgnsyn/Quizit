@@ -200,6 +200,9 @@ function renderPagination() {
     const pageNumberButton = document.createElement('button');
     pageNumberButton.className = 'page-number';
     pageNumberButton.textContent = i + 1;
+    if (i === currentQuestionIndex) {
+      pageNumberButton.classList.add('active');
+    }
     pageNumberButton.addEventListener('click', () => {
       currentQuestionIndex = i;
       renderQuiz(document.querySelector('.question-display'));

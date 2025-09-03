@@ -438,6 +438,11 @@ button.three-dot-button {
   color: var(--text);
 }
 
+.page-number.active {
+  background-color: var(--info);
+  color: var(--bg-light);
+}
+
 .total-score {
   display: flex;
   justify-content: flex-end;
