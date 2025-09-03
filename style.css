@@ -31,6 +31,9 @@ nav {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border) var(--bg-dark);
+  transition:
+    height 0.2s ease-in-out,
+    width 0.2s ease-in-out;
 }
 
 .nav-header {
@@ -401,7 +404,7 @@ button.three-dot-button {
   justify-content: flex-start;
   align-items: center;
   gap: 4rem;
-  margin-block: 1rem;
+  margin-block: 1rem 2rem;
 }
 
 .filter-button {
@@ -461,5 +464,21 @@ button.three-dot-button {
   gap: 1rem;
   margin-top: 1rem;
 }
-ze: 2rem;
+
+.prev-btn,
+.next-btn {
+  padding: 0.75em 2.25em;
+  border-radius: 100vw;
+  display: grid;
+  place-content: center;
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  display: grid;
+  place-content: center;
+}
+
+.prev-btn:disabled,
+.next-btn:disabled {
+  background-color: transparent;
 }
