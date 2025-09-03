@@ -181,10 +181,58 @@
           <div class="pagination-controls"></div>
         </div>
         <div class="no-file-content disabled">
-          <textarea
+          <div>
+            <div class="json-instruction">
+              <p>
+                You should insert or paste valid json to the input field below.
+              </p>
+              <p>
+                The following prompt can also be used for AI models to generate
+                your questions.
+              </p>
+            </div>
+            <div class="code-block">
+              <p>
+                Generate exercise questions in JSON using the format shown
+                below..
+              </p>
+              <pre>
+              {
+              &nbsp;&nbsp;"title": "&lt;your subject here&gt;",
+              &nbsp;&nbsp;"type": "multiple choice",
+              &nbsp;&nbsp;"questions": [
+              &nbsp;&nbsp;&nbsp;&nbsp;{
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"question": "sample question?",
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"answers": ["A", "B", "C", "D"],
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"correct_option": 1,
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"explanation": "Why this answer is correct."
+              &nbsp;&nbsp;&nbsp;&nbsp;}
+              &nbsp;&nbsp;]
+              }
+            </pre
+              >
+              <p>
+                Make at least
+                <span class="ph-warn"
+                  >&lt;number of questions (e.g., 20, 30)&gt;</span
+                >
+                about the topic
+                <span class="ph-warn"
+                  >&lt;your topic here (e.g., supervised learning, English
+                  tenses)&gt;</span
+                >.
+              </p>
+              <p>
+                you should return strictly valid JSON with no extra text,
+                comments, or formatting.
+              </p>
+            </div>
+          </div>
+          <input
+            type="text"
             class="content-textarea"
-            placeholder="no content"
-          ></textarea>
+            placeholder="paste your json here"
+          />
           <div class="button-container">
             <button id="clear-btn">Clear</button>
             <button id="save-btn">Save</button>

@@ -37,7 +37,7 @@ export function displayFileContent(path) {
   const fileView = fileContentDiv.querySelector(".file-view");
   const noFileContent = fileContentDiv.querySelector(".no-file-content");
   const noFileSelected = fileContentDiv.querySelector(".no-file-selected");
-  const textArea = noFileContent.querySelector("textarea");
+  const contentInput = noFileContent.querySelector(".content-textarea");
   const clearButton = noFileContent.querySelector("#clear-btn");
   const saveButton = noFileContent.querySelector("#save-btn");
   const testDisplay = fileView.querySelector(".test-display");
@@ -56,8 +56,8 @@ export function displayFileContent(path) {
       fileView.classList.add("disabled");
       noFileContent.classList.remove("disabled");
 
-      textArea.value = "";
-      textArea.focus();
+      contentInput.value = "";
+      contentInput.focus();
 
       const newClearButton = clearButton.cloneNode(true);
       clearButton.parentNode.replaceChild(newClearButton, clearButton);
@@ -65,15 +65,22 @@ export function displayFileContent(path) {
       saveButton.parentNode.replaceChild(newSaveButton, saveButton);
 
       newClearButton.addEventListener("click", () => {
-        textArea.value = "";
+        contentInput.value = "";
       });
 
       newSaveButton.addEventListener("click", () => {
-        const newContent = textArea.value;
+        const newContent = contentInput.value;
         const currentContent = getContent();
         currentContent[path] = newContent;
         saveContent(currentContent);
         displayFileContent(path);
+      });
+
+      contentInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          newSaveButton.click();
+        }
       });
     } else {
       try {
