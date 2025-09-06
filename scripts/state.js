@@ -111,5 +111,24 @@ export function loadState() {
   if (savedOpenFolders) {
     openFolders.push(...JSON.parse(savedOpenFolders));
   }
-  selectedItem = localStorage.getItem("selectedItem") || null;
+  selectedItem = localStorage.getItem("selectedItem") || "";
+  saveState();
 }
+
+
+
+export function getQuizState() {
+  const quizState = localStorage.getItem("quizState");
+  if (quizState) {
+    return JSON.parse(quizState);
+  }
+  const defaultState = {};
+  saveQuizState(defaultState);
+  return defaultState;
+}
+
+export function saveQuizState(quizState) {
+  localStorage.setItem("quizState", JSON.stringify(quizState));
+}
+
+

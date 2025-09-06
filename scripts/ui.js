@@ -12,6 +12,8 @@ import {
   getDirectory,
   getContent,
   saveContent,
+  getQuizState,
+  saveQuizState,
 } from "./state.js";
 import * as fileSystem from "./fileSystem.js";
 import { validateQuizJSON } from "./jsonParse.js";
@@ -19,6 +21,52 @@ import { validateQuizJSON } from "./jsonParse.js";
 let currentQuizData = null;
 let currentQuestionIndex = 0;
 let currentPageWindow = 0;
+let currentFilter = 'all';
+let filteredIndices = [];
+
+const filterMap = {
+    'all': 0,
+    'correct': 1,
+    'incorrect': 2,
+    'unattempted': 3
+};
+
+function applyFilter() {
+    const quizState = getQuizState();
+    const path = getSelectedItem();
+    const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
+
+    if (currentFilter === 'all') {
+        filteredIndices = [...Array(currentQuizData.questions.length).keys()];
+    } else if (currentFilter === 'correct') {
+        filteredIndices = fileQuizState.filter(q => q.is_correct).map(q => q.question_id);
+    } else if (currentFilter === 'incorrect') {
+        filteredIndices = fileQuizState.filter(q => !q.is_correct).map(q => q.question_id);
+    } else if (currentFilter === 'unattempted') {
+        const answeredIndices = fileQuizState.map(q => q.question_id);
+        filteredIndices = [...Array(currentQuizData.questions.length).keys()].filter(i => !answeredIndices.includes(i));
+    }
+}
+
+function updateScore() {
+    const quizState = getQuizState();
+    const path = getSelectedItem();
+    const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
+    const correctAnswers = fileQuizState.filter(q => q.is_correct).length;
+    const totalQuestions = currentQuizData.questions.length;
+
+    const scoreSpan = document.querySelector('.total-score span:last-child');
+    scoreSpan.textContent = `${correctAnswers}/${totalQuestions}`;
+
+    if (!quizState[path]) {
+        quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+    }
+    quizState[path].score = {
+        correct: correctAnswers,
+        total: totalQuestions
+    };
+    saveQuizState(quizState);
+}
 
 const uiFunctions = {
   createFileTree,
@@ -116,9 +164,31 @@ export function displayFileContent(path) {
           fileView.classList.remove("disabled");
           
           currentQuizData = quizData;
-          currentQuestionIndex = 0;
-          currentPageWindow = 0;
-          renderQuiz(questionDisplay);
+          const quizState = getQuizState();
+          const fileState = quizState[path] || { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+          currentFilter = fileState.filter;
+          const filterButton = document.querySelector('.filter-button span');
+          const filterOption = document.querySelector(`.filter-popup li[data-filter="${currentFilter}"]`);
+          filterButton.textContent = filterOption.textContent;
+
+          applyFilter();
+
+          if (filteredIndices.length > 0) {
+            if (!filteredIndices.includes(fileState.lastQuestionIndex[filterMap[currentFilter]])) {
+              currentQuestionIndex = filteredIndices[0];
+            } else {
+              currentQuestionIndex = fileState.lastQuestionIndex[filterMap[currentFilter]];
+            }
+            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
+            if (currentPageWindow < 0) {
+                currentPageWindow = 0;
+            }
+            renderQuiz(questionDisplay);
+            updateScore();
+          } else {
+            questionDisplay.innerHTML = "<p>No questions match the current filter.</p>";
+            renderPagination();
+          }
 
           if (quizData.title) {
             titleSpan.textContent = quizData.title;
@@ -145,6 +215,15 @@ export function displayFileContent(path) {
 function renderQuiz(container) {
   container.innerHTML = "";
 
+  if (filteredIndices.length === 0) {
+    container.innerHTML = "<p>No questions match the current filter.</p>";
+    renderPagination();
+    return;
+  }
+  const explanationText = document.querySelector('.explanation-text');
+  explanationText.classList.add('disabled');
+  explanationText.textContent = '';
+
   const question = currentQuizData.questions[currentQuestionIndex];
 
   const questionContainer = document.createElement("div");
@@ -156,6 +235,11 @@ function renderQuiz(container) {
 
   const answersContainer = document.createElement("div");
   answersContainer.className = "answers-container";
+
+  const quizState = getQuizState();
+  const path = getSelectedItem();
+  const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
+  const questionState = fileQuizState.find(qs => qs.question_id === currentQuestionIndex);
 
   question.answers.forEach((answer, answerIndex) => {
     const answerWrapper = document.createElement("div");
@@ -174,7 +258,64 @@ function renderQuiz(container) {
     answerWrapper.appendChild(radio);
     answerWrapper.appendChild(label);
     answersContainer.appendChild(answerWrapper);
+
+    if (questionState) {
+      radio.disabled = true;
+      if (questionState.user_answer === answerIndex) {
+        radio.checked = true;
+        if (questionState.is_correct) {
+          answerWrapper.classList.add("correct-answer");
+        } else {
+          answerWrapper.classList.add("wrong-answer");
+        }
+      }
+      if (question.correct_option === answerIndex && !questionState.is_correct) {
+        answerWrapper.classList.add('correct-option');
+      }
+    } else {
+      radio.addEventListener("change", () => {
+        const selectedAnswer = parseInt(radio.value);
+        const correctAnswer = question.correct_option;
+        const isCorrect = selectedAnswer === correctAnswer;
+
+        const allAnswerWrappers = answersContainer.querySelectorAll('.answer-wrapper');
+        allAnswerWrappers.forEach((wrapper, index) => {
+          const radioInput = wrapper.querySelector('input[type="radio"]');
+          radioInput.disabled = true;
+          if (index === correctAnswer) {
+            wrapper.classList.add('correct-option');
+          }
+        });
+
+        if (isCorrect) {
+          answerWrapper.classList.add("correct-answer");
+        } else {
+          answerWrapper.classList.add("wrong-answer");
+        }
+
+        explanationText.textContent = question.explanation;
+        explanationText.classList.remove('disabled');
+
+        const quizState = getQuizState();
+        const path = getSelectedItem();
+        if (!quizState[path]) {
+          quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+        }
+        quizState[path].questions.push({
+          question_id: currentQuestionIndex,
+          user_answer: selectedAnswer,
+          is_correct: isCorrect,
+        });
+        saveQuizState(quizState);
+        updateScore();
+      });
+    }
   });
+
+  if (questionState) {
+    explanationText.textContent = question.explanation;
+    explanationText.classList.remove('disabled');
+  }
 
   questionContainer.appendChild(answersContainer);
   container.appendChild(questionContainer);
@@ -182,8 +323,9 @@ function renderQuiz(container) {
   const prevButton = document.querySelector('.prev-btn');
   const nextButton = document.querySelector('.next-btn');
 
-  prevButton.disabled = currentQuestionIndex === 0;
-  nextButton.disabled = currentQuestionIndex === currentQuizData.questions.length - 1;
+  const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
+  prevButton.disabled = currentIndexInFiltered === 0;
+  nextButton.disabled = currentIndexInFiltered === filteredIndices.length - 1;
 
   renderPagination();
 }
@@ -192,46 +334,151 @@ function renderPagination() {
   const pageNumbersContainer = document.querySelector('.page-numbers');
   pageNumbersContainer.innerHTML = '';
 
-  const totalQuestions = currentQuizData.questions.length;
-  const start = currentPageWindow * 10;
-  const end = Math.min(start + 10, totalQuestions);
+  if (!currentQuizData) return;
 
-  for (let i = start; i < end; i++) {
+  const totalQuestions = filteredIndices.length;
+  const quizState = getQuizState();
+  const path = getSelectedItem();
+  const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
+
+  const startQuestion = currentPageWindow * 10;
+  const endQuestion = Math.min(startQuestion + 10, totalQuestions);
+
+  for (let i = startQuestion; i < endQuestion; i++) {
+    const questionIndex = filteredIndices[i];
     const pageNumberButton = document.createElement('button');
     pageNumberButton.className = 'page-number';
-    pageNumberButton.textContent = i + 1;
-    if (i === currentQuestionIndex) {
+    pageNumberButton.textContent = questionIndex + 1;
+
+    const questionState = fileQuizState.find(qs => qs.question_id === questionIndex);
+
+    if (currentQuestionIndex === questionIndex) {
       pageNumberButton.classList.add('active');
+    } else if (questionState) {
+      if (questionState.is_correct) {
+        pageNumberButton.classList.add('correct-page');
+      } else {
+        pageNumberButton.classList.add('incorrect-page');
+      }
     }
+
     pageNumberButton.addEventListener('click', () => {
-      currentQuestionIndex = i;
+      currentQuestionIndex = questionIndex;
+      const quizState = getQuizState();
+      const path = getSelectedItem();
+      if (!quizState[path]) {
+        quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+      }
+      quizState[path].lastQuestionIndex[filterMap[currentFilter]] = currentQuestionIndex;
+      saveQuizState(quizState);
       renderQuiz(document.querySelector('.question-display'));
     });
+
     pageNumbersContainer.appendChild(pageNumberButton);
   }
 
   const leftArrow = document.querySelector('.pagination-display .page-arrow:first-child');
   const rightArrow = document.querySelector('.pagination-display .page-arrow:last-child');
 
-  leftArrow.disabled = currentPageWindow === 0;
-  rightArrow.disabled = end >= totalQuestions;
+  const totalPages = Math.ceil(totalQuestions / 10);
+
+  if (totalPages <= 1) {
+    leftArrow.classList.add('disabled');
+    rightArrow.classList.add('disabled');
+  } else {
+    leftArrow.classList.remove('disabled');
+    rightArrow.classList.remove('disabled');
+    leftArrow.disabled = currentPageWindow === 0;
+    rightArrow.disabled = endQuestion >= totalQuestions;
+  }
 }
 
 export function initializeQuizView() {
     const prevButton = document.querySelector('.prev-btn');
     const nextButton = document.querySelector('.next-btn');
     const questionDisplay = document.querySelector('.question-display');
+    const filterButton = document.querySelector('.filter-button');
+    const filterPopup = document.querySelector('.filter-popup');
+    const backdrop = document.querySelector('.popup-backdrop');
+
+    filterButton.addEventListener('click', () => {
+        const rect = filterButton.getBoundingClientRect();
+        filterPopup.style.top = `${rect.bottom}px`;
+        filterPopup.style.left = `${rect.left}px`;
+        filterPopup.classList.remove('disabled');
+        backdrop.classList.remove('disabled');
+    });
+
+    backdrop.addEventListener('click', () => {
+        filterPopup.classList.add('disabled');
+        backdrop.classList.add('disabled');
+    });
+
+    filterPopup.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LI') {
+            const selectedLi = filterPopup.querySelector('li.selected');
+            if (selectedLi) {
+                selectedLi.classList.remove('selected');
+            }
+            e.target.classList.add('selected');
+
+            currentFilter = e.target.dataset.filter;
+            filterButton.querySelector('span').textContent = e.target.textContent;
+            
+            const quizState = getQuizState();
+            const path = getSelectedItem();
+            if (!quizState[path]) {
+                quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+            }
+            quizState[path].filter = currentFilter;
+            saveQuizState(quizState);
+
+            applyFilter();
+            const lastIndex = quizState[path].lastQuestionIndex[filterMap[currentFilter]];
+            if (filteredIndices.includes(lastIndex)) {
+                currentQuestionIndex = lastIndex;
+            } else {
+                currentQuestionIndex = filteredIndices[0] || 0;
+            }
+
+            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
+            if (currentPageWindow < 0) {
+                currentPageWindow = 0;
+            }
+            renderQuiz(document.querySelector('.question-display'));
+            filterPopup.classList.add('disabled');
+            backdrop.classList.add('disabled');
+        }
+    });
 
     prevButton.addEventListener('click', () => {
-        if (currentQuizData && currentQuestionIndex > 0) {
-            currentQuestionIndex--;
+        const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
+        if (currentIndexInFiltered > 0) {
+            currentQuestionIndex = filteredIndices[currentIndexInFiltered - 1];
+            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
+            const quizState = getQuizState();
+            const path = getSelectedItem();
+            if (!quizState[path]) {
+                quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+            }
+            quizState[path].lastQuestionIndex[filterMap[currentFilter]] = currentQuestionIndex;
+            saveQuizState(quizState);
             renderQuiz(questionDisplay);
         }
     });
 
     nextButton.addEventListener('click', () => {
-        if (currentQuizData && currentQuestionIndex < currentQuizData.questions.length - 1) {
-            currentQuestionIndex++;
+        const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
+        if (currentIndexInFiltered < filteredIndices.length - 1) {
+            currentQuestionIndex = filteredIndices[currentIndexInFiltered + 1];
+            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
+            const quizState = getQuizState();
+            const path = getSelectedItem();
+            if (!quizState[path]) {
+                quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+            }
+            quizState[path].lastQuestionIndex[filterMap[currentFilter]] = currentQuestionIndex;
+            saveQuizState(quizState);
             renderQuiz(questionDisplay);
         }
     });
@@ -247,10 +494,23 @@ export function initializeQuizView() {
     });
 
     rightArrow.addEventListener('click', () => {
-        const totalPages = Math.ceil(currentQuizData.questions.length / 10);
-        if (currentPageWindow < totalPages - 1) {
+        if ((currentPageWindow + 1) * 10 < filteredIndices.length) {
             currentPageWindow++;
             renderPagination();
+        }
+    });
+
+    const resetButton = document.querySelector('.reset-btn');
+
+    resetButton.addEventListener('click', () => {
+        const path = getSelectedItem();
+        if (path) {
+            const quizState = getQuizState();
+            if (quizState[path]) {
+                delete quizState[path];
+                saveQuizState(quizState);
+                displayFileContent(path);
+            }
         }
     });
 }

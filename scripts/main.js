@@ -26,36 +26,14 @@ if (!directory) {
   directory = {
     type: "folder",
     name: "root",
-    children: [{ type: "file", name: "quiz.json" }],
+    children: [],
   };
   saveDirectory(directory);
 }
 
 let content = getContent();
 if (!content) {
-  content = {
-    "root/quiz.json": JSON.stringify(
-      {
-        title: "Sample Quiz",
-        questions: [
-          {
-            question: "What is the capital of France?",
-            answers: ["London", "Paris", "Berlin", "Madrid"],
-            correct_option: 1,
-            explanation: "Paris is the capital of France.",
-          },
-          {
-            question: "What is 2 + 2?",
-            answers: ["3", "4", "5", "6"],
-            correct_option: 1,
-            explanation: "2 + 2 = 4",
-          },
-        ],
-      },
-      null,
-      2
-    ),
-  };
+  content = {};
   saveContent(content);
 }
 
