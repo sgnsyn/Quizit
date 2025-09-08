@@ -15,9 +15,10 @@ import {
 import {
   createFileTree,
   displayFileContent,
-  navToggleHandler,
   createPopupMenu,
   initializeQuizView,
+  collapseNav,
+  expandNav,
 } from "./ui.js";
 import { expandToPath } from "./fileSystem.js";
 
@@ -41,9 +42,11 @@ syncContentWithDirectory(directory, content);
 
 const filetreeContainer = document.querySelector(".filetree");
 const mainElement = document.querySelector("main");
-const navToggleBtn = document.querySelector(".nav-expand-collapse");
+const navExpandBtn = document.querySelector(".nav-expand");
+const navCollapseBtn = document.querySelector(".nav-collapse");
 
-navToggleBtn.addEventListener("click", navToggleHandler);
+navExpandBtn.addEventListener("click", expandNav);
+navCollapseBtn.addEventListener("click", collapseNav);
 
 function renderFileTree() {
   const directory = getDirectory();

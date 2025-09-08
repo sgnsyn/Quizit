@@ -74,15 +74,24 @@ const uiFunctions = {
   closePopupMenu,
 };
 
-export function navToggleHandler() {
-  const filetreeContainer = document.querySelector(".filetree");
+export function collapseNav() {
+  const nav = document.querySelector("nav");
   const dirDisplay = document.querySelector(".directory-display");
-  const navToggleBtn = document.querySelector(".nav-expand-collapse");
+  const filetreeContainer = document.querySelector(".filetree");
 
-  filetreeContainer.classList.toggle("disabled");
-  document.querySelector("nav").classList.toggle("collapsed");
-  navToggleBtn.closest(".nav-header").classList.toggle("collapsed");
-  dirDisplay.classList.toggle("collapsed");
+  nav.classList.add("collapsed");
+  dirDisplay.classList.add("collapsed");
+  filetreeContainer.classList.add("disabled");
+}
+
+export function expandNav() {
+  const nav = document.querySelector("nav");
+  const dirDisplay = document.querySelector(".directory-display");
+  const filetreeContainer = document.querySelector(".filetree");
+
+  nav.classList.remove("collapsed");
+  dirDisplay.classList.remove("collapsed");
+  filetreeContainer.classList.remove("disabled");
 }
 
 export function displayFileContent(path) {
@@ -167,9 +176,20 @@ export function displayFileContent(path) {
           const quizState = getQuizState();
           const fileState = quizState[path] || { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
           currentFilter = fileState.filter;
-          const filterButton = document.querySelector('.filter-button span');
-          const filterOption = document.querySelector(`.filter-popup li[data-filter="${currentFilter}"]`);
-          filterButton.textContent = filterOption.textContent;
+          
+          const filterButton = document.querySelector('.filter-button');
+          const filterButtonSpan = filterButton.querySelector('span');
+          const filterPopup = document.querySelector('.filter-popup');
+          const filterOptions = filterPopup.querySelectorAll('li');
+
+          const selectedOption = Array.from(filterOptions).find(option => option.dataset.filter === currentFilter);
+
+          filterOptions.forEach(option => option.classList.remove('selected'));
+
+          if (selectedOption) {
+            selectedOption.classList.add('selected');
+            filterButtonSpan.textContent = selectedOption.textContent;
+          }
 
           applyFilter();
 
@@ -323,9 +343,16 @@ function renderQuiz(container) {
   const prevButton = document.querySelector('.prev-btn');
   const nextButton = document.querySelector('.next-btn');
 
-  const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
-  prevButton.disabled = currentIndexInFiltered === 0;
-  nextButton.disabled = currentIndexInFiltered === filteredIndices.length - 1;
+  if (filteredIndices.length <= 1) {
+    prevButton.classList.add('disabled');
+    nextButton.classList.add('disabled');
+  } else {
+    prevButton.classList.remove('disabled');
+    nextButton.classList.remove('disabled');
+    const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
+    prevButton.disabled = currentIndexInFiltered === 0;
+    nextButton.disabled = currentIndexInFiltered === filteredIndices.length - 1;
+  }
 
   renderPagination();
 }

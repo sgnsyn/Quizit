@@ -16,11 +16,22 @@ svg {
   height: 1.5rem;
 }
 
+button {
+  transition:
+    background 0.1s ease-in-out,
+    color 0.1s ease-in-out;
+}
+
 .svg-button {
   background-color: transparent;
   border: none;
   display: grid;
   place-content: center;
+}
+
+button:not(.svg-button):hover {
+  background-color: var(--highlight);
+  color: var(--text);
 }
 
 nav {
@@ -31,9 +42,17 @@ nav {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border) var(--bg-dark);
+  z-index: 3;
   transition:
-    height 0.2s ease-in-out,
-    width 0.2s ease-in-out;
+    height 0.1s linear,
+    width 0.1s linear;
+}
+
+.nav-expand {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
 }
 
 .nav-header {
@@ -56,6 +75,7 @@ nav {
 .nav-header.collapsed {
   background-color: var(--bg);
   transition: background-color 0.2s ease-in-out;
+  height: 0rem;
 }
 
 .nav-header.collapsed:hover {
@@ -64,9 +84,8 @@ nav {
 
 nav.collapsed {
   border: none;
-  height: fit-content;
-  width: calc(6ch + 9rem);
-  overflow: hidden;
+  height: 0vh;
+  width: 0vw;
   background-color: transparent;
 }
 
@@ -76,9 +95,10 @@ nav.collapsed .resizer {
 
 .directory-display.collapsed {
   border: none;
-  height: 0;
+  height: 0rem;
   padding-top: 0;
   padding-bottom: 0;
+  height: 0rem;
 }
 
 main {
@@ -86,6 +106,11 @@ main {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: width 0.1s linear;
+}
+
+nav.collapsed+main {
+  width: 100vw;
 }
 
 .directory-display {
@@ -99,9 +124,7 @@ main {
   overflow: hidden;
   flex-shrink: 0;
   gap: 2rem;
-  transition:
-    height 0.2s ease-in-out,
-    padding 0.2s ease-in-out;
+  transition: height 0.1s ease-in-out;
 }
 
 .directory-display span {
@@ -448,6 +471,8 @@ button.three-dot-button {
 .page-numbers {
   display: flex;
   gap: 0.25rem;
+  flex-wrap: wrap;
+  flex-grow: 1;
 }
 
 .page-number {
@@ -478,7 +503,7 @@ button.three-dot-button {
 }
 
 .page-arrow:disabled {
-    cursor: default;
+  cursor: default;
 }
 
 .total-score {
