@@ -55,6 +55,12 @@ nav {
   z-index: 2;
 }
 
+.settings-btn {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
+
 .nav-header {
   display: flex;
   align-items: center;
@@ -109,7 +115,7 @@ main {
   transition: width 0.1s linear;
 }
 
-nav.collapsed+main {
+nav.collapsed + main {
   width: 100vw;
 }
 
@@ -125,6 +131,7 @@ nav.collapsed+main {
   flex-shrink: 0;
   gap: 2rem;
   transition: height 0.1s ease-in-out;
+  margin-bottom: 1rem;
 }
 
 .directory-display span {
@@ -166,6 +173,10 @@ nav.collapsed+main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-width: 80ch;
+  margin-inline: auto;
+  justify-content: center;
+  align-items: center;
 }
 
 .json-instruction {
@@ -321,7 +332,9 @@ button.three-dot-button {
   left: 0;
   width: 100vw;
   min-height: 100vh;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
   z-index: 99;
 }
 
@@ -382,8 +395,15 @@ button.three-dot-button {
 
 .button-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.25rem;
+}
+
+.action-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
 }
 
 .button-container button {
@@ -430,12 +450,8 @@ button.three-dot-button {
 
 .question-container p {
   width: min(65ch, 80vw);
+  font-size: 1.25rem;
   margin-bottom: 1rem;
-}
-
-.answers-container {
-  display: flex;
-  flex-direction: column;
 }
 
 .answer-wrapper {
@@ -457,7 +473,7 @@ button.three-dot-button {
   gap: 0.5rem;
   border: 1px solid var(--border);
   padding: 0.5rem 1rem;
-  border-radius: 100vw;
+  border-radius: 0.5rem;
   background-color: var(--bg);
   color: var(--text);
 }
@@ -488,6 +504,11 @@ button.three-dot-button {
 }
 
 .page-number.active {
+  background-color: var(--info);
+  color: var(--bg-light);
+}
+
+.page-number.active:hover {
   background-color: var(--info);
   color: var(--bg-light);
 }
@@ -541,7 +562,7 @@ button.three-dot-button {
 .next-btn,
 .reset-btn {
   padding: 0.75em 2.25em;
-  border-radius: 100vw;
+  border-radius: 0.5rem;
   display: grid;
   place-content: center;
   background-color: var(--bg);
@@ -562,26 +583,6 @@ button.three-dot-button {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
-}
-
-.answer-wrapper.correct-answer {
-  background-color: var(--success);
-  outline: 1px solid var(--success);
-  outline-offset: 2px;
-  border-radius: 0.25rem;
-}
-
-.answer-wrapper.wrong-answer {
-  background-color: var(--danger);
-  outline: 1px solid var(--danger);
-  outline-offset: 2px;
-  border-radius: 0.25rem;
-}
-
-.answer-wrapper.correct-option {
-  outline: 1px solid var(--success);
-  outline-offset: 2px;
-  border-radius: 0.25rem;
 }
 
 .explanation-text {
@@ -620,4 +621,49 @@ button.three-dot-button {
 .filter-popup li.selected {
   background-color: var(--info);
   color: var(--bg-light);
+}
+
+input[type="radio"] {
+  --hw: 1rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: var(--hw);
+  height: var(--hw);
+  border: 1px solid var(--bg-dark);
+  outline: 0.1rem solid var(--text);
+  background: var(--bg-dark);
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.correct-answer input[type="radio"]:checked {
+  background-color: var(--success);
+  outline-color: var(--success);
+  outline: 0.2rem solid var(--success);
+}
+
+.wrong-answer input[type="radio"]:checked {
+  background-color: var(--warning);
+  outline: 0.2rem solid var(--warning);
+}
+
+.was-correct input[type="radio"] {
+  outline: 0.2rem solid var(--success);
+}
+
+.answer-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.answer-wrapper label {
+  font-size: 1rem;
+}
+ {
+  font-size: 1rem;
 }

@@ -289,9 +289,6 @@ function renderQuiz(container) {
           answerWrapper.classList.add("wrong-answer");
         }
       }
-      if (question.correct_option === answerIndex && !questionState.is_correct) {
-        answerWrapper.classList.add('correct-option');
-      }
     } else {
       radio.addEventListener("change", () => {
         const selectedAnswer = parseInt(radio.value);
@@ -299,18 +296,16 @@ function renderQuiz(container) {
         const isCorrect = selectedAnswer === correctAnswer;
 
         const allAnswerWrappers = answersContainer.querySelectorAll('.answer-wrapper');
-        allAnswerWrappers.forEach((wrapper, index) => {
-          const radioInput = wrapper.querySelector('input[type="radio"]');
-          radioInput.disabled = true;
-          if (index === correctAnswer) {
-            wrapper.classList.add('correct-option');
-          }
+        allAnswerWrappers.forEach((wrapper) => {
+          wrapper.querySelector('input[type="radio"]').disabled = true;
         });
 
         if (isCorrect) {
           answerWrapper.classList.add("correct-answer");
         } else {
           answerWrapper.classList.add("wrong-answer");
+          const correctAnswerWrapper = allAnswerWrappers[correctAnswer];
+          correctAnswerWrapper.classList.add("was-correct");
         }
 
         explanationText.textContent = question.explanation;
@@ -331,6 +326,11 @@ function renderQuiz(container) {
       });
     }
   });
+
+  if (questionState && !questionState.is_correct) {
+    const correctAnswerWrapper = answersContainer.querySelectorAll('.answer-wrapper')[question.correct_option];
+    correctAnswerWrapper.classList.add('was-correct');
+  }
 
   if (questionState) {
     explanationText.textContent = question.explanation;
