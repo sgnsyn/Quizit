@@ -21,51 +21,67 @@ import { validateQuizJSON } from "./jsonParse.js";
 let currentQuizData = null;
 let currentQuestionIndex = 0;
 let currentPageWindow = 0;
-let currentFilter = 'all';
+let currentFilter = "all";
 let filteredIndices = [];
 
 const filterMap = {
-    'all': 0,
-    'correct': 1,
-    'incorrect': 2,
-    'unattempted': 3
+  all: 0,
+  correct: 1,
+  incorrect: 2,
+  unattempted: 3,
 };
 
 function applyFilter() {
-    const quizState = getQuizState();
-    const path = getSelectedItem();
-    const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
+  const quizState = getQuizState();
+  const path = getSelectedItem();
+  const fileQuizState =
+    quizState[path] && quizState[path].questions
+      ? quizState[path].questions
+      : [];
 
-    if (currentFilter === 'all') {
-        filteredIndices = [...Array(currentQuizData.questions.length).keys()];
-    } else if (currentFilter === 'correct') {
-        filteredIndices = fileQuizState.filter(q => q.is_correct).map(q => q.question_id);
-    } else if (currentFilter === 'incorrect') {
-        filteredIndices = fileQuizState.filter(q => !q.is_correct).map(q => q.question_id);
-    } else if (currentFilter === 'unattempted') {
-        const answeredIndices = fileQuizState.map(q => q.question_id);
-        filteredIndices = [...Array(currentQuizData.questions.length).keys()].filter(i => !answeredIndices.includes(i));
-    }
+  if (currentFilter === "all") {
+    filteredIndices = [...Array(currentQuizData.questions.length).keys()];
+  } else if (currentFilter === "correct") {
+    filteredIndices = fileQuizState
+      .filter((q) => q.is_correct)
+      .map((q) => q.question_id);
+  } else if (currentFilter === "incorrect") {
+    filteredIndices = fileQuizState
+      .filter((q) => !q.is_correct)
+      .map((q) => q.question_id);
+  } else if (currentFilter === "unattempted") {
+    const answeredIndices = fileQuizState.map((q) => q.question_id);
+    filteredIndices = [
+      ...Array(currentQuizData.questions.length).keys(),
+    ].filter((i) => !answeredIndices.includes(i));
+  }
 }
 
 function updateScore() {
-    const quizState = getQuizState();
-    const path = getSelectedItem();
-    const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
-    const correctAnswers = fileQuizState.filter(q => q.is_correct).length;
-    const totalQuestions = currentQuizData.questions.length;
+  const quizState = getQuizState();
+  const path = getSelectedItem();
+  const fileQuizState =
+    quizState[path] && quizState[path].questions
+      ? quizState[path].questions
+      : [];
+  const correctAnswers = fileQuizState.filter((q) => q.is_correct).length;
+  const totalQuestions = currentQuizData.questions.length;
 
-    const scoreSpan = document.querySelector('.total-score span:last-child');
-    scoreSpan.textContent = `${correctAnswers}/${totalQuestions}`;
+  const scoreSpan = document.querySelector(".total-score span:last-child");
+  scoreSpan.textContent = `${correctAnswers}/${totalQuestions}`;
 
-    if (!quizState[path]) {
-        quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
-    }
-    quizState[path].score = {
-        correct: correctAnswers,
-        total: totalQuestions
+  if (!quizState[path]) {
+    quizState[path] = {
+      lastQuestionIndex: [0, 0, 0, 0],
+      questions: [],
+      filter: "all",
     };
-    saveQuizState(quizState);
+  }
+  quizState[path].score = {
+    correct: correctAnswers,
+    total: totalQuestions,
+  };
+  saveQuizState(quizState);
 }
 
 const uiFunctions = {
@@ -77,21 +93,17 @@ const uiFunctions = {
 export function collapseNav() {
   const nav = document.querySelector("nav");
   const dirDisplay = document.querySelector(".directory-display");
-  const filetreeContainer = document.querySelector(".filetree");
 
-  nav.classList.add("collapsed");
-  dirDisplay.classList.add("collapsed");
-  filetreeContainer.classList.add("disabled");
+  nav.classList.add("disabled");
+  dirDisplay.classList.add("disabled");
 }
 
 export function expandNav() {
   const nav = document.querySelector("nav");
   const dirDisplay = document.querySelector(".directory-display");
-  const filetreeContainer = document.querySelector(".filetree");
 
-  nav.classList.remove("collapsed");
-  dirDisplay.classList.remove("collapsed");
-  filetreeContainer.classList.remove("disabled");
+  nav.classList.remove("disabled");
+  dirDisplay.classList.remove("disabled");
 }
 
 export function displayFileContent(path) {
@@ -154,15 +166,18 @@ export function displayFileContent(path) {
         }
       });
 
-      const copyButton = noFileContent.querySelector('.copy-button');
-      copyButton.addEventListener('click', () => {
-        const codeBlock = noFileContent.querySelector('.code-block');
+      const copyButton = noFileContent.querySelector(".copy-button");
+      copyButton.addEventListener("click", () => {
+        const codeBlock = noFileContent.querySelector(".code-block");
         const textToCopy = codeBlock.innerText;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          // Optional: Show a "Copied!" message
-        }, (err) => {
-          console.error('Could not copy text: ', err);
-        });
+        navigator.clipboard.writeText(textToCopy).then(
+          () => {
+            // Optional: Show a "Copied!" message
+          },
+          (err) => {
+            console.error("Could not copy text: ", err);
+          },
+        );
       });
     } else {
       try {
@@ -171,42 +186,58 @@ export function displayFileContent(path) {
           noFileSelected.classList.add("disabled");
           noFileContent.classList.add("disabled");
           fileView.classList.remove("disabled");
-          
+
           currentQuizData = quizData;
           const quizState = getQuizState();
-          const fileState = quizState[path] || { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+          const fileState = quizState[path] || {
+            lastQuestionIndex: [0, 0, 0, 0],
+            questions: [],
+            filter: "all",
+          };
           currentFilter = fileState.filter;
-          
-          const filterButton = document.querySelector('.filter-button');
-          const filterButtonSpan = filterButton.querySelector('span');
-          const filterPopup = document.querySelector('.filter-popup');
-          const filterOptions = filterPopup.querySelectorAll('li');
 
-          const selectedOption = Array.from(filterOptions).find(option => option.dataset.filter === currentFilter);
+          const filterButton = document.querySelector(".filter-button");
+          const filterButtonSpan = filterButton.querySelector("span");
+          const filterPopup = document.querySelector(".filter-popup");
+          const filterOptions = filterPopup.querySelectorAll("li");
 
-          filterOptions.forEach(option => option.classList.remove('selected'));
+          const selectedOption = Array.from(filterOptions).find(
+            (option) => option.dataset.filter === currentFilter,
+          );
+
+          filterOptions.forEach((option) =>
+            option.classList.remove("selected"),
+          );
 
           if (selectedOption) {
-            selectedOption.classList.add('selected');
+            selectedOption.classList.add("selected");
             filterButtonSpan.textContent = selectedOption.textContent;
           }
 
           applyFilter();
 
           if (filteredIndices.length > 0) {
-            if (!filteredIndices.includes(fileState.lastQuestionIndex[filterMap[currentFilter]])) {
+            if (
+              !filteredIndices.includes(
+                fileState.lastQuestionIndex[filterMap[currentFilter]],
+              )
+            ) {
               currentQuestionIndex = filteredIndices[0];
             } else {
-              currentQuestionIndex = fileState.lastQuestionIndex[filterMap[currentFilter]];
+              currentQuestionIndex =
+                fileState.lastQuestionIndex[filterMap[currentFilter]];
             }
-            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
+            currentPageWindow = Math.floor(
+              filteredIndices.indexOf(currentQuestionIndex) / 10,
+            );
             if (currentPageWindow < 0) {
-                currentPageWindow = 0;
+              currentPageWindow = 0;
             }
             renderQuiz(questionDisplay);
             updateScore();
           } else {
-            questionDisplay.innerHTML = "<p>No questions match the current filter.</p>";
+            questionDisplay.innerHTML =
+              "<p>No questions match the current filter.</p>";
             renderPagination();
           }
 
@@ -240,9 +271,9 @@ function renderQuiz(container) {
     renderPagination();
     return;
   }
-  const explanationText = document.querySelector('.explanation-text');
-  explanationText.classList.add('disabled');
-  explanationText.textContent = '';
+  const explanationText = document.querySelector(".explanation-text");
+  explanationText.classList.add("disabled");
+  explanationText.textContent = "";
 
   const question = currentQuizData.questions[currentQuestionIndex];
 
@@ -258,8 +289,13 @@ function renderQuiz(container) {
 
   const quizState = getQuizState();
   const path = getSelectedItem();
-  const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
-  const questionState = fileQuizState.find(qs => qs.question_id === currentQuestionIndex);
+  const fileQuizState =
+    quizState[path] && quizState[path].questions
+      ? quizState[path].questions
+      : [];
+  const questionState = fileQuizState.find(
+    (qs) => qs.question_id === currentQuestionIndex,
+  );
 
   question.answers.forEach((answer, answerIndex) => {
     const answerWrapper = document.createElement("div");
@@ -295,7 +331,8 @@ function renderQuiz(container) {
         const correctAnswer = question.correct_option;
         const isCorrect = selectedAnswer === correctAnswer;
 
-        const allAnswerWrappers = answersContainer.querySelectorAll('.answer-wrapper');
+        const allAnswerWrappers =
+          answersContainer.querySelectorAll(".answer-wrapper");
         allAnswerWrappers.forEach((wrapper) => {
           wrapper.querySelector('input[type="radio"]').disabled = true;
         });
@@ -309,12 +346,16 @@ function renderQuiz(container) {
         }
 
         explanationText.textContent = question.explanation;
-        explanationText.classList.remove('disabled');
+        explanationText.classList.remove("disabled");
 
         const quizState = getQuizState();
         const path = getSelectedItem();
         if (!quizState[path]) {
-          quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+          quizState[path] = {
+            lastQuestionIndex: [0, 0, 0, 0],
+            questions: [],
+            filter: "all",
+          };
         }
         quizState[path].questions.push({
           question_id: currentQuestionIndex,
@@ -328,28 +369,32 @@ function renderQuiz(container) {
   });
 
   if (questionState && !questionState.is_correct) {
-    const correctAnswerWrapper = answersContainer.querySelectorAll('.answer-wrapper')[question.correct_option];
-    correctAnswerWrapper.classList.add('was-correct');
+    const correctAnswerWrapper =
+      answersContainer.querySelectorAll(".answer-wrapper")[
+      question.correct_option
+      ];
+    correctAnswerWrapper.classList.add("was-correct");
   }
 
   if (questionState) {
     explanationText.textContent = question.explanation;
-    explanationText.classList.remove('disabled');
+    explanationText.classList.remove("disabled");
   }
 
   questionContainer.appendChild(answersContainer);
   container.appendChild(questionContainer);
 
-  const prevButton = document.querySelector('.prev-btn');
-  const nextButton = document.querySelector('.next-btn');
+  const prevButton = document.querySelector(".prev-btn");
+  const nextButton = document.querySelector(".next-btn");
 
   if (filteredIndices.length <= 1) {
-    prevButton.classList.add('disabled');
-    nextButton.classList.add('disabled');
+    prevButton.classList.add("disabled");
+    nextButton.classList.add("disabled");
   } else {
-    prevButton.classList.remove('disabled');
-    nextButton.classList.remove('disabled');
-    const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
+    prevButton.classList.remove("disabled");
+    nextButton.classList.remove("disabled");
+    const currentIndexInFiltered =
+      filteredIndices.indexOf(currentQuestionIndex);
     prevButton.disabled = currentIndexInFiltered === 0;
     nextButton.disabled = currentIndexInFiltered === filteredIndices.length - 1;
   }
@@ -358,188 +403,229 @@ function renderQuiz(container) {
 }
 
 function renderPagination() {
-  const pageNumbersContainer = document.querySelector('.page-numbers');
-  pageNumbersContainer.innerHTML = '';
+  const pageNumbersContainer = document.querySelector(".page-numbers");
+  pageNumbersContainer.innerHTML = "";
 
   if (!currentQuizData) return;
 
   const totalQuestions = filteredIndices.length;
   const quizState = getQuizState();
   const path = getSelectedItem();
-  const fileQuizState = (quizState[path] && quizState[path].questions) ? quizState[path].questions : [];
+  const fileQuizState =
+    quizState[path] && quizState[path].questions
+      ? quizState[path].questions
+      : [];
 
   const startQuestion = currentPageWindow * 10;
   const endQuestion = Math.min(startQuestion + 10, totalQuestions);
 
   for (let i = startQuestion; i < endQuestion; i++) {
     const questionIndex = filteredIndices[i];
-    const pageNumberButton = document.createElement('button');
-    pageNumberButton.className = 'page-number';
+    const pageNumberButton = document.createElement("button");
+    pageNumberButton.className = "page-number";
     pageNumberButton.textContent = questionIndex + 1;
 
-    const questionState = fileQuizState.find(qs => qs.question_id === questionIndex);
+    const questionState = fileQuizState.find(
+      (qs) => qs.question_id === questionIndex,
+    );
 
     if (currentQuestionIndex === questionIndex) {
-      pageNumberButton.classList.add('active');
+      pageNumberButton.classList.add("active");
     } else if (questionState) {
       if (questionState.is_correct) {
-        pageNumberButton.classList.add('correct-page');
+        pageNumberButton.classList.add("correct-page");
       } else {
-        pageNumberButton.classList.add('incorrect-page');
+        pageNumberButton.classList.add("incorrect-page");
       }
     }
 
-    pageNumberButton.addEventListener('click', () => {
+    pageNumberButton.addEventListener("click", () => {
       currentQuestionIndex = questionIndex;
       const quizState = getQuizState();
       const path = getSelectedItem();
       if (!quizState[path]) {
-        quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
+        quizState[path] = {
+          lastQuestionIndex: [0, 0, 0, 0],
+          questions: [],
+          filter: "all",
+        };
       }
-      quizState[path].lastQuestionIndex[filterMap[currentFilter]] = currentQuestionIndex;
+      quizState[path].lastQuestionIndex[filterMap[currentFilter]] =
+        currentQuestionIndex;
       saveQuizState(quizState);
-      renderQuiz(document.querySelector('.question-display'));
+      renderQuiz(document.querySelector(".question-display"));
     });
 
     pageNumbersContainer.appendChild(pageNumberButton);
   }
 
-  const leftArrow = document.querySelector('.pagination-display .page-arrow:first-child');
-  const rightArrow = document.querySelector('.pagination-display .page-arrow:last-child');
+  const leftArrow = document.querySelector(
+    ".pagination-display .page-arrow:first-child",
+  );
+  const rightArrow = document.querySelector(
+    ".pagination-display .page-arrow:last-child",
+  );
 
   const totalPages = Math.ceil(totalQuestions / 10);
 
   if (totalPages <= 1) {
-    leftArrow.classList.add('disabled');
-    rightArrow.classList.add('disabled');
+    leftArrow.classList.add("disabled");
+    rightArrow.classList.add("disabled");
   } else {
-    leftArrow.classList.remove('disabled');
-    rightArrow.classList.remove('disabled');
+    leftArrow.classList.remove("disabled");
+    rightArrow.classList.remove("disabled");
     leftArrow.disabled = currentPageWindow === 0;
     rightArrow.disabled = endQuestion >= totalQuestions;
   }
 }
 
 export function initializeQuizView() {
-    const prevButton = document.querySelector('.prev-btn');
-    const nextButton = document.querySelector('.next-btn');
-    const questionDisplay = document.querySelector('.question-display');
-    const filterButton = document.querySelector('.filter-button');
-    const filterPopup = document.querySelector('.filter-popup');
-    const backdrop = document.querySelector('.popup-backdrop');
+  const prevButton = document.querySelector(".prev-btn");
+  const nextButton = document.querySelector(".next-btn");
+  const questionDisplay = document.querySelector(".question-display");
+  const filterButton = document.querySelector(".filter-button");
+  const filterPopup = document.querySelector(".filter-popup");
+  const backdrop = document.querySelector(".popup-backdrop");
 
-    filterButton.addEventListener('click', () => {
-        const rect = filterButton.getBoundingClientRect();
-        filterPopup.style.top = `${rect.bottom}px`;
-        filterPopup.style.left = `${rect.left}px`;
-        filterPopup.classList.remove('disabled');
-        backdrop.classList.remove('disabled');
-    });
+  filterButton.addEventListener("click", () => {
+    const rect = filterButton.getBoundingClientRect();
+    filterPopup.style.top = `${rect.bottom}px`;
+    filterPopup.style.left = `${rect.left}px`;
+    filterPopup.classList.remove("disabled");
+    backdrop.classList.remove("disabled");
+  });
 
-    backdrop.addEventListener('click', () => {
-        filterPopup.classList.add('disabled');
-        backdrop.classList.add('disabled');
-    });
+  backdrop.addEventListener("click", () => {
+    filterPopup.classList.add("disabled");
+    backdrop.classList.add("disabled");
+  });
 
-    filterPopup.addEventListener('click', (e) => {
-        if (e.target.tagName === 'LI') {
-            const selectedLi = filterPopup.querySelector('li.selected');
-            if (selectedLi) {
-                selectedLi.classList.remove('selected');
-            }
-            e.target.classList.add('selected');
+  filterPopup.addEventListener("click", (e) => {
+    if (e.target.tagName === "LI") {
+      const selectedLi = filterPopup.querySelector("li.selected");
+      if (selectedLi) {
+        selectedLi.classList.remove("selected");
+      }
+      e.target.classList.add("selected");
 
-            currentFilter = e.target.dataset.filter;
-            filterButton.querySelector('span').textContent = e.target.textContent;
-            
-            const quizState = getQuizState();
-            const path = getSelectedItem();
-            if (!quizState[path]) {
-                quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
-            }
-            quizState[path].filter = currentFilter;
-            saveQuizState(quizState);
+      currentFilter = e.target.dataset.filter;
+      filterButton.querySelector("span").textContent = e.target.textContent;
 
-            applyFilter();
-            const lastIndex = quizState[path].lastQuestionIndex[filterMap[currentFilter]];
-            if (filteredIndices.includes(lastIndex)) {
-                currentQuestionIndex = lastIndex;
-            } else {
-                currentQuestionIndex = filteredIndices[0] || 0;
-            }
+      const quizState = getQuizState();
+      const path = getSelectedItem();
+      if (!quizState[path]) {
+        quizState[path] = {
+          lastQuestionIndex: [0, 0, 0, 0],
+          questions: [],
+          filter: "all",
+        };
+      }
+      quizState[path].filter = currentFilter;
+      saveQuizState(quizState);
 
-            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
-            if (currentPageWindow < 0) {
-                currentPageWindow = 0;
-            }
-            renderQuiz(document.querySelector('.question-display'));
-            filterPopup.classList.add('disabled');
-            backdrop.classList.add('disabled');
-        }
-    });
+      applyFilter();
+      const lastIndex =
+        quizState[path].lastQuestionIndex[filterMap[currentFilter]];
+      if (filteredIndices.includes(lastIndex)) {
+        currentQuestionIndex = lastIndex;
+      } else {
+        currentQuestionIndex = filteredIndices[0] || 0;
+      }
 
-    prevButton.addEventListener('click', () => {
-        const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
-        if (currentIndexInFiltered > 0) {
-            currentQuestionIndex = filteredIndices[currentIndexInFiltered - 1];
-            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
-            const quizState = getQuizState();
-            const path = getSelectedItem();
-            if (!quizState[path]) {
-                quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
-            }
-            quizState[path].lastQuestionIndex[filterMap[currentFilter]] = currentQuestionIndex;
-            saveQuizState(quizState);
-            renderQuiz(questionDisplay);
-        }
-    });
+      currentPageWindow = Math.floor(
+        filteredIndices.indexOf(currentQuestionIndex) / 10,
+      );
+      if (currentPageWindow < 0) {
+        currentPageWindow = 0;
+      }
+      renderQuiz(document.querySelector(".question-display"));
+      filterPopup.classList.add("disabled");
+      backdrop.classList.add("disabled");
+    }
+  });
 
-    nextButton.addEventListener('click', () => {
-        const currentIndexInFiltered = filteredIndices.indexOf(currentQuestionIndex);
-        if (currentIndexInFiltered < filteredIndices.length - 1) {
-            currentQuestionIndex = filteredIndices[currentIndexInFiltered + 1];
-            currentPageWindow = Math.floor(filteredIndices.indexOf(currentQuestionIndex) / 10);
-            const quizState = getQuizState();
-            const path = getSelectedItem();
-            if (!quizState[path]) {
-                quizState[path] = { lastQuestionIndex: [0, 0, 0, 0], questions: [], filter: 'all' };
-            }
-            quizState[path].lastQuestionIndex[filterMap[currentFilter]] = currentQuestionIndex;
-            saveQuizState(quizState);
-            renderQuiz(questionDisplay);
-        }
-    });
+  prevButton.addEventListener("click", () => {
+    const currentIndexInFiltered =
+      filteredIndices.indexOf(currentQuestionIndex);
+    if (currentIndexInFiltered > 0) {
+      currentQuestionIndex = filteredIndices[currentIndexInFiltered - 1];
+      currentPageWindow = Math.floor(
+        filteredIndices.indexOf(currentQuestionIndex) / 10,
+      );
+      const quizState = getQuizState();
+      const path = getSelectedItem();
+      if (!quizState[path]) {
+        quizState[path] = {
+          lastQuestionIndex: [0, 0, 0, 0],
+          questions: [],
+          filter: "all",
+        };
+      }
+      quizState[path].lastQuestionIndex[filterMap[currentFilter]] =
+        currentQuestionIndex;
+      saveQuizState(quizState);
+      renderQuiz(questionDisplay);
+    }
+  });
 
-    const leftArrow = document.querySelector('.pagination-display .page-arrow:first-child');
-    const rightArrow = document.querySelector('.pagination-display .page-arrow:last-child');
+  nextButton.addEventListener("click", () => {
+    const currentIndexInFiltered =
+      filteredIndices.indexOf(currentQuestionIndex);
+    if (currentIndexInFiltered < filteredIndices.length - 1) {
+      currentQuestionIndex = filteredIndices[currentIndexInFiltered + 1];
+      currentPageWindow = Math.floor(
+        filteredIndices.indexOf(currentQuestionIndex) / 10,
+      );
+      const quizState = getQuizState();
+      const path = getSelectedItem();
+      if (!quizState[path]) {
+        quizState[path] = {
+          lastQuestionIndex: [0, 0, 0, 0],
+          questions: [],
+          filter: "all",
+        };
+      }
+      quizState[path].lastQuestionIndex[filterMap[currentFilter]] =
+        currentQuestionIndex;
+      saveQuizState(quizState);
+      renderQuiz(questionDisplay);
+    }
+  });
 
-    leftArrow.addEventListener('click', () => {
-        if (currentPageWindow > 0) {
-            currentPageWindow--;
-            renderPagination();
-        }
-    });
+  const leftArrow = document.querySelector(
+    ".pagination-display .page-arrow:first-child",
+  );
+  const rightArrow = document.querySelector(
+    ".pagination-display .page-arrow:last-child",
+  );
 
-    rightArrow.addEventListener('click', () => {
-        if ((currentPageWindow + 1) * 10 < filteredIndices.length) {
-            currentPageWindow++;
-            renderPagination();
-        }
-    });
+  leftArrow.addEventListener("click", () => {
+    if (currentPageWindow > 0) {
+      currentPageWindow--;
+      renderPagination();
+    }
+  });
 
-    const resetButton = document.querySelector('.reset-btn');
+  rightArrow.addEventListener("click", () => {
+    if ((currentPageWindow + 1) * 10 < filteredIndices.length) {
+      currentPageWindow++;
+      renderPagination();
+    }
+  });
 
-    resetButton.addEventListener('click', () => {
-        const path = getSelectedItem();
-        if (path) {
-            const quizState = getQuizState();
-            if (quizState[path]) {
-                delete quizState[path];
-                saveQuizState(quizState);
-                displayFileContent(path);
-            }
-        }
-    });
+  const resetButton = document.querySelector(".reset-btn");
+
+  resetButton.addEventListener("click", () => {
+    const path = getSelectedItem();
+    if (path) {
+      const quizState = getQuizState();
+      if (quizState[path]) {
+        delete quizState[path];
+        saveQuizState(quizState);
+        displayFileContent(path);
+      }
+    }
+  });
 }
 
 export function createFileTree(data, parent, path = "") {
@@ -569,7 +655,7 @@ export function createFileTree(data, parent, path = "") {
       expandButton.className = "svg-button expand-collapse";
       const expandSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "svg"
+        "svg",
       );
       expandSvg.classList.add("exp-icon");
       if (openFolders.includes(currentPath)) {
@@ -577,7 +663,7 @@ export function createFileTree(data, parent, path = "") {
       }
       const expandUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "use"
+        "use",
       );
       expandUse.setAttribute("href", "#right-arrow");
       expandSvg.appendChild(expandUse);
@@ -585,12 +671,12 @@ export function createFileTree(data, parent, path = "") {
 
       const folderIcon = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "svg"
+        "svg",
       );
       folderIcon.classList.add("file-folder-icon");
       const folderUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "use"
+        "use",
       );
       if (openFolders.includes(currentPath)) {
         folderIcon.classList.add("expanded");
@@ -616,11 +702,11 @@ export function createFileTree(data, parent, path = "") {
       threeDotButton.className = "svg-button three-dot-button";
       const threeDotSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "svg"
+        "svg",
       );
       const threeDotUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "use"
+        "use",
       );
       threeDotUse.setAttribute("href", "#three-dot");
       threeDotSvg.appendChild(threeDotUse);
@@ -651,7 +737,7 @@ export function createFileTree(data, parent, path = "") {
 
       const fileIcon = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "svg"
+        "svg",
       );
       fileIcon.classList.add("file-folder-icon");
       if (currentPath === getSelectedItem()) {
@@ -660,7 +746,7 @@ export function createFileTree(data, parent, path = "") {
       }
       const fileUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "use"
+        "use",
       );
       fileUse.setAttribute("href", "#file");
       fileIcon.appendChild(fileUse);
@@ -676,11 +762,11 @@ export function createFileTree(data, parent, path = "") {
       threeDotButton.className = "svg-button three-dot-button";
       const threeDotSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "svg"
+        "svg",
       );
       const threeDotUse = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "use"
+        "use",
       );
       threeDotUse.setAttribute("href", "#three-dot");
       threeDotSvg.appendChild(threeDotUse);
@@ -738,14 +824,14 @@ export function createPopupMenu(target, isFolder) {
     const createFile = document.createElement("li");
     createFile.textContent = "Create File";
     createFile.addEventListener("click", () =>
-      showCreationPopup("file", highlightedItem.dataset.path, rect)
+      showCreationPopup("file", highlightedItem.dataset.path, rect),
     );
     ul.appendChild(createFile);
 
     const createFolder = document.createElement("li");
     createFolder.textContent = "Create Folder";
     createFolder.addEventListener("click", () =>
-      showCreationPopup("folder", highlightedItem.dataset.path, rect)
+      showCreationPopup("folder", highlightedItem.dataset.path, rect),
     );
     ul.appendChild(createFolder);
   }
@@ -754,7 +840,7 @@ export function createPopupMenu(target, isFolder) {
     const renameItemLi = document.createElement("li");
     renameItemLi.textContent = "Rename";
     renameItemLi.addEventListener("click", () =>
-      showRenamePopup(highlightedItem, rect)
+      showRenamePopup(highlightedItem, rect),
     );
     ul.appendChild(renameItemLi);
 
@@ -762,7 +848,7 @@ export function createPopupMenu(target, isFolder) {
     deleteItemLi.textContent = "Delete";
     deleteItemLi.className = "delete-item";
     deleteItemLi.addEventListener("click", () =>
-      showDeleteConfirmationPopup(highlightedItem.dataset.path, isFolder)
+      showDeleteConfirmationPopup(highlightedItem.dataset.path, isFolder),
     );
     ul.appendChild(deleteItemLi);
   }
@@ -812,7 +898,7 @@ export function showCreationPopup(type, parentPath, rect) {
       errorContainer,
       getDirectory(),
       getContent(),
-      uiFunctions
+      uiFunctions,
     );
   });
   buttonContainer.appendChild(createButton);
@@ -832,7 +918,7 @@ export function showCreationPopup(type, parentPath, rect) {
         errorContainer,
         getDirectory(),
         getContent(),
-        uiFunctions
+        uiFunctions,
       );
     }
   });
@@ -854,9 +940,8 @@ export function showDeleteConfirmationPopup(path, isFolder) {
   confirmationPopup.className = "creation-popup";
 
   const warningMessage = document.createElement("p");
-  warningMessage.textContent = `Are you sure you want to delete this ${
-    isFolder ? "folder" : "file"
-  }?`;
+  warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"
+    }?`;
   warningMessage.style.color = "var(--warning)";
   confirmationPopup.appendChild(warningMessage);
 
@@ -879,7 +964,7 @@ export function showDeleteConfirmationPopup(path, isFolder) {
       isFolder,
       getDirectory(),
       getContent(),
-      uiFunctions
+      uiFunctions,
     );
     document.body.removeChild(confirmationPopup);
     closePopupMenu();
@@ -903,6 +988,8 @@ export function showDeleteConfirmationPopup(path, isFolder) {
     confirmationPopup.style.left = `${rect.left}px`;
   }
 }
+
+
 
 export function showRenamePopup(itemToRename, rect) {
   closePopupMenu(true, true);
@@ -942,7 +1029,7 @@ export function showRenamePopup(itemToRename, rect) {
       errorContainer,
       getDirectory(),
       getContent(),
-      uiFunctions
+      uiFunctions,
     );
   });
   buttonContainer.appendChild(renameButton);
@@ -961,7 +1048,7 @@ export function showRenamePopup(itemToRename, rect) {
         errorContainer,
         getDirectory(),
         getContent(),
-        uiFunctions
+        uiFunctions,
       );
     }
   });

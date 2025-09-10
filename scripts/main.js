@@ -21,6 +21,7 @@ import {
   expandNav,
 } from "./ui.js";
 import { expandToPath } from "./fileSystem.js";
+import { initTheme } from "./theme.js";
 
 let directory = getDirectory();
 if (!directory) {
@@ -103,6 +104,7 @@ resizer.addEventListener("mousedown", (e) => {
 });
 
 initializeQuizView();
+initTheme();
 loadState();
 renderFileTree();
 displayFileContent(getSelectedItem());

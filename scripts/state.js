@@ -115,8 +115,6 @@ export function loadState() {
   saveState();
 }
 
-
-
 export function getQuizState() {
   const quizState = localStorage.getItem("quizState");
   if (quizState) {
@@ -130,5 +128,3 @@ export function getQuizState() {
 export function saveQuizState(quizState) {
   localStorage.setItem("quizState", JSON.stringify(quizState));
 }
-
-
