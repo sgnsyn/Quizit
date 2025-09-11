@@ -93,18 +93,38 @@ const resize = (e) => {
   const newNavWidth = e.clientX;
   nav.style.width = `${newNavWidth}px`;
   mainElement.style.width = `calc(100vw - ${newNavWidth}px)`;
+  localStorage.setItem('navWidth', `${newNavWidth}px`);
 };
 
 resizer.addEventListener("mousedown", (e) => {
   e.preventDefault();
-  document.addEventListener("mousemove", resize);
-  document.addEventListener("mouseup", () => {
-    document.removeEventListener("mousemove", resize);
-  });
+  resizer.style.zIndex = "11";
+
+  const onMouseMove = (e) => {
+    resize(e);
+  };
+
+  const onMouseUp = () => {
+    resizer.style.zIndex = "2";
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
 });
+
+function loadNavWidth() {
+  const navWidth = localStorage.getItem('navWidth');
+  if (navWidth) {
+    nav.style.width = navWidth;
+    mainElement.style.width = `calc(100vw - ${navWidth})`;
+  }
+}
 
 initializeQuizView();
 initTheme();
 loadState();
+loadNavWidth();
 renderFileTree();
 displayFileContent(getSelectedItem());

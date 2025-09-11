@@ -3,57 +3,73 @@
   src: url("../../assets/fonts/Inter/inter.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Cou";
+  src: url("../../assets/fonts/Courier/CourierPrime-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Atkin";
+  src: url("../../assets/fonts/Atkinson/AtkinsonHyperlegibleMono-VariableFont_wght.ttf") format("truetype");
+}
+
 :root {
-  --shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
-  --bg-dark: hsl(319 100% 3%);
-  --bg: hsl(315 100% 5%);
-  --bg-light: hsl(314 100% 8%);
-  --text: hsl(321 100% 99%);
-  --text-muted: hsl(320 50% 73%);
-  --highlight: hsl(314 72% 38%);
-  --border: hsl(311 100% 21%);
-  --border-muted: hsl(311 100% 13%);
-  --primary: hsl(317 100% 73%);
-  --secondary: hsl(163 100% 28%);
-  --danger: hsl(7 100% 66%);
-  --warning: hsl(53 100% 21%);
-  --success: hsl(162 100% 22%);
-  --info: hsl(217 100% 70%);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
+  /* Dark Mode Colors */
+  --bg-dark: hsl(315 20% 8%);
+  --bg: hsl(315 20% 10%);
+  --bg-light: hsl(315 20% 14%);
+  --text: hsl(320 40% 95%);
+  --text-muted: hsl(320 15% 65%);
+  --highlight: hsl(315 60% 40%);
+  --border: hsl(315 20% 30%);
+  --border-muted: hsl(315 15% 20%);
+
+  /* Accents (same hue across modes) */
+  --primary: hsl(317 85% 70%);
+  --secondary: hsl(163 60% 40%);
+  --danger: hsl(7 75% 60%);
+  --warning: hsl(50 80% 45%);
+  --success: hsl(162 65% 38%);
+  --info: hsl(217 85% 65%);
 }
 
 body.light {
-  --bg-dark: hsl(321 100% 94%);
-  --bg: hsl(321 100% 99%);
-  --bg-light: hsl(321 100% 100%);
-  --text: hsl(312 100% 5%);
-  --text-muted: hsl(311 100% 21%);
-  --highlight: hsl(319 100% 100%);
-  --border: hsl(316 55% 52%);
-  --border-muted: hsl(317 78% 65%);
-  --primary: hsl(311 100% 21%);
-  --secondary: hsl(154 100% 5%);
-  --danger: hsl(4 99% 37%);
-  --warning: hsl(50 100% 12%);
-  --success: hsl(159 100% 9%);
-  --info: hsl(215 95% 42%);
+  --bg-dark: hsl(315 40% 96%);
+  --bg: hsl(315 40% 99%);
+  --bg-light: hsl(315 40% 100%);
+  --text: hsl(315 30% 10%);
+  --text-muted: hsl(315 15% 40%);
+  --highlight: hsl(315 60% 30%);
+  --border: hsl(315 25% 70%);
+  --border-muted: hsl(315 15% 80%);
+
+  --primary: hsl(317 60% 45%);
+  --secondary: hsl(163 45% 30%);
+  --danger: hsl(7 70% 40%);
+  --warning: hsl(50 80% 35%);
+  --success: hsl(162 45% 30%);
+  --info: hsl(217 75% 45%);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg-dark: hsl(321 100% 94%);
-    --bg: hsl(321 100% 99%);
-    --bg-light: hsl(321 100% 100%);
-    --text: hsl(312 100% 5%);
-    --text-muted: hsl(311 100% 21%);
-    --highlight: hsl(319 100% 100%);
-    --border: hsl(316 55% 52%);
-    --border-muted: hsl(317 78% 65%);
-    --primary: hsl(311 100% 21%);
-    --secondary: hsl(154 100% 5%);
-    --danger: hsl(4 99% 37%);
-    --warning: hsl(50 100% 12%);
-    --success: hsl(159 100% 9%);
-    --info: hsl(215 95% 42%);
+    --bg-dark: hsl(315 40% 96%);
+    --bg: hsl(315 40% 99%);
+    --bg-light: hsl(315 40% 100%);
+    --text: hsl(315 30% 10%);
+    --text-muted: hsl(315 15% 40%);
+    --highlight: hsl(315 60% 30%);
+    --border: hsl(315 25% 70%);
+    --border-muted: hsl(315 15% 80%);
+
+    --primary: hsl(317 60% 45%);
+    --secondary: hsl(163 45% 30%);
+    --danger: hsl(7 70% 40%);
+    --warning: hsl(50 80% 35%);
+    --success: hsl(162 45% 30%);
+    --info: hsl(217 75% 45%);
   }
 }
 
@@ -183,23 +199,7 @@ button:hover {
   cursor: pointer;
 }
 
-/* Scrollbar for Chromium */
-nav::-webkit-scrollbar {
-  height: 5px;
-}
 
-nav::-webkit-scrollbar-track {
-  background: var(--bg-dark);
-}
-
-nav::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 5px;
-}
-
-nav::-webkit-scrollbar-thumb:hover {
-  background: var(--text);
-}
 
 @media (prefers-reduced-motion: no-preference) {
   :has(:target) {

@@ -1,3 +1,4 @@
+import { showCustomPopup } from './popup.js';
 
 const themeRadios = document.querySelectorAll('input[name="theme"]');
 const body = document.body;
@@ -91,4 +92,93 @@ export function initTheme() {
 
     closeBtn.addEventListener("click", closePopup);
     backdrop.addEventListener("click", closePopup);
+
+    const exportBtn = document.getElementById('export-config-btn');
+    exportBtn.addEventListener('click', () => {
+        const allData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            allData[key] = localStorage.getItem(key);
+        }
+
+        const jsonString = JSON.stringify(allData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'test-forge-config.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    const importBtn = document.getElementById('import-config-btn');
+    importBtn.addEventListener('click', () => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json';
+        fileInput.style.display = 'none';
+
+        fileInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    await handleImportedData(importedData);
+                } catch (error) {
+                    await showCustomPopup({
+                        message: 'Error parsing JSON file: ' + error.message,
+                        buttons: [{ text: 'OK', value: true }]
+                    });
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        document.body.removeChild(fileInput);
+    });
+
+    async function handleImportedData(importedData) {
+        const localKeys = Object.keys(localStorage);
+        const importedKeys = Object.keys(importedData);
+        const conflictingKeys = importedKeys.filter(key => localKeys.includes(key));
+
+        if (conflictingKeys.length > 0) {
+            const overwrite = await showCustomPopup({
+                message: 'Some data might be overwritten. Do you want to proceed?',
+                buttons: [
+                    { text: 'Overwrite All', value: true },
+                    { text: 'Cancel', value: false }
+                ],
+                messageClass: 'warning-text'
+            });
+            if (overwrite) {
+                for (const key in importedData) {
+                    localStorage.setItem(key, importedData[key]);
+                }
+                await showCustomPopup({
+                    message: 'Import successful! The page will now reload.',
+                    buttons: [{ text: 'OK', value: true }]
+                });
+                location.reload();
+            }
+        } else {
+            for (const key in importedData) {
+                localStorage.setItem(key, importedData[key]);
+            }
+            await showCustomPopup({
+                message: 'Import successful! The page will now reload.',
+                buttons: [{ text: 'OK', value: true }]
+            });
+            location.reload();
+        }
+    }
 }

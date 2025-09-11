@@ -92,18 +92,27 @@ const uiFunctions = {
 
 export function collapseNav() {
   const nav = document.querySelector("nav");
+  const main = document.querySelector("main");
   const dirDisplay = document.querySelector(".directory-display");
 
   nav.classList.add("disabled");
   dirDisplay.classList.add("disabled");
+  main.style.width = "100vw";
 }
 
 export function expandNav() {
   const nav = document.querySelector("nav");
+  const main = document.querySelector("main");
   const dirDisplay = document.querySelector(".directory-display");
 
   nav.classList.remove("disabled");
   dirDisplay.classList.remove("disabled");
+
+  const navWidth = localStorage.getItem('navWidth');
+  if (navWidth) {
+    nav.style.width = navWidth;
+    main.style.width = `calc(100vw - ${navWidth})`;
+  }
 }
 
 export function displayFileContent(path) {
@@ -280,9 +289,20 @@ function renderQuiz(container) {
   const questionContainer = document.createElement("div");
   questionContainer.className = "question-container";
 
-  const questionText = document.createElement("p");
-  questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
-  questionContainer.appendChild(questionText);
+  const questionTextContainer = document.createElement("div");
+  questionTextContainer.className = "question-text-container";
+
+  const questionNumber = document.createElement("span");
+  questionNumber.className = "question-number";
+  questionNumber.textContent = `${currentQuestionIndex + 1}.`;
+  questionTextContainer.appendChild(questionNumber);
+
+  const questionText = document.createElement("span");
+  questionText.className = "question-text";
+  questionText.textContent = question.question;
+  questionTextContainer.appendChild(questionText);
+
+  questionContainer.appendChild(questionTextContainer);
 
   const answersContainer = document.createElement("div");
   answersContainer.className = "answers-container";
