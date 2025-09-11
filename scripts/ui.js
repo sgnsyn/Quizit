@@ -108,10 +108,12 @@ export function expandNav() {
   nav.classList.remove("disabled");
   dirDisplay.classList.remove("disabled");
 
-  const navWidth = localStorage.getItem('navWidth');
-  if (navWidth) {
-    nav.style.width = navWidth;
-    main.style.width = `calc(100vw - ${navWidth})`;
+  if (window.innerWidth > 720) {
+    const navWidth = localStorage.getItem('navWidth');
+    if (navWidth) {
+      nav.style.width = navWidth;
+      main.style.width = `calc(100vw - ${navWidth})`;
+    }
   }
 }
 

@@ -65,7 +65,6 @@ nav {
   gap: 2rem;
   padding: 0.75em 2.25em;
   margin: 1rem;
-  width: calc(4ch + 8rem);
   border-radius: 100vw;
 }
 
@@ -84,7 +83,8 @@ main {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-block: 1.25rem 4rem;
+  padding-block: 1rem;
+  padding-left: 2.25rem;
   position: relative;
   /* transition: width 0.1s linear; */
 }
@@ -129,6 +129,10 @@ nav.disabled+main {
   overflow-y: auto;
   overflow-x: hidden;
   padding-inline: 1rem;
+}
+
+nav.disabled {
+  width: 0vw;
 }
 
 .file-content .file-view {
@@ -446,9 +450,11 @@ button.three-dot-button {
 
 .pagination-controls {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
+  gap: 1rem;
   align-items: center;
-  width: min(70ch, 80vw);
+  width: min(75ch, 80vw);
 }
 
 .filter-button {
@@ -515,7 +521,8 @@ button.three-dot-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(70ch, 80vw);
+  width: min(75ch, 80vw);
+  padding-top: 2.25rem;
 }
 
 .total-score {
@@ -577,6 +584,7 @@ button.three-dot-button {
 .explanation-text {
   margin-top: 1rem;
   padding: 1rem;
+
   background-color: var(--bg-light);
   border-radius: 0.25rem;
 }
@@ -760,4 +768,23 @@ input[type="radio"] {
 
 .warning-text {
   color: var(--warning);
+}
+
+@media (max-width: 720px) {
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+  }
+
+  main {
+    width: 100vw;
+  }
+
+  .resizer {
+    display: none;
+  }
 }

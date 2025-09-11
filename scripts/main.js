@@ -90,10 +90,12 @@ const nav = document.querySelector("nav");
 const resizer = document.querySelector(".resizer");
 
 const resize = (e) => {
-  const newNavWidth = e.clientX;
-  nav.style.width = `${newNavWidth}px`;
-  mainElement.style.width = `calc(100vw - ${newNavWidth}px)`;
-  localStorage.setItem('navWidth', `${newNavWidth}px`);
+  if (window.innerWidth > 720) {
+    const newNavWidth = e.clientX;
+    nav.style.width = `${newNavWidth}px`;
+    mainElement.style.width = `calc(100vw - ${newNavWidth}px)`;
+    localStorage.setItem('navWidth', `${newNavWidth}px`);
+  }
 };
 
 resizer.addEventListener("mousedown", (e) => {
@@ -115,11 +117,17 @@ resizer.addEventListener("mousedown", (e) => {
 });
 
 function loadNavWidth() {
-  const navWidth = localStorage.getItem('navWidth');
-  if (navWidth) {
-    nav.style.width = navWidth;
-    mainElement.style.width = `calc(100vw - ${navWidth})`;
+  if (window.innerWidth > 720) {
+    const navWidth = localStorage.getItem('navWidth');
+    if (navWidth) {
+      nav.style.width = navWidth;
+      mainElement.style.width = `calc(100vw - ${navWidth})`;
+    }
   }
+}
+
+if (window.innerWidth <= 720) {
+  collapseNav();
 }
 
 initializeQuizView();
