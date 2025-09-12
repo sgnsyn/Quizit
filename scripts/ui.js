@@ -18,7 +18,7 @@ import {
 import * as fileSystem from "./fileSystem.js";
 import { validateQuizJSON } from "./jsonParse.js";
 
-import { showCustomPopup } from './popup.js';
+import { showCustomPopup } from "./popup.js";
 
 let currentQuizData = null;
 let currentQuestionIndex = 0;
@@ -93,9 +93,9 @@ const uiFunctions = {
 };
 
 export function toggleNav() {
-    document.body.classList.toggle('nav-open');
-    const navBackdrop = document.querySelector('.nav-backdrop');
-    navBackdrop.classList.toggle('disabled');
+  document.body.classList.toggle("nav-open");
+  const navBackdrop = document.querySelector(".nav-backdrop");
+  navBackdrop.classList.toggle("disabled");
 }
 
 export function displayFileContent(path) {
@@ -246,7 +246,6 @@ export function displayFileContent(path) {
       }
     }
   } else {
-    pathSpan.textContent = "";
     noFileSelected.classList.remove("disabled");
     fileView.classList.add("disabled");
     noFileContent.classList.add("disabled");
@@ -419,7 +418,10 @@ function renderPagination() {
       : [];
 
   const startQuestion = currentPageWindow * questionsPerPage;
-  const endQuestion = Math.min(startQuestion + questionsPerPage, totalQuestions);
+  const endQuestion = Math.min(
+    startQuestion + questionsPerPage,
+    totalQuestions,
+  );
 
   for (let i = startQuestion; i < endQuestion; i++) {
     const questionIndex = filteredIndices[i];
@@ -625,12 +627,13 @@ export function initializeQuizView() {
     const path = getSelectedItem();
     if (path) {
       const confirmation = await showCustomPopup({
-        message: "This action will reset your progress for the current test. Are you sure you want to proceed?",
+        message:
+          "This action will reset your progress for the current test. Are you sure you want to proceed?",
         messageClass: "warning-text",
         buttons: [
           { text: "Cancel", value: false },
-          { text: "Reset", value: true, className: "danger-button" }
-        ]
+          { text: "Reset", value: true, className: "danger-button" },
+        ],
       });
 
       if (confirmation) {
@@ -1013,8 +1016,6 @@ export function showDeleteConfirmationPopup(path, isFolder) {
     confirmationPopup.style.left = `${rect.left}px`;
   }
 }
-
-
 
 export function showRenamePopup(itemToRename, rect) {
   closePopupMenu(true, true);

@@ -96,6 +96,7 @@ main {
 
 .directory-display {
   padding-inline: 1.25rem;
+  margin-bottom: 1rem;
   font-size: 1.25rem;
   color: var(--text);
   text-align: right;
@@ -817,5 +818,17 @@ input[type="radio"] {
   .three-dot-button {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .total-score span {
+    font-size: 1.5rem;
+  }
+
+  .prev-btn,
+  .next-btn,
+  .reset-btn,
+  .filter-button {
+    font-size: 0.8rem;
+    padding: 0.5em 1.5em;
   }
 }
