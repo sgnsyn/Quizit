@@ -92,3 +92,8 @@ initTheme();
 loadState();
 renderFileTree();
 displayFileContent(getSelectedItem());
+
+window.addEventListener('resize', () => {
+    renderFileTree();
+    displayFileContent(getSelectedItem());
+});

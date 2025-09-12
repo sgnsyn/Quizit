@@ -216,8 +216,9 @@ export function displayFileContent(path) {
               currentQuestionIndex =
                 fileState.lastQuestionIndex[filterMap[currentFilter]];
             }
+            const questionsPerPage = window.innerWidth <= 720 ? 5 : 10;
             currentPageWindow = Math.floor(
-              filteredIndices.indexOf(currentQuestionIndex) / 10,
+              filteredIndices.indexOf(currentQuestionIndex) / questionsPerPage,
             );
             if (currentPageWindow < 0) {
               currentPageWindow = 0;
@@ -408,6 +409,7 @@ function renderPagination() {
 
   if (!currentQuizData) return;
 
+  const questionsPerPage = window.innerWidth <= 720 ? 5 : 10;
   const totalQuestions = filteredIndices.length;
   const quizState = getQuizState();
   const path = getSelectedItem();
@@ -416,8 +418,8 @@ function renderPagination() {
       ? quizState[path].questions
       : [];
 
-  const startQuestion = currentPageWindow * 10;
-  const endQuestion = Math.min(startQuestion + 10, totalQuestions);
+  const startQuestion = currentPageWindow * questionsPerPage;
+  const endQuestion = Math.min(startQuestion + questionsPerPage, totalQuestions);
 
   for (let i = startQuestion; i < endQuestion; i++) {
     const questionIndex = filteredIndices[i];
@@ -466,7 +468,7 @@ function renderPagination() {
     ".pagination-display .page-arrow:last-child",
   );
 
-  const totalPages = Math.ceil(totalQuestions / 10);
+  const totalPages = Math.ceil(totalQuestions / questionsPerPage);
 
   if (totalPages <= 1) {
     leftArrow.classList.add("disabled");
@@ -532,8 +534,9 @@ export function initializeQuizView() {
         currentQuestionIndex = filteredIndices[0] || 0;
       }
 
+      const questionsPerPage = window.innerWidth <= 720 ? 5 : 10;
       currentPageWindow = Math.floor(
-        filteredIndices.indexOf(currentQuestionIndex) / 10,
+        filteredIndices.indexOf(currentQuestionIndex) / questionsPerPage,
       );
       if (currentPageWindow < 0) {
         currentPageWindow = 0;
@@ -549,8 +552,9 @@ export function initializeQuizView() {
       filteredIndices.indexOf(currentQuestionIndex);
     if (currentIndexInFiltered > 0) {
       currentQuestionIndex = filteredIndices[currentIndexInFiltered - 1];
+      const questionsPerPage = window.innerWidth <= 720 ? 5 : 10;
       currentPageWindow = Math.floor(
-        filteredIndices.indexOf(currentQuestionIndex) / 10,
+        filteredIndices.indexOf(currentQuestionIndex) / questionsPerPage,
       );
       const quizState = getQuizState();
       const path = getSelectedItem();
@@ -573,8 +577,9 @@ export function initializeQuizView() {
       filteredIndices.indexOf(currentQuestionIndex);
     if (currentIndexInFiltered < filteredIndices.length - 1) {
       currentQuestionIndex = filteredIndices[currentIndexInFiltered + 1];
+      const questionsPerPage = window.innerWidth <= 720 ? 5 : 10;
       currentPageWindow = Math.floor(
-        filteredIndices.indexOf(currentQuestionIndex) / 10,
+        filteredIndices.indexOf(currentQuestionIndex) / questionsPerPage,
       );
       const quizState = getQuizState();
       const path = getSelectedItem();
@@ -607,7 +612,8 @@ export function initializeQuizView() {
   });
 
   rightArrow.addEventListener("click", () => {
-    if ((currentPageWindow + 1) * 10 < filteredIndices.length) {
+    const questionsPerPage = window.innerWidth <= 720 ? 5 : 10;
+    if ((currentPageWindow + 1) * questionsPerPage < filteredIndices.length) {
       currentPageWindow++;
       renderPagination();
     }
