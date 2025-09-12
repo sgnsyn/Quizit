@@ -43,6 +43,7 @@ nav {
   z-index: 3;
   display: flex;
   flex-direction: column;
+  font-family: Atkin;
 }
 
 .nav-expand {
@@ -84,7 +85,6 @@ main {
   display: flex;
   flex-direction: column;
   padding-block: 1rem;
-  padding-left: 2.25rem;
   position: relative;
   /* transition: width 0.1s linear; */
 }
@@ -114,9 +114,11 @@ nav.disabled+main {
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  font-family: Atkin;
 }
 
 .directory-display .path {
+  font-family: Cou;
   direction: rtl;
   text-align: left;
   overflow: hidden;
@@ -429,7 +431,6 @@ button.three-dot-button {
 }
 
 .question-container {
-  width: min(65ch, 80vw);
   font-family: Atkin;
   line-height: 2.5ch;
   margin-block: 2rem;
@@ -448,13 +449,19 @@ button.three-dot-button {
   margin-bottom: 0.5rem;
 }
 
+.test-pagination-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
 .pagination-controls {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
   align-items: center;
-  width: min(75ch, 80vw);
 }
 
 .filter-button {
@@ -470,6 +477,7 @@ button.three-dot-button {
 
 .pagination-display {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 1.5rem;
 }
@@ -521,15 +529,16 @@ button.three-dot-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(75ch, 80vw);
+  flex-wrap: wrap;
   padding-top: 2.25rem;
+  width: min(75ch, 90vw);
 }
 
 .total-score {
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
   align-items: center;
+  justify-content: center;
+  gap: 1rem;
   color: var(--primary);
 }
 
@@ -538,16 +547,24 @@ button.three-dot-button {
   text-transform: uppercase;
 }
 
-.test-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* flex-grow: 1; */
+.total-score .score-text {
+  color: var(--text);
+  font-family: Atkin;
 }
 
 .test-nav-content {
-  max-width: 65ch;
+  width: min(75ch, 90vw);
+  background-color: var(--bg);
+  border-radius: 1.25rem;
+  padding: 1rem;
   margin: 0 auto;
+}
+
+.filter-test-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .test-navigation {
@@ -584,9 +601,11 @@ button.three-dot-button {
 .explanation-text {
   margin-top: 1rem;
   padding: 1rem;
-
   background-color: var(--bg-light);
-  border-radius: 0.25rem;
+  border-radius: 1.5rem;
+  font-family: Cou;
+  color: var(--info);
+  text-align: justify;
 }
 
 .filter-popup {
@@ -633,11 +652,16 @@ button.three-dot-button {
   flex-direction: column;
   gap: 1rem;
   box-shadow: var(--shadow);
+  font-family: Atkin;
+}
+
+.config-label {
+  font-weight: bold;
 }
 
 .close-popup-btn {
   position: absolute;
-  top: 0.75rem;
+  top: 1rem;
   right: 1rem;
 }
 
@@ -645,7 +669,7 @@ button.three-dot-button {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: min(17rem, 80vw);
+  width: min(22rem, 90vw);
 }
 
 .theme-options {
@@ -654,6 +678,7 @@ button.three-dot-button {
   gap: 0.5rem;
   margin-top: 0.5rem;
   margin-left: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .theme-option input[type="radio"]:checked {
@@ -671,7 +696,8 @@ button.three-dot-button {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .config-buttons button {

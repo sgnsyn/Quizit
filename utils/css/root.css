@@ -14,63 +14,96 @@
 }
 
 :root {
-  --shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 
-  /* Dark Mode Colors */
-  --bg-dark: hsl(315 20% 8%);
-  --bg: hsl(315 20% 10%);
-  --bg-light: hsl(315 20% 14%);
-  --text: hsl(320 40% 95%);
-  --text-muted: hsl(320 15% 65%);
-  --highlight: hsl(315 60% 40%);
-  --border: hsl(315 20% 30%);
-  --border-muted: hsl(315 15% 20%);
+  /* Dark Mode Base */
+  --bg-dark: hsl(220 15% 10%);
+  --bg: hsl(220 15% 12%);
+  --bg-light: hsl(220 15% 16%);
+  --text: hsl(220 15% 96%);
+  --text-muted: hsl(220 10% 60%);
+  --highlight: hsl(220 25% 30%);
+  --border: hsl(220 10% 28%);
+  --border-muted: hsl(220 10% 18%);
 
-  /* Accents (same hue across modes) */
-  --primary: hsl(317 85% 70%);
-  --secondary: hsl(163 60% 40%);
-  --danger: hsl(7 75% 60%);
-  --warning: hsl(50 80% 45%);
-  --success: hsl(162 65% 38%);
-  --info: hsl(217 85% 65%);
+  /* Accent Colors (Dark Mode) */
+  --primary: hsl(250 80% 70%);
+  --primary-hover: hsl(250 80% 60%);
+
+  --secondary: hsl(180 50% 45%);
+  --secondary-hover: hsl(180 50% 38%);
+
+  --success: hsl(145 65% 40%);
+  --success-hover: hsl(145 65% 34%);
+
+  --danger: hsl(0 70% 50%);
+  --danger-hover: hsl(0 70% 44%);
+
+  --warning: hsl(35 85% 50%);
+  --warning-hover: hsl(35 85% 44%);
+
+  --info: hsl(210 85% 65%);
+  --info-hover: hsl(210 85% 58%);
 }
 
+/* Light Mode via :root (if toggled on html or via prefers-color-scheme) */
+:root.light {
+  --bg-dark: hsl(220 20% 95%);
+  --bg: hsl(220 20% 99%);
+  --bg-light: hsl(220 20% 100%);
+  --text: hsl(220 25% 10%);
+  --text-muted: hsl(220 10% 40%);
+  --highlight: hsl(220 25% 20%);
+  --border: hsl(220 15% 75%);
+  --border-muted: hsl(220 15% 85%);
+
+  --primary: hsl(250 60% 40%);
+  --primary-hover: hsl(250 60% 35%);
+
+  --secondary: hsl(180 45% 35%);
+  --secondary-hover: hsl(180 45% 30%);
+
+  --success: hsl(145 60% 32%);
+  --success-hover: hsl(145 60% 27%);
+
+  --danger: hsl(0 65% 40%);
+  --danger-hover: hsl(0 65% 35%);
+
+  --warning: hsl(35 75% 40%);
+  --warning-hover: hsl(35 75% 35%);
+
+  --info: hsl(210 75% 40%);
+  --info-hover: hsl(210 75% 35%);
+}
+
+/* Light Mode via body class (common approach) */
 body.light {
-  --bg-dark: hsl(315 40% 96%);
-  --bg: hsl(315 40% 99%);
-  --bg-light: hsl(315 40% 100%);
-  --text: hsl(315 30% 10%);
-  --text-muted: hsl(315 15% 40%);
-  --highlight: hsl(315 60% 30%);
-  --border: hsl(315 25% 70%);
-  --border-muted: hsl(315 15% 80%);
+  --bg-dark: hsl(220 20% 95%);
+  --bg: hsl(220 20% 99%);
+  --bg-light: hsl(220 20% 100%);
+  --text: hsl(220 25% 10%);
+  --text-muted: hsl(220 10% 40%);
+  --highlight: hsl(220 25% 20%);
+  --border: hsl(220 15% 75%);
+  --border-muted: hsl(220 15% 85%);
 
-  --primary: hsl(317 60% 45%);
-  --secondary: hsl(163 45% 30%);
-  --danger: hsl(7 70% 40%);
-  --warning: hsl(50 80% 35%);
-  --success: hsl(162 45% 30%);
-  --info: hsl(217 75% 45%);
-}
+  --primary: hsl(250 60% 40%);
+  --primary-hover: hsl(250 60% 35%);
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-dark: hsl(315 40% 96%);
-    --bg: hsl(315 40% 99%);
-    --bg-light: hsl(315 40% 100%);
-    --text: hsl(315 30% 10%);
-    --text-muted: hsl(315 15% 40%);
-    --highlight: hsl(315 60% 30%);
-    --border: hsl(315 25% 70%);
-    --border-muted: hsl(315 15% 80%);
+  --secondary: hsl(180 45% 35%);
+  --secondary-hover: hsl(180 45% 30%);
 
-    --primary: hsl(317 60% 45%);
-    --secondary: hsl(163 45% 30%);
-    --danger: hsl(7 70% 40%);
-    --warning: hsl(50 80% 35%);
-    --success: hsl(162 45% 30%);
-    --info: hsl(217 75% 45%);
-  }
+  --success: hsl(145 60% 32%);
+  --success-hover: hsl(145 60% 27%);
+
+  --danger: hsl(0 65% 40%);
+  --danger-hover: hsl(0 65% 35%);
+
+  --warning: hsl(35 75% 40%);
+  --warning-hover: hsl(35 75% 35%);
+
+  --info: hsl(210 75% 40%);
+  --info-hover: hsl(210 75% 35%);
 }
 
 /* Default for very large screens (8K and above) */
@@ -198,8 +231,6 @@ p {
 button:hover {
   cursor: pointer;
 }
-
-
 
 @media (prefers-reduced-motion: no-preference) {
   :has(:target) {

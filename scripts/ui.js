@@ -109,7 +109,7 @@ export function expandNav() {
   dirDisplay.classList.remove("disabled");
 
   if (window.innerWidth > 720) {
-    const navWidth = localStorage.getItem('navWidth');
+    const navWidth = localStorage.getItem("navWidth");
     if (navWidth) {
       nav.style.width = navWidth;
       main.style.width = `calc(100vw - ${navWidth})`;
@@ -1010,8 +1010,6 @@ export function showDeleteConfirmationPopup(path, isFolder) {
     confirmationPopup.style.left = `${rect.left}px`;
   }
 }
-
-
 
 export function showRenamePopup(itemToRename, rect) {
   closePopupMenu(true, true);

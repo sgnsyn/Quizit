@@ -124,54 +124,58 @@
     <div class="file-content">
       <div class="file-view disabled">
         <div class="score-reset-container">
+
           <div class="total-score">
-            <span>score</span>
+            <span class="score-text">score</span>
             <span>11/90</span>
           </div>
-          <button class="reset-btn">Reset Exam</button>
+
+          <button class="reset-btn">RESET ALL</button>
         </div>
-        <div class="pagination-controls">
-          <button class="filter-button">
-            <svg>
-              <use href="#filter"></use>
-            </svg>
-            <span>All</span>
-          </button>
-          <div class="pagination-display">
-            <button class="svg-button page-arrow">
-              <svg>
-                <use href="#left-arrow"></use>
-              </svg>
-            </button>
-            <div class="page-numbers">
-              <button class="page-number">1</button>
-              <button class="page-number">2</button>
-              <button class="page-number">3</button>
-              <button class="page-number">4</button>
-              <button class="page-number">5</button>
-              <button class="page-number">6</button>
-              <button class="page-number">7</button>
-              <button class="page-number">8</button>
-              <button class="page-number">9</button>
-              <button class="page-number">10</button>
+        <div class="test-pagination-container">
+          <div class="pagination-controls">
+            <div class="pagination-display">
+              <button class="svg-button page-arrow">
+                <svg>
+                  <use href="#left-arrow"></use>
+                </svg>
+              </button>
+              <div class="page-numbers">
+                <button class="page-number">1</button>
+                <button class="page-number">2</button>
+                <button class="page-number">3</button>
+                <button class="page-number">4</button>
+                <button class="page-number">5</button>
+                <button class="page-number">6</button>
+                <button class="page-number">7</button>
+                <button class="page-number">8</button>
+                <button class="page-number">9</button>
+                <button class="page-number">10</button>
+              </div>
+              <button class="svg-button page-arrow">
+                <svg>
+                  <use href="#right-arrow"></use>
+                </svg>
+              </button>
             </div>
-            <button class="svg-button page-arrow">
-              <svg>
-                <use href="#right-arrow"></use>
-              </svg>
-            </button>
           </div>
-        </div>
-        <div class="test-container">
           <div class="test-nav-content">
-            <div class="test-navigation">
-              <button class="prev-btn">prev</button>
-              <button class="next-btn">next</button>
+            <div class="filter-test-nav">
+              <button class="filter-button">
+                <svg>
+                  <use href="#filter"></use>
+                </svg>
+                <span>All</span>
+              </button>
+              <div class="test-navigation">
+                <button class="prev-btn">prev</button>
+                <button class="next-btn">next</button>
+              </div>
             </div>
             <div class="question-display"></div>
             <p class="explanation-text disabled"></p>
-          </div>
 
+          </div>
         </div>
       </div>
       <div class="no-file-content disabled">
@@ -254,7 +258,7 @@
         <use href="#close"></use>
       </svg>
     </button>
-    <label>Theme</label>
+    <span class="config-label">Theme</span>
     <div class="theme-options">
       <div class="theme-option">
         <input type="radio" id="light-theme" name="theme" value="light">
@@ -269,6 +273,7 @@
         <label for="system-theme">System</label>
       </div>
     </div>
+    <span class="config-label">Save/Load Files and Config</span>
     <div class="config-buttons">
       <button id="export-config-btn">Export Config</button>
       <button id="import-config-btn">Import Config</button>
