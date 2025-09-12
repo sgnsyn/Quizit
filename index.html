@@ -83,6 +83,12 @@
       <path d="M15 6L9 12L15 18" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
         fill="#00000000" />
     </symbol>
+
+    <symbol fill="var(--text)" id="long-left-arrow" viewBox="0 0 32 32">
+      <path
+        d="M 16 4.09375 L 9.28125 10.8125 L 10.71875 12.21875 L 15 7.9375 L 15 28 L 17 28 L 17 7.9375 L 21.28125 12.21875 L 22.71875 10.8125 Z">
+      </path>
+    </symbol>
     <symbol id="three-dot" viewBox="0 0 24 24">
       <path
         d="M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z"
@@ -95,31 +101,31 @@
         fill="var(--text)" />
     </symbol>
   </svg>
-  <button class="svg-button nav-expand">
-    <svg>
-      <use href="#navbar"></use>
-    </svg>
-  </button>
   <nav>
     <div class="nav-header">
-      <span class="text">files</span>
       <button class="svg-button nav-collapse">
         <svg>
-          <use href="#navbar"></use>
+          <use href="#long-left-arrow"></use>
+        </svg>
+      </button>
+      <span class="text">files</span>
+      <button class="svg-button settings-btn">
+        <svg>
+          <use href="#setting"></use>
         </svg>
       </button>
     </div>
     <div class="filetree"></div>
-    <div class="resizer"></div>
-    <button class="svg-button settings-btn">
-      <svg>
-        <use href="#setting"></use>
-      </svg>
-    </button>
   </nav>
   <main>
     <div class="directory-display">
-      <span class="title"></span><span class="path"></span>
+
+      <button class="svg-button nav-expand">
+        <svg>
+          <use href="#navbar"></use>
+        </svg>
+      </button>
+      <span class="title"></span>
     </div>
     <div class="file-content">
       <div class="file-view disabled">
@@ -244,6 +250,7 @@
   </main>
   <script type="module" src="scripts/main.js"></script>
   <div class="popup-backdrop disabled"></div>
+  <div class="nav-backdrop disabled"></div>
   <div class="filter-popup disabled">
     <ul>
       <li data-filter="all">All</li>

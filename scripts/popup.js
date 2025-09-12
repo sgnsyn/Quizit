@@ -17,6 +17,9 @@ export function showCustomPopup(options) {
     buttons.forEach(buttonInfo => {
       const button = document.createElement('button');
       button.textContent = buttonInfo.text;
+      if (buttonInfo.className) {
+        button.classList.add(buttonInfo.className);
+      }
       button.addEventListener('click', () => {
         document.body.removeChild(popup);
         document.body.removeChild(backdrop);
@@ -29,6 +32,11 @@ export function showCustomPopup(options) {
 
     const backdrop = document.createElement('div');
     backdrop.className = 'custom-popup-backdrop';
+    backdrop.addEventListener('click', () => {
+      document.body.removeChild(popup);
+      document.body.removeChild(backdrop);
+      resolve(false);
+    });
 
     document.body.appendChild(backdrop);
     document.body.appendChild(popup);

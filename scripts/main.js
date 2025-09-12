@@ -1,8 +1,6 @@
 import {
   getDirectory,
   getContent,
-  getDefaultDirectory,
-  getDefaultContent,
   saveDirectory,
   saveContent,
   syncContentWithDirectory,
@@ -17,8 +15,7 @@ import {
   displayFileContent,
   createPopupMenu,
   initializeQuizView,
-  collapseNav,
-  expandNav,
+  toggleNav,
 } from "./ui.js";
 import { expandToPath } from "./fileSystem.js";
 import { initTheme } from "./theme.js";
@@ -42,12 +39,14 @@ if (!content) {
 syncContentWithDirectory(directory, content);
 
 const filetreeContainer = document.querySelector(".filetree");
-const mainElement = document.querySelector("main");
 const navExpandBtn = document.querySelector(".nav-expand");
 const navCollapseBtn = document.querySelector(".nav-collapse");
+const navBackdrop = document.querySelector(".nav-backdrop");
 
-navExpandBtn.addEventListener("click", expandNav);
-navCollapseBtn.addEventListener("click", collapseNav);
+navExpandBtn.addEventListener("click", toggleNav);
+navCollapseBtn.addEventListener("click", toggleNav);
+navBackdrop.addEventListener("click", toggleNav);
+
 
 function renderFileTree() {
   const directory = getDirectory();
@@ -83,56 +82,13 @@ filetreeContainer.addEventListener("click", (e) => {
     saveState();
     renderFileTree();
     displayFileContent(path);
+    toggleNav();
   }
 });
 
-const nav = document.querySelector("nav");
-const resizer = document.querySelector(".resizer");
-
-const resize = (e) => {
-  if (window.innerWidth > 720) {
-    const newNavWidth = e.clientX;
-    nav.style.width = `${newNavWidth}px`;
-    mainElement.style.width = `calc(100vw - ${newNavWidth}px)`;
-    localStorage.setItem('navWidth', `${newNavWidth}px`);
-  }
-};
-
-resizer.addEventListener("mousedown", (e) => {
-  e.preventDefault();
-  resizer.style.zIndex = "11";
-
-  const onMouseMove = (e) => {
-    resize(e);
-  };
-
-  const onMouseUp = () => {
-    resizer.style.zIndex = "2";
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
-  };
-
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
-});
-
-function loadNavWidth() {
-  if (window.innerWidth > 720) {
-    const navWidth = localStorage.getItem('navWidth');
-    if (navWidth) {
-      nav.style.width = navWidth;
-      mainElement.style.width = `calc(100vw - ${navWidth})`;
-    }
-  }
-}
-
-if (window.innerWidth <= 720) {
-  collapseNav();
-}
 
 initializeQuizView();
 initTheme();
 loadState();
-loadNavWidth();
 renderFileTree();
 displayFileContent(getSelectedItem());

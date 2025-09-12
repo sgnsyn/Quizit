@@ -18,6 +18,8 @@ import {
 import * as fileSystem from "./fileSystem.js";
 import { validateQuizJSON } from "./jsonParse.js";
 
+import { showCustomPopup } from './popup.js';
+
 let currentQuizData = null;
 let currentQuestionIndex = 0;
 let currentPageWindow = 0;
@@ -90,31 +92,10 @@ const uiFunctions = {
   closePopupMenu,
 };
 
-export function collapseNav() {
-  const nav = document.querySelector("nav");
-  const main = document.querySelector("main");
-  const dirDisplay = document.querySelector(".directory-display");
-
-  nav.classList.add("disabled");
-  dirDisplay.classList.add("disabled");
-  main.style.width = "100vw";
-}
-
-export function expandNav() {
-  const nav = document.querySelector("nav");
-  const main = document.querySelector("main");
-  const dirDisplay = document.querySelector(".directory-display");
-
-  nav.classList.remove("disabled");
-  dirDisplay.classList.remove("disabled");
-
-  if (window.innerWidth > 720) {
-    const navWidth = localStorage.getItem("navWidth");
-    if (navWidth) {
-      nav.style.width = navWidth;
-      main.style.width = `calc(100vw - ${navWidth})`;
-    }
-  }
+export function toggleNav() {
+    document.body.classList.toggle('nav-open');
+    const navBackdrop = document.querySelector('.nav-backdrop');
+    navBackdrop.classList.toggle('disabled');
 }
 
 export function displayFileContent(path) {
@@ -130,10 +111,7 @@ export function displayFileContent(path) {
 
   titleSpan.textContent = "";
 
-  const pathSpan = document.querySelector(".directory-display .path");
-
   if (path && getContent().hasOwnProperty(path)) {
-    pathSpan.textContent = path;
     const fileContent = getContent()[path];
 
     if (fileContent === "") {
@@ -637,14 +615,25 @@ export function initializeQuizView() {
 
   const resetButton = document.querySelector(".reset-btn");
 
-  resetButton.addEventListener("click", () => {
+  resetButton.addEventListener("click", async () => {
     const path = getSelectedItem();
     if (path) {
-      const quizState = getQuizState();
-      if (quizState[path]) {
-        delete quizState[path];
-        saveQuizState(quizState);
-        displayFileContent(path);
+      const confirmation = await showCustomPopup({
+        message: "This action will reset your progress for the current test. Are you sure you want to proceed?",
+        messageClass: "warning-text",
+        buttons: [
+          { text: "Cancel", value: false },
+          { text: "Reset", value: true, className: "danger-button" }
+        ]
+      });
+
+      if (confirmation) {
+        const quizState = getQuizState();
+        if (quizState[path]) {
+          delete quizState[path];
+          saveQuizState(quizState);
+          displayFileContent(path);
+        }
       }
     }
   });
@@ -878,8 +867,9 @@ export function createPopupMenu(target, isFolder) {
   getPopupMenu().appendChild(ul);
   document.body.appendChild(getPopupMenu());
 
+  const popupRect = getPopupMenu().getBoundingClientRect();
   getPopupMenu().style.top = `${rect.bottom}px`;
-  getPopupMenu().style.left = `${rect.left}px`;
+  getPopupMenu().style.left = `${rect.right - popupRect.width}px`;
 }
 
 export function showCreationPopup(type, parentPath, rect) {
@@ -887,8 +877,6 @@ export function showCreationPopup(type, parentPath, rect) {
 
   const creationPopup = document.createElement("div");
   creationPopup.className = "creation-popup";
-  creationPopup.style.top = `${rect.bottom}px`;
-  creationPopup.style.left = `${rect.left}px`;
 
   const label = document.createElement("label");
   label.textContent = type === "file" ? "File Name" : "Folder Name";
@@ -931,6 +919,16 @@ export function showCreationPopup(type, parentPath, rect) {
   errorContainer.className = "error-container";
   creationPopup.appendChild(errorContainer);
 
+  document.body.appendChild(creationPopup);
+
+  const nav = document.querySelector("nav");
+  const navRect = nav.getBoundingClientRect();
+  const popupWidth = creationPopup.offsetWidth;
+  const left = navRect.left + (navRect.width - popupWidth) / 2;
+
+  creationPopup.style.top = `${rect.bottom}px`;
+  creationPopup.style.left = `${left}px`;
+
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       fileSystem.createFileOrFolder(
@@ -945,7 +943,6 @@ export function showCreationPopup(type, parentPath, rect) {
     }
   });
 
-  document.body.appendChild(creationPopup);
   input.focus();
   if (getBackdrop()) {
     getBackdrop().onclick = () => {
@@ -1011,13 +1008,13 @@ export function showDeleteConfirmationPopup(path, isFolder) {
   }
 }
 
+
+
 export function showRenamePopup(itemToRename, rect) {
   closePopupMenu(true, true);
 
   const renamePopup = document.createElement("div");
   renamePopup.className = "creation-popup";
-  renamePopup.style.top = `${rect.bottom}px`;
-  renamePopup.style.left = `${rect.left}px`;
 
   const label = document.createElement("label");
   label.textContent = "New Name";
@@ -1060,6 +1057,16 @@ export function showRenamePopup(itemToRename, rect) {
   errorContainer.className = "error-container";
   renamePopup.appendChild(errorContainer);
 
+  document.body.appendChild(renamePopup);
+
+  const nav = document.querySelector("nav");
+  const navRect = nav.getBoundingClientRect();
+  const popupWidth = renamePopup.offsetWidth;
+  const left = navRect.left + (navRect.width - popupWidth) / 2;
+
+  renamePopup.style.top = `${rect.bottom}px`;
+  renamePopup.style.left = `${left}px`;
+
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       fileSystem.renameItem(
@@ -1073,7 +1080,6 @@ export function showRenamePopup(itemToRename, rect) {
     }
   });
 
-  document.body.appendChild(renamePopup);
   input.focus();
   if (getBackdrop()) {
     getBackdrop().onclick = () => {
