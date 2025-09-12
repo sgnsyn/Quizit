@@ -741,15 +741,25 @@ input[type="radio"] {
   outline: 0.2rem solid var(--success);
 }
 
+.answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .answer-wrapper {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+.answer-wrapper label:hover {
+  cursor: pointer;
 }
 
 .answer-wrapper label {
   font-size: 1rem;
+  padding-left: 1rem;
 }
 
 .question-text-container {
