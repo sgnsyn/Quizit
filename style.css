@@ -17,8 +17,10 @@ svg {
 }
 
 .no-file-selected svg {
-  width: 60%;
-  height: 60%;
+  --hw: min(60vw, 60vh);
+  width: var(--hw);
+  height: var(--hw);
+  aspect-ratio: 1/1;
 }
 
 button {
@@ -85,6 +87,10 @@ body.nav-open nav {
 
 .nav-collapse {
   transform: rotate(-90deg);
+}
+
+.nav-collapse:active {
+  transform: rotate(-90deg) scale(0.9);
 }
 
 .nav-header .text {
@@ -432,7 +438,7 @@ button.three-dot-button {
   justify-content: center;
   align-items: center;
   min-height: 100%;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .no-file-selected span {
@@ -525,6 +531,10 @@ button.three-dot-button {
 .page-number.incorrect-page {
   background-color: transparent;
   color: var(--danger);
+}
+
+.page-arrow {
+  border-radius: 0.25rem;
 }
 
 .page-arrow:disabled {
@@ -882,6 +892,10 @@ input[type="radio"] {
     background-color: transparent;
   }
 
+  .page-arrow:hover {
+    background-color: var(--highlight);
+  }
+
   .page-arrow:hover svg {
     stroke: var(--primary);
   }
@@ -903,11 +917,11 @@ input[type="radio"] {
   .filter-popup li:hover {
     background-color: var(--highlight);
   }
-  
+
   .answer-wrapper label:hover {
     cursor: pointer;
   }
-  
+
   .current-dir .file-folder-name:hover,
   .file-container .file-folder-name:hover {
     cursor: default;
