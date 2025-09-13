@@ -99,6 +99,7 @@ export function createFileOrFolder(
 
     if (type === "file") {
       setSelectedItem(newItemPath);
+      uiFunctions.toggleNav();
     }
 
     saveDirectory(directory);

@@ -90,6 +90,7 @@ const uiFunctions = {
   createFileTree,
   displayFileContent,
   closePopupMenu,
+  toggleNav,
 };
 
 export function toggleNav() {
@@ -120,7 +121,6 @@ export function displayFileContent(path) {
       noFileContent.classList.remove("disabled");
 
       contentInput.value = "";
-      contentInput.focus();
 
       const newClearButton = clearButton.cloneNode(true);
       clearButton.parentNode.replaceChild(newClearButton, clearButton);
@@ -142,8 +142,13 @@ export function displayFileContent(path) {
         }
 
         errorContainer.textContent = "";
+
+        let quizData = JSON.parse(newContent);
+        quizData = scrambleQuizAnswers(quizData);
+        const scrambledContent = JSON.stringify(quizData, null, 2);
+
         const currentContent = getContent();
-        currentContent[path] = newContent;
+        currentContent[path] = scrambledContent;
         saveContent(currentContent);
         displayFileContent(path);
       });
@@ -1100,4 +1105,34 @@ export function showRenamePopup(itemToRename, rect) {
       closePopupMenu();
     };
   }
+}
+
+function scrambleQuizAnswers(quizData) {
+  quizData.questions.forEach(question => {
+    const correctAnswer = question.answers[question.correct_option];
+    
+    const answersToShuffle = [...question.answers];
+    
+    const shuffledAnswers = shuffle(answersToShuffle);
+    
+    const newCorrectOption = shuffledAnswers.indexOf(correctAnswer);
+    
+    question.answers = shuffledAnswers;
+    question.correct_option = newCorrectOption;
+  });
+  return quizData;
+}
+
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
 }
