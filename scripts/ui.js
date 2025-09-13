@@ -254,15 +254,15 @@ export function displayFileContent(path) {
 
 function renderQuiz(container) {
   container.innerHTML = "";
+  const explanationText = document.querySelector(".explanation-text");
+  explanationText.classList.add("disabled");
+  explanationText.textContent = "";
 
   if (filteredIndices.length === 0) {
     container.innerHTML = "<p>No questions match the current filter.</p>";
     renderPagination();
     return;
   }
-  const explanationText = document.querySelector(".explanation-text");
-  explanationText.classList.add("disabled");
-  explanationText.textContent = "";
 
   const question = currentQuizData.questions[currentQuestionIndex];
 
@@ -930,13 +930,15 @@ export function showCreationPopup(type, parentPath, rect) {
 
   document.body.appendChild(creationPopup);
 
-  const nav = document.querySelector("nav");
-  const navRect = nav.getBoundingClientRect();
-  const popupWidth = creationPopup.offsetWidth;
-  const left = navRect.left + (navRect.width - popupWidth) / 2;
+  if (window.innerWidth > 720) {
+    const nav = document.querySelector("nav");
+    const navRect = nav.getBoundingClientRect();
+    const popupWidth = creationPopup.offsetWidth;
+    const left = navRect.left + (navRect.width - popupWidth) / 2;
 
-  creationPopup.style.top = `${rect.bottom}px`;
-  creationPopup.style.left = `${left}px`;
+    creationPopup.style.top = `${rect.bottom}px`;
+    creationPopup.style.left = `${left}px`;
+  }
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -965,7 +967,7 @@ export function showDeleteConfirmationPopup(path, isFolder) {
   closePopupMenu(true, true);
 
   const confirmationPopup = document.createElement("div");
-  confirmationPopup.className = "creation-popup";
+  confirmationPopup.className = "creation-popup delete-confirmation-popup";
 
   const warningMessage = document.createElement("p");
   warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"
@@ -1009,11 +1011,13 @@ export function showDeleteConfirmationPopup(path, isFolder) {
     };
   }
 
-  const highlightedItem = document.querySelector(".highlighted");
-  if (highlightedItem) {
-    const rect = highlightedItem.getBoundingClientRect();
-    confirmationPopup.style.top = `${rect.bottom}px`;
-    confirmationPopup.style.left = `${rect.left}px`;
+  if (window.innerWidth > 720) {
+    const highlightedItem = document.querySelector(".highlighted");
+    if (highlightedItem) {
+      const rect = highlightedItem.getBoundingClientRect();
+      confirmationPopup.style.top = `${rect.bottom}px`;
+      confirmationPopup.style.left = `${rect.left}px`;
+    }
   }
 }
 
@@ -1066,13 +1070,15 @@ export function showRenamePopup(itemToRename, rect) {
 
   document.body.appendChild(renamePopup);
 
-  const nav = document.querySelector("nav");
-  const navRect = nav.getBoundingClientRect();
-  const popupWidth = renamePopup.offsetWidth;
-  const left = navRect.left + (navRect.width - popupWidth) / 2;
+  if (window.innerWidth > 720) {
+    const nav = document.querySelector("nav");
+    const navRect = nav.getBoundingClientRect();
+    const popupWidth = renamePopup.offsetWidth;
+    const left = navRect.left + (navRect.width - popupWidth) / 2;
 
-  renamePopup.style.top = `${rect.bottom}px`;
-  renamePopup.style.left = `${left}px`;
+    renamePopup.style.top = `${rect.bottom}px`;
+    renamePopup.style.left = `${left}px`;
+  }
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {

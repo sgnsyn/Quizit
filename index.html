@@ -184,7 +184,7 @@
         </div>
       </div>
       <div class="no-file-content disabled">
-        <div>
+        <div class="instruction-container">
           <div class="json-instruction" <p>
             You should insert or paste valid json to the input field below.
             The following prompt can also be used for AI models to generate
@@ -201,20 +201,30 @@
               Generate exercise questions in JSON using the format given
               below...
             </p>
+
+
+            <!-- prettier-ignore-start -->
             <pre>
-              {
-              &nbsp;&nbsp;"title": "&lt;your subject here&gt;",
-              &nbsp;&nbsp;"type": "multiple choice",
-              &nbsp;&nbsp;"questions": [
-              &nbsp;&nbsp;&nbsp;&nbsp;{
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"question": "sample question?",
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"answers": ["A", "B", "C", "D"],
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"correct_option": 1,
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"explanation": "Why this answer is correct."
-              &nbsp;&nbsp;&nbsp;&nbsp;}
-              &nbsp;&nbsp;]
-              }
+{
+  "title": "<your subject here>",
+  "type": "multiple choice",
+  "questions": [
+    {
+      "question": "sample question?",
+      "answers": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "correct_option": 1,
+      "explanation": "Why this answer is correct."
+    }
+  ]
+}
             </pre>
+            <!-- prettier-ignore-end -->
+
             <p>
               Make at least
               <span class="ph-warn">&lt;number of questions (e.g., 20, 30)&gt;</span>
