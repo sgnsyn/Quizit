@@ -78,7 +78,7 @@ body.nav-open nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 4rem;
   margin: 1rem;
   border-radius: 100vw;
   background-color: var(--bg-light);
@@ -97,8 +97,21 @@ body.nav-open nav {
   font-size: 1.25rem;
   font-weight: bold;
   text-transform: uppercase;
+  cursor: default;
 }
-
+.about-link {
+  font-size: 1.125rem;
+  font-weight: bold;
+  padding-inline: 0.55rem;
+  color: var(--text);
+  text-transform: uppercase;
+  font-size: 1rem;
+  color: var(--primary);
+  transition: color 0.1s ease-in-out;
+}
+.about-link:hover {
+  color: var(--secondary);
+}
 main {
   width: 100vw;
   height: 100vh;
@@ -365,6 +378,9 @@ button.three-dot-button {
   cursor: pointer;
   color: var(--text);
 }
+.popup-menu li:hover {
+  background-color: var(--highlight);
+}
 
 .popup-menu .delete-item:not(:only-child) {
   color: var(--danger);
@@ -372,7 +388,10 @@ button.three-dot-button {
 }
 
 .creation-popup {
-  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
   background-color: var(--bg);
   padding: 2rem;
   border-radius: 0.75rem;
@@ -685,6 +704,9 @@ givecore-reset-container {
 .config-label {
   font-weight: bold;
 }
+.config-label.save-load {
+  margin-top: 1rem;
+}
 
 .close-popup-btn {
   position: absolute;
@@ -806,7 +828,6 @@ input[type="radio"] {
   background-color: var(--bg-light);
   color: var(--warning);
   width: fit-content;
-  margin-inline: auto;
 }
 
 .custom-popup-backdrop {
@@ -835,6 +856,10 @@ input[type="radio"] {
   width: min(50ch, 90vw);
 }
 
+.custom-popup p {
+  text-align: center;
+}
+
 .custom-popup .button-container {
   gap: 1rem;
 }
@@ -851,6 +876,10 @@ input[type="radio"] {
 
 .button-container .danger-button {
   color: var(--danger);
+}
+
+.text-center {
+  text-align: center;
 }
 
 @media (hover: none) {
@@ -906,7 +935,7 @@ input[type="radio"] {
   }
 
   .popup-menu li:hover {
-    background-color: var(--bg-light);
+    background-color: var(--highlight);
   }
 
   .page-number.active:hover {
@@ -941,7 +970,7 @@ input[type="radio"] {
 
   .three-dot-button {
     opacity: 1;
-    pointer-events: auto3;
+    pointer-events: auto;
   }
 
   .total-score span {
@@ -965,11 +994,7 @@ input[type="radio"] {
     justify-content: flex-start;
     align-items: center;
   }
-
-  .creation-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+}
+.text-center {
+  text-align: center;
 }

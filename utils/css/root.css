@@ -5,12 +5,14 @@
 
 @font-face {
   font-family: "Cou";
-  src: url("../../assets/fonts/Courier/CourierPrime-Regular.ttf") format("truetype");
+  src: url("../../assets/fonts/Courier/CourierPrime-Regular.ttf")
+    format("truetype");
 }
 
 @font-face {
   font-family: "Atkin";
-  src: url("../../assets/fonts/Atkinson/AtkinsonHyperlegibleMono-VariableFont_wght.ttf") format("truetype");
+  src: url("../../assets/fonts/Atkinson/AtkinsonHyperlegibleMono-VariableFont_wght.ttf")
+    format("truetype");
 }
 
 :root {
@@ -53,7 +55,7 @@
   --bg-light: hsl(220 20% 100%);
   --text: hsl(220 25% 10%);
   --text-muted: hsl(220 10% 40%);
-  --highlight: hsl(220 25% 20%);
+  --highlight: hsl(220 25% 90%);
   --border: hsl(220 15% 75%);
   --border-muted: hsl(220 15% 85%);
 
@@ -83,7 +85,7 @@ body.light {
   --bg-light: hsl(220 20% 100%);
   --text: hsl(220 25% 10%);
   --text-muted: hsl(220 10% 40%);
-  --highlight: hsl(220 25% 20%);
+  --highlight: hsl(220 25% 90%);
   --border: hsl(220 15% 75%);
   --border-muted: hsl(220 15% 85%);
 

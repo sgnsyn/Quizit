@@ -155,10 +155,10 @@ export function initTheme() {
             const overwrite = await showCustomPopup({
                 message: 'Some data might be overwritten. Do you want to proceed?',
                 buttons: [
-                    { text: 'Overwrite All', value: true },
+                    { text: 'Overwrite All', value: true, className: 'danger-button' },
                     { text: 'Cancel', value: false }
                 ],
-                messageClass: 'warning-text'
+                messageClass: 'text-center'
             });
             if (overwrite) {
                 for (const key in importedData) {

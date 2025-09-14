@@ -376,7 +376,7 @@ function renderQuiz(container) {
   if (questionState && !questionState.is_correct) {
     const correctAnswerWrapper =
       answersContainer.querySelectorAll(".answer-wrapper")[
-      question.correct_option
+        question.correct_option
       ];
     correctAnswerWrapper.classList.add("was-correct");
   }
@@ -634,7 +634,7 @@ export function initializeQuizView() {
       const confirmation = await showCustomPopup({
         message:
           "This action will reset your progress for the current test. Are you sure you want to proceed?",
-        messageClass: "warning-text",
+        messageClass: "text-center",
         buttons: [
           { text: "Cancel", value: false },
           { text: "Reset", value: true, className: "danger-button" },
@@ -881,9 +881,8 @@ export function createPopupMenu(target, isFolder) {
   getPopupMenu().appendChild(ul);
   document.body.appendChild(getPopupMenu());
 
-  const popupRect = getPopupMenu().getBoundingClientRect();
-  getPopupMenu().style.top = `${rect.bottom}px`;
-  getPopupMenu().style.left = `${rect.right - popupRect.width}px`;
+  popupMenu.style.top = `${rect.bottom}px`;
+  popupMenu.style.right = `${window.innerWidth - rect.right}px`;
 }
 
 export function showCreationPopup(type, parentPath, rect) {
@@ -935,16 +934,6 @@ export function showCreationPopup(type, parentPath, rect) {
 
   document.body.appendChild(creationPopup);
 
-  if (window.innerWidth > 720) {
-    const nav = document.querySelector("nav");
-    const navRect = nav.getBoundingClientRect();
-    const popupWidth = creationPopup.offsetWidth;
-    const left = navRect.left + (navRect.width - popupWidth) / 2;
-
-    creationPopup.style.top = `${rect.bottom}px`;
-    creationPopup.style.left = `${left}px`;
-  }
-
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       fileSystem.createFileOrFolder(
@@ -975,9 +964,10 @@ export function showDeleteConfirmationPopup(path, isFolder) {
   confirmationPopup.className = "creation-popup delete-confirmation-popup";
 
   const warningMessage = document.createElement("p");
-  warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"
-    }?`;
-  warningMessage.style.color = "var(--warning)";
+  warningMessage.textContent = `Are you sure you want to delete this ${
+    isFolder ? "folder" : "file"
+  }?`;
+  warningMessage.className = "text-center";
   confirmationPopup.appendChild(warningMessage);
 
   const buttonContainer = document.createElement("div");
@@ -993,6 +983,7 @@ export function showDeleteConfirmationPopup(path, isFolder) {
 
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
+  deleteButton.className = "danger-button";
   deleteButton.addEventListener("click", () => {
     fileSystem.deleteItem(
       path,
@@ -1014,15 +1005,6 @@ export function showDeleteConfirmationPopup(path, isFolder) {
       document.body.removeChild(confirmationPopup);
       closePopupMenu();
     };
-  }
-
-  if (window.innerWidth > 720) {
-    const highlightedItem = document.querySelector(".highlighted");
-    if (highlightedItem) {
-      const rect = highlightedItem.getBoundingClientRect();
-      confirmationPopup.style.top = `${rect.bottom}px`;
-      confirmationPopup.style.left = `${rect.left}px`;
-    }
   }
 }
 
@@ -1075,16 +1057,6 @@ export function showRenamePopup(itemToRename, rect) {
 
   document.body.appendChild(renamePopup);
 
-  if (window.innerWidth > 720) {
-    const nav = document.querySelector("nav");
-    const navRect = nav.getBoundingClientRect();
-    const popupWidth = renamePopup.offsetWidth;
-    const left = navRect.left + (navRect.width - popupWidth) / 2;
-
-    renamePopup.style.top = `${rect.bottom}px`;
-    renamePopup.style.left = `${left}px`;
-  }
-
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       fileSystem.renameItem(
@@ -1108,15 +1080,15 @@ export function showRenamePopup(itemToRename, rect) {
 }
 
 function scrambleQuizAnswers(quizData) {
-  quizData.questions.forEach(question => {
+  quizData.questions.forEach((question) => {
     const correctAnswer = question.answers[question.correct_option];
-    
+
     const answersToShuffle = [...question.answers];
-    
+
     const shuffledAnswers = shuffle(answersToShuffle);
-    
+
     const newCorrectOption = shuffledAnswers.indexOf(correctAnswer);
-    
+
     question.answers = shuffledAnswers;
     question.correct_option = newCorrectOption;
   });
@@ -1124,15 +1096,19 @@ function scrambleQuizAnswers(quizData) {
 }
 
 function shuffle(array) {
-  let currentIndex = array.length,  randomIndex;
+  let currentIndex = array.length,
+    randomIndex;
 
   while (currentIndex != 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
     [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
+      array[randomIndex],
+      array[currentIndex],
+    ];
   }
 
   return array;
 }
+

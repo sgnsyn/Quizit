@@ -7,6 +7,8 @@ import {
   saveDirectory,
   saveContent,
   saveState,
+  getQuizState,
+  saveQuizState,
 } from "./state.js";
 
 export function findFolder(path, dir, currentPath = "root") {
@@ -146,12 +148,25 @@ export function deleteItem(path, isFolder, directory, content, uiFunctions) {
 
       pathsToDelete.forEach((p) => delete content[p]);
 
+      const quizState = getQuizState();
+      pathsToDelete.forEach((p) => {
+        if (quizState[p]) {
+          delete quizState[p];
+        }
+      });
+      saveQuizState(quizState);
+
       if (getSelectedItem() && getSelectedItem().startsWith(path + "/")) {
         setSelectedItem(null);
       }
     } else {
       // file
       delete content[path];
+      const quizState = getQuizState();
+      if (quizState[path]) {
+        delete quizState[path];
+        saveQuizState(quizState);
+      }
       if (getSelectedItem() === path) {
         setSelectedItem(null);
       }
@@ -232,6 +247,13 @@ export function renameItem(
 
       if (getSelectedItem() && getSelectedItem().startsWith(oldPath)) {
         setSelectedItem(getSelectedItem().replace(oldPath, newPath));
+      }
+
+      const quizState = getQuizState();
+      if (quizState[oldPath]) {
+        quizState[newPath] = quizState[oldPath];
+        delete quizState[oldPath];
+        saveQuizState(quizState);
       }
 
       saveDirectory(directory);

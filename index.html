@@ -107,6 +107,7 @@
           <use href="#long-left-arrow"></use>
         </svg>
       </button>
+
       <span class="text">files</span>
       <button class="svg-button settings-btn">
         <svg>
@@ -124,7 +125,9 @@
           <use href="#navbar"></use>
         </svg>
       </button>
+
       <span class="title"></span>
+      <a href="./about/" class="about-link">About</a>
     </div>
     <div class="file-content">
       <div class="file-view disabled">
@@ -205,23 +208,23 @@
 
             <!-- prettier-ignore-start -->
             <pre>
-{
-  "title": "<your subject here>",
-  "type": "multiple choice",
-  "questions": [
-    {
-      "question": "sample question?",
-      "answers": [
-        "A",
-        "B",
-        "C",
-        "D"
-      ],
-      "correct_option": 1,
-      "explanation": "Why this answer is correct."
-    }
-  ]
-}
+              {
+              "title": "<your subject here>",
+                "type": "multiple choice",
+                "questions": [
+                {
+                "question": "sample question?",
+                "answers": [
+                "A",
+                "B",
+                "C",
+                "D"
+                ],
+                "correct_option": 1,
+                "explanation": "Why this answer is correct."
+                }
+                ]
+                }
             </pre>
             <!-- prettier-ignore-end -->
 
@@ -287,7 +290,7 @@
         <label for="system-theme">System</label>
       </div>
     </div>
-    <span class="config-label">Save/Load Files and Config</span>
+    <span class="config-label save-load">Save/Load Files and Config</span>
     <div class="config-buttons">
       <button id="export-config-btn">Export Config</button>
       <button id="import-config-btn">Import Config</button>
