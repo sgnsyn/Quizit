@@ -1,36 +1,43 @@
 # Test Forge
 
-## About This Program
+---
 
-Test Forge is a web program that helps you create and take tests. Because you can install it on your device and use it offline, it works without an internet connection.
+## Introduction
 
-The program works in a straightforward way:
+Test Forge is a web app that helps you make and take tests. The best part? You can use it offline once you have it on your device. No internet, no problem!
 
-1.  **Get Your Questions Ready:** You create your own test questions. You can do this by hand or by using a tool to generate them. Your questions must be saved in a specific JSON file format.
-2.  **Make a Test:** You upload your JSON file to the program. Test Forge then turns the data into a working test right away.
-3.  **Use Key Features:** As you take the test, the program automatically saves your progress, keeps track of your score, and lets you review your answers when you're done.
+It works in a few easy steps:
 
-This project was built to make it easy to create tests, so you can spend less time building them and more time learning.
+1.  **Prep Your Questions:** Write your own questions and save them in a special JSON file format. (You can also generate your questions using AI, just so you know).
+2.  **Make Your Test:** Upload that file to the program. Test Forge instantly turns it into a live test.
+3.  **Take Your Test:** The program automatically saves your progress, tracks your score, and lets you review everything once you're done.
 
-## How to Get Started
+This project was built to make creating tests a breeze, so you can spend less time setting things up and more time actually learning.
 
-### What You Need
+---
 
-- A modern web browser (like Chrome, Firefox, or Safari).
+## Getting Started
+
+### What You'll Need
+
+- A modern web browser like Chrome, Firefox, or Safari.
 
 ### How to Run It
 
-This program is live and ready to use. Simply visit the following link in your browser:
+This program is ready to go! Just visit the link below:
 
 [PASTE YOUR GITHUB PAGES LINK HERE]
 
-To install the program, look for an "install" button in your browser's address bar after the page has loaded. This will add Test Forge to your home screen or desktop so you can use it offline.
+If you want to install it, just look for an **"install" button** in your browser's address bar after the page loads. It'll add Test Forge to your home screen or desktop, so you can use it offline anytime.
+
+---
 
 ## How to Use It
 
 ### Making a Test
 
 1.  **Create a JSON file** with your questions. The file should look like this:
+
     ```json
     {
       "title": "<your subject here>",
@@ -45,25 +52,20 @@ To install the program, look for an "install" button in your browser's address b
       ]
     }
     ```
-2.  **Upload the JSON file** on the Test Forge.
-3.  **Start the test!** The questions will appear, and your work will be saved automatically, even if you are not connected to the internet.
 
-## How to Help
+    A quick heads-up: when using AI to generate questions, the answers can sometimes be biased towards the same option (like 'B' being the correct answer for every question). To avoid this, Test Forge automatically shuffles the answers you provide.
 
-We appreciate any help you can give to make this project better.
+2.  **Upload the JSON file** on the Test Forge page.
+3.  **Start your test!** Questions will pop up, and your progress saves automatically, even if you lose your internet connection.
 
-1.  Copy the project to your own GitHub account (Fork it).
-2.  Create a new branch for your changes (`git checkout -b new-feature`).
-3.  Save your changes (`git commit -m 'Add a new feature'`).
-4.  Send your changes to your new branch (`git push origin new-feature`).
-5.  Create a pull request to share your work with us.
+---
 
-## License
+## Want to Help?
 
-This project is open-source under the MIT License. See the `LICENSE` file for more details.
+We'd love your help to make this project even better.
 
-## Contact
-
-Your Name - [YOUR EMAIL]
-
-Project Link: [https://github.com/YOUR-USERNAME/test-forge](https://github.com/YOUR-USERNAME/test-forge)
+1.  **Fork** this project to your own GitHub account.
+2.  **Create a new branch** for your changes (`git checkout -b new-feature`).
+3.  **Commit your changes** (`git commit -m 'Add a new feature'`).
+4.  **Push your changes** to your new branch (`git push origin new-feature`).
+5.  **Open a pull request** to share your work with everyone!
