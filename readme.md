@@ -24,9 +24,7 @@ This project was built to make creating tests a breeze, so you can spend less ti
 
 ### How to Run It
 
-This program is ready to go! Just visit the link below:
-
-[PASTE YOUR GITHUB PAGES LINK HERE]
+This program is ready to go! Just go to Test Forge(https://sgnsyn.github.io/test_forge/)
 
 If you want to install it, just look for an **"install" button** in your browser's address bar after the page loads. It'll add Test Forge to your home screen or desktop, so you can use it offline anytime.
 
