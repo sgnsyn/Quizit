@@ -5,7 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Test Forge</title>
+  <meta name="description" content="Create, take, and manage your tests with Test Forge. This installable web app works offline, allowing you to generate tests from JSON files and track your progress anytime, anywhere.">
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.webmanifest" />
 </head>
 
 <body class="light">
@@ -102,14 +104,14 @@
   </svg>
   <nav>
     <div class="nav-header">
-      <button class="svg-button nav-collapse">
+      <button class="svg-button nav-collapse" aria-label="close navbar">
         <svg>
           <use href="#long-left-arrow"></use>
         </svg>
       </button>
 
       <span class="text">files</span>
-      <button class="svg-button settings-btn">
+      <button class="svg-button settings-btn" aria-label="open settings">
         <svg>
           <use href="#setting"></use>
         </svg>
@@ -120,7 +122,7 @@
   <main>
     <div class="directory-display">
 
-      <button class="svg-button nav-expand">
+      <button class="svg-button nav-expand"aria-label="open navbar">
         <svg>
           <use href="#navbar"></use>
         </svg>
@@ -143,7 +145,7 @@
         <div class="test-pagination-container">
           <div class="pagination-controls">
             <div class="pagination-display">
-              <button class="svg-button page-arrow">
+              <button class="svg-button page-arrow" aria-label="Next page of questions">
                 <svg>
                   <use href="#left-arrow"></use>
                 </svg>
@@ -160,7 +162,7 @@
                 <button class="page-number">9</button>
                 <button class="page-number">10</button>
               </div>
-              <button class="svg-button page-arrow">
+              <button class="svg-button page-arrow" aria-label="Next page of questions">
                 <svg>
                   <use href="#right-arrow"></use>
                 </svg>
@@ -273,7 +275,7 @@
     </ul>
   </div>
   <div class="config-popup disabled">
-    <button class="svg-button close-popup-btn">
+    <button class="svg-button close-popup-btn" aria-label="Close settings popup">
       <svg>
         <use href="#close"></use>
       </svg>
@@ -298,6 +300,9 @@
       <button id="export-config-btn">Save Files</button>
       <button id="import-config-btn">Load Files</button>
     </div>
+  </div>
+  <div class="loading-backdrop disabled">
+    <div class="loading-text">loading.</div>
   </div>
 </body>
 

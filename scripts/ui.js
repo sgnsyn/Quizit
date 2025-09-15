@@ -132,25 +132,50 @@ export function displayFileContent(path) {
       });
 
       newSaveButton.addEventListener("click", () => {
-        const newContent = contentInput.value;
-        const validationResult = validateQuizJSON(newContent);
+        const loadingBackdrop = document.querySelector(".loading-backdrop");
+        const loadingText = loadingBackdrop.querySelector(".loading-text");
 
-        const errorContainer = noFileContent.querySelector(".error-container");
-        if (!validationResult.isValid) {
-          errorContainer.textContent = validationResult.error;
-          return;
-        }
+        loadingBackdrop.classList.remove("disabled");
+        let dotCount = 1;
+        const intervalId = setInterval(() => {
+          loadingText.textContent = "loading" + ".".repeat(dotCount);
+          dotCount = (dotCount % 3) + 1;
+        }, 500);
 
-        errorContainer.textContent = "";
+        setTimeout(() => {
+          try {
+            const newContent = contentInput.value;
+            const validationResult = validateQuizJSON(newContent);
 
-        let quizData = JSON.parse(newContent);
-        quizData = scrambleQuizAnswers(quizData);
-        const scrambledContent = JSON.stringify(quizData, null, 2);
+            const errorContainer = noFileContent.querySelector(".error-container");
+            if (!validationResult.isValid) {
+              errorContainer.textContent = validationResult.error;
+              loadingBackdrop.classList.add("disabled");
+              clearInterval(intervalId);
+              return;
+            }
 
-        const currentContent = getContent();
-        currentContent[path] = scrambledContent;
-        saveContent(currentContent);
-        displayFileContent(path);
+            errorContainer.textContent = "";
+
+            let quizData = JSON.parse(newContent);
+            quizData = scrambleQuizAnswers(quizData);
+            const scrambledContent = JSON.stringify(quizData, null, 2);
+
+            const currentContent = getContent();
+            currentContent[path] = scrambledContent;
+            saveContent(currentContent);
+
+            loadingBackdrop.classList.add("disabled");
+            clearInterval(intervalId);
+            displayFileContent(path);
+          } catch (e) {
+            console.error("Error processing JSON:", e);
+            const errorContainer = noFileContent.querySelector(".error-container");
+            errorContainer.textContent = "An error occurred while processing the file.";
+            loadingBackdrop.classList.add("disabled");
+            clearInterval(intervalId);
+          }
+        }, 10);
       });
 
       contentInput.addEventListener("keydown", (e) => {
@@ -678,7 +703,7 @@ export function createFileTree(data, parent, path = "") {
       fileFolderInfo.className = "file-folder-info";
 
       const expandButton = document.createElement("button");
-      expandButton.className = "svg-button expand-collapse";
+      expandButton.className = "svg-button";
       const expandSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "svg",
@@ -726,6 +751,7 @@ export function createFileTree(data, parent, path = "") {
 
       const threeDotButton = document.createElement("button");
       threeDotButton.className = "svg-button three-dot-button";
+      threeDotButton.setAttribute("aria-label", "Open options");
       const threeDotSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "svg",
@@ -786,6 +812,7 @@ export function createFileTree(data, parent, path = "") {
 
       const threeDotButton = document.createElement("button");
       threeDotButton.className = "svg-button three-dot-button";
+      threeDotButton.setAttribute("aria-label", "Open options");
       const threeDotSvg = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "svg",
