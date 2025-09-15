@@ -161,17 +161,18 @@ export function displayFileContent(path) {
       });
 
       const copyButton = noFileContent.querySelector(".copy-button");
+      const copyFeedback = noFileContent.querySelector(".copy-feedback");
       copyButton.addEventListener("click", () => {
         const codeBlock = noFileContent.querySelector(".code-block");
         const textToCopy = codeBlock.innerText;
-        navigator.clipboard.writeText(textToCopy).then(
-          () => {
-            // Optional: Show a "Copied!" message
-          },
-          (err) => {
-            console.error("Could not copy text: ", err);
-          },
-        );
+        copyTextToClipboard(textToCopy).then((success) => {
+          if (success) {
+            copyFeedback.classList.remove("disabled");
+            setTimeout(() => {
+              copyFeedback.classList.add("disabled");
+            }, 2000);
+          }
+        });
       });
     } else {
       try {
@@ -1112,3 +1113,38 @@ function shuffle(array) {
   return array;
 }
 
+function copyTextToClipboard(text) {
+  return new Promise((resolve) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => resolve(true),
+        () => {
+          console.error("Clipboard API failed, falling back.");
+          resolve(fallbackCopyTextToClipboard(text));
+        },
+      );
+    } else {
+      resolve(fallbackCopyTextToClipboard(text));
+    }
+  });
+}
+
+function fallbackCopyTextToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    console.error("Fallback copy failed: ", err);
+    document.body.removeChild(textArea);
+    return false;
+  }
+}

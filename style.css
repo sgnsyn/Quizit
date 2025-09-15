@@ -218,10 +218,16 @@ pre {
   gap: 1rem;
 }
 
-.copy-button {
+.copy-container {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.copy-button {
   transition: transform 0.1s ease-in-out;
 }
 
@@ -997,4 +1003,8 @@ input[type="radio"] {
 }
 .text-center {
   text-align: center;
+}
+
+.copy-feedback {
+  color: var(--primary);
 }

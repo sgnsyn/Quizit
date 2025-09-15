@@ -9,6 +9,7 @@ import {
   setSelectedItem,
   saveState,
   getSelectedItem,
+  cleanupState,
 } from "./state.js";
 import {
   createFileTree,
@@ -90,6 +91,7 @@ filetreeContainer.addEventListener("click", (e) => {
 initializeQuizView();
 initTheme();
 loadState();
+cleanupState();
 renderFileTree();
 displayFileContent(getSelectedItem());
 

@@ -128,3 +128,79 @@ export function getQuizState() {
 export function saveQuizState(quizState) {
   localStorage.setItem("quizState", JSON.stringify(quizState));
 }
+
+export function cleanupState() {
+  const directory = getDirectory();
+  if (!directory) return;
+
+  const allFilePaths = [];
+  const allFolderPaths = [];
+
+  function collectPaths(folder, currentPath) {
+    for (const item of folder.children) {
+      const itemPath = `${currentPath}/${item.name}`;
+      if (item.type === "file") {
+        allFilePaths.push(itemPath);
+      } else if (item.type === "folder") {
+        allFolderPaths.push(itemPath);
+        if (item.children) {
+          collectPaths(item, itemPath);
+        }
+      }
+    }
+  }
+
+  allFolderPaths.push("root");
+  collectPaths(directory, "root");
+
+  // Clean content
+  const content = getContent();
+  let contentChanged = false;
+  if (content) {
+    for (const contentPath in content) {
+      if (!allFilePaths.includes(contentPath)) {
+        delete content[contentPath];
+        contentChanged = true;
+      }
+    }
+  }
+  if (contentChanged) {
+    saveContent(content);
+  }
+
+  // Clean openFolders
+  const originalOpenFoldersLength = openFolders.length;
+  const cleanedOpenFolders = openFolders.filter((folderPath) =>
+    allFolderPaths.includes(folderPath),
+  );
+  let openFoldersChanged =
+    cleanedOpenFolders.length !== originalOpenFoldersLength;
+  if (openFoldersChanged) {
+    openFolders.length = 0;
+    openFolders.push(...cleanedOpenFolders);
+  }
+
+  // Clean selectedItem
+  let selectedItemChanged = false;
+  if (selectedItem && !allFilePaths.includes(selectedItem)) {
+    setSelectedItem(null);
+    selectedItemChanged = true;
+  }
+
+  if (openFoldersChanged || selectedItemChanged) {
+    saveState();
+  }
+
+  // Clean quizState
+  const quizState = getQuizState();
+  let quizStateChanged = false;
+  for (const path in quizState) {
+    if (!allFilePaths.includes(path)) {
+      delete quizState[path];
+      quizStateChanged = true;
+    }
+  }
+  if (quizStateChanged) {
+    saveQuizState(quizState);
+  }
+}

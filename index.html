@@ -195,11 +195,14 @@
             </p>
           </div>
           <div class="code-block">
-            <button class="svg-button copy-button">
-              <svg>
-                <use href="#copy"></use>
-              </svg>
-            </button>
+            <div class="copy-container">
+              <span class="copy-feedback disabled">Copied...</span>
+              <button class="svg-button copy-button">
+                <svg>
+                  <use href="#copy"></use>
+                </svg>
+              </button>
+            </div>
             <p>
               Generate exercise questions in JSON using the format given
               below...
@@ -292,8 +295,8 @@
     </div>
     <span class="config-label save-load">Save/Load Files and Config</span>
     <div class="config-buttons">
-      <button id="export-config-btn">Export Config</button>
-      <button id="import-config-btn">Import Config</button>
+      <button id="export-config-btn">Save Files</button>
+      <button id="import-config-btn">Load Files</button>
     </div>
   </div>
 </body>
