@@ -1,9 +1,0 @@
-{
-  "name": "Test Forge",
-  "short_name": "TestForge",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#17191c",
-  "theme_color": "#9980e6",
-  "description": "A simple app to create and take tests."
-}

@@ -407,6 +407,7 @@ button.three-dot-button {
   gap: 1rem;
   box-shadow: var(--shadow);
   width: min(35ch, 70vw);
+  transition: all 0.2s ease-in-out;
 }
 
 .creation-popup input {
@@ -564,18 +565,7 @@ button.three-dot-button {
 
 .page-arrow:disabled {
   cursor: default;
-}
-
-givecore-reset-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  width: min(75ch, 90vw);
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: var(--bg);
-  border-radius: 1.25rem;
+  opacity: 0.4;
 }
 
 .score-reset-container {
@@ -648,6 +638,7 @@ givecore-reset-container {
 .reset-btn:disabled {
   background-color: transparent;
   cursor: default;
+  opacity: 0.4;
 }
 
 .reset-btn {
