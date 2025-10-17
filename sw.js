@@ -1,126 +1,116 @@
 const CACHE_NAME = "quizit-pwa-cache-v1";
 const PRECACHE_RESOURCES = [
   // HTML
-  "/",
-  "/index.html",
-  "/about/index.html",
+  "./",
+  "./index.html",
+  "./about/index.html",
 
   // CSS
-  "/style.css",
-  "/about/style.css",
-  "/utils/css/root.css",
-  "/utils/css/scrollbar.css",
+  "./style.css",
+  "./about/style.css",
+  "./utils/css/root.css",
+  "./utils/css/scrollbar.css",
 
   // JS
-  "/about/script.js",
-  "/scripts/fileSystem.js",
-  "/scripts/jsonParse.js",
-  "/scripts/main.js",
-  "/scripts/popup.js",
-  "/scripts/state.js",
-  "/scripts/theme.js",
-  "/scripts/ui.js",
-  "/scripts/sw-register.js",
+  "./about/script.js",
+  "./scripts/fileSystem.js",
+  "./scripts/jsonParse.js",
+  "./scripts/main.js",
+  "./scripts/popup.js",
+  "./scripts/state.js",
+  "./scripts/theme.js",
+  "./scripts/ui.js",
+  "./scripts/sw-register.js",
 
   // Manifest and icons
-  "/site.webmanifest",
-  "/assets/icons/icons.json",
+  "./site.webmanifest",
 
   // Fonts
-  "/assets/fonts/Atkinson/Atkinson.ttf",
-  "/assets/fonts/Courier/Courier.ttf",
-  "/assets/fonts/Inter/Inter.ttf",
+  "./assets/fonts/Atkinson/Atkinson.ttf",
+  "./assets/fonts/Courier/Courier.ttf",
+  "./assets/fonts/Inter/Inter.ttf",
 
   // Icons - Android
-  "/assets/icons/android/android-launchericon-48-48.png",
-  "/assets/icons/android/android-launchericon-72-72.png",
-  "/assets/icons/android/android-launchericon-96-96.png",
-  "/assets/icons/android/android-launchericon-144-144.png",
-  "/assets/icons/android/android-launchericon-192-192.png",
-  "/assets/icons/android/android-launchericon-512-512.png",
+  "./assets/icons/android/android-launchericon-48-48.png",
+  "./assets/icons/android/android-launchericon-72-72.png",
+  "./assets/icons/android/android-launchericon-96-96.png",
+  "./assets/icons/android/android-launchericon-144-144.png",
+  "./assets/icons/android/android-launchericon-192-192.png",
+  "./assets/icons/android/android-launchericon-512-512.png",
 
   // Icons - iOS
-  "/assets/icons/ios/16.png",
-  "/assets/icons/ios/20.png",
-  "/assets/icons/ios/29.png",
-  "/assets/icons/ios/32.png",
-  "/assets/icons/ios/40.png",
-  "/assets/icons/ios/50.png",
-  "/assets/icons/ios/57.png",
-  "/assets/icons/ios/58.png",
-  "/assets/icons/ios/60.png",
-  "/assets/icons/ios/64.png",
-  "/assets/icons/ios/72.png",
-  "/assets/icons/ios/76.png",
-  "/assets/icons/ios/80.png",
-  "/assets/icons/ios/87.png",
-  "/assets/icons/ios/100.png",
-  "/assets/icons/ios/114.png",
-  "/assets/icons/ios/120.png",
-  "/assets/icons/ios/128.png",
-  "/assets/icons/ios/144.png",
-  "/assets/icons/ios/152.png",
-  "/assets/icons/ios/167.png",
-  "/assets/icons/ios/180.png",
-  "/assets/icons/ios/192.png",
-  "/assets/icons/ios/256.png",
-  "/assets/icons/ios/512.png",
-  "/assets/icons/ios/1024.png",
-  "/assets/icons/apple-touch-icon.png",
-  "/assets/icons/favicon-96x96.png",
-  "/assets/icons/favicon.svg",
-  "/assets/icons/favicon.ico",
+  "./assets/icons/ios/16.png",
+  "./assets/icons/ios/20.png",
+  "./assets/icons/ios/29.png",
+  "./assets/icons/ios/32.png",
+  "./assets/icons/ios/40.png",
+  "./assets/icons/ios/50.png",
+  "./assets/icons/ios/57.png",
+  "./assets/icons/ios/58.png",
+  "./assets/icons/ios/60.png",
+  "./assets/icons/ios/64.png",
+  "./assets/icons/ios/72.png",
+  "./assets/icons/ios/76.png",
+  "./assets/icons/ios/80.png",
+  "./assets/icons/ios/87.png",
+  "./assets/icons/ios/100.png",
+  "./assets/icons/ios/114.png",
+  "./assets/icons/ios/120.png",
+  "./assets/icons/ios/128.png",
+  "./assets/icons/ios/144.png",
+  "./assets/icons/ios/152.png",
+  "./assets/icons/ios/167.png",
+  "./assets/icons/ios/180.png",
+  "./assets/icons/ios/192.png",
+  "./assets/icons/ios/256.png",
+  "./assets/icons/ios/512.png",
+  "./assets/icons/ios/1024.png",
+  "./assets/icons/apple-touch-icon.png",
+  "./assets/icons/favicon-96x96.png",
+  "./assets/icons/favicon.svg",
+  "./assets/icons/favicon.ico",
 
   // Icons - Windows 11
-  "/assets/icons/windows11/LargeTile.scale-100.png",
-  "/assets/icons/windows11/LargeTile.scale-125.png",
-  "/assets/icons/windows11/LargeTile.scale-150.png",
-  "/assets/icons/windows11/LargeTile.scale-200.png",
-  "/assets/icons/windows11/LargeTile.scale-400.png",
-  "/assets/icons/windows11/SmallTile.scale-100.png",
-  "/assets/icons/windows11/SmallTile.scale-125.png",
-  "/assets/icons/windows11/SmallTile.scale-150.png",
-  "/assets/icons/windows11/SmallTile.scale-200.png",
-  "/assets/icons/windows11/SmallTile.scale-400.png",
-  "/assets/icons/windows11/SplashScreen.scale-100.png",
-  "/assets/icons/windows11/SplashScreen.scale-125.png",
-  "/assets/icons/windows11/SplashScreen.scale-150.png",
-  "/assets/icons/windows11/SplashScreen.scale-200.png",
-  "/assets/icons/windows11/SplashScreen.scale-400.png",
-  "/assets/icons/windows11/Square150x150Logo.scale-100.png",
-  "/assets/icons/windows11/Square150x150Logo.scale-125.png",
-  "/assets/icons/windows11/Square150x150Logo.scale-150.png",
-  "/assets/icons/windows11/Square150x150Logo.scale-200.png",
-  "/assets/icons/windows11/Square150x150Logo.scale-400.png",
-  "/assets/icons/windows11/Wide310x150Logo.scale-100.png",
-  "/assets/icons/windows11/Wide310x150Logo.scale-125.png",
-  "/assets/icons/windows11/Wide310x150Logo.scale-150.png",
-  "/assets/icons/windows11/Wide310x150Logo.scale-200.png",
-  "/assets/icons/windows11/Wide310x150Logo.scale-400.png",
-  "/assets/icons/windows11/StoreLogo.scale-100.png",
-  "/assets/icons/windows11/StoreLogo.scale-125.png",
-  "/assets/icons/windows11/StoreLogo.scale-150.png",
-  "/assets/icons/windows11/StoreLogo.scale-200.png",
-  "/assets/icons/windows11/StoreLogo.scale-400.png",
+  "./assets/icons/windows11/LargeTile.scale-100.png",
+  "./assets/icons/windows11/LargeTile.scale-125.png",
+  "./assets/icons/windows11/LargeTile.scale-150.png",
+  "./assets/icons/windows11/LargeTile.scale-200.png",
+  "./assets/icons/windows11/LargeTile.scale-400.png",
+  "./assets/icons/windows11/SmallTile.scale-100.png",
+  "./assets/icons/windows11/SmallTile.scale-125.png",
+  "./assets/icons/windows11/SmallTile.scale-150.png",
+  "./assets/icons/windows11/SmallTile.scale-200.png",
+  "./assets/icons/windows11/SmallTile.scale-400.png",
+  "./assets/icons/windows11/SplashScreen.scale-100.png",
+  "./assets/icons/windows11/SplashScreen.scale-125.png",
+  "./assets/icons/windows11/SplashScreen.scale-150.png",
+  "./assets/icons/windows11/SplashScreen.scale-200.png",
+  "./assets/icons/windows11/SplashScreen.scale-400.png",
+  "./assets/icons/windows11/Square150x150Logo.scale-100.png",
+  "./assets/icons/windows11/Square150x150Logo.scale-125.png",
+  "./assets/icons/windows11/Square150x150Logo.scale-150.png",
+  "./assets/icons/windows11/Square150x150Logo.scale-200.png",
+  "./assets/icons/windows11/Square150x150Logo.scale-400.png",
+  "./assets/icons/windows11/Wide310x150Logo.scale-100.png",
+  "./assets/icons/windows11/Wide310x150Logo.scale-125.png",
+  "./assets/icons/windows11/Wide310x150Logo.scale-150.png",
+  "./assets/icons/windows11/Wide310x150Logo.scale-200.png",
+  "./assets/icons/windows11/Wide310x150Logo.scale-400.png",
+  "./assets/icons/windows11/StoreLogo.scale-100.png",
+  "./assets/icons/windows11/StoreLogo.scale-125.png",
+  "./assets/icons/windows11/StoreLogo.scale-150.png",
+  "./assets/icons/windows11/StoreLogo.scale-200.png",
+  "./assets/icons/windows11/StoreLogo.scale-400.png",
 ];
 
 // Install event: cache initial assets
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      for (const url of PRECACHE_RESOURCES) {
-        try {
-          const res = await fetch(url);
-          if (res.ok) await cache.put(url, res);
-        } catch (e) {
-          // Failed to cache
-        }
-      }
-      //resource cached
-    })(),
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(PRECACHE_RESOURCES))
+      .then(() => self.skipWaiting()),
   );
-  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -163,12 +153,16 @@ async function updateCacheInBackground(request) {
 
 // Respond with cached first, update cache in background
 async function handleRequest(event) {
-  let request = event.request;
+  const { request } = event;
   const url = new URL(request.url);
 
-  // If the request is for a directory, append index.html
+  // For directory requests, serve 'index.html' from cache.
   if (url.pathname.endsWith("/")) {
-    request = new Request(url.href + "index.html");
+    const cache = await caches.open(CACHE_NAME);
+    const cachedResponse = await cache.match(url.pathname + "index.html");
+    if (cachedResponse) {
+      return cachedResponse;
+    }
   }
 
   const cachedResponse =
@@ -193,29 +187,10 @@ async function handleRequest(event) {
     return networkResponse;
   } catch (error) {
     // Network fetch failed, return offline fallback
-    return getOfflineFallback(request);
-  }
-}
-
-async function getOfflineFallback(request) {
-  const dest = request.destination;
-
-  if (dest === "document") {
-    // Fallback to main page
-    return await caches.match("/index.html");
-  }
-
-  if (dest === "image") {
-    // Simple offline image response
-    return new Response("Image unavailable", {
+    return new Response("Network error: You are offline", {
       status: 503,
       statusText: "Offline",
+      headers: { "Content-Type": "text/plain" },
     });
   }
-
-  // Generic fallback for other requests
-  return new Response(JSON.stringify({ error: "Offline" }), {
-    status: 503,
-    headers: { "Content-Type": "application/json" },
-  });
 }
