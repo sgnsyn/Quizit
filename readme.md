@@ -24,7 +24,7 @@ This project was built to make creating tests a breeze, so you can spend less ti
 
 ### How to Run It
 
-This program is ready to go! Just go to [Quizit](https://sgnsyn.github.io/test_forge/)
+This program is ready to go! Just go to [Quizit](https://sgnsyn.github.io/Quizit/)
 
 If you want to install it, just look for an **"install" button** in your browser's address bar after the page loads. It'll add Quizit to your home screen or desktop, so you can use it offline anytime.
 
