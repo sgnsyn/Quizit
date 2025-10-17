@@ -98,7 +98,10 @@ export function setInstallIcon() {
   if (installBtn) {
     const use = installBtn.querySelector("use");
     if (use) {
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
       if (isMobile) {
         use.setAttribute("href", "#mobile-install");
       } else {
@@ -304,12 +307,19 @@ export function displayFileContent(path) {
 function renderQuiz(container) {
   container.innerHTML = "";
   const explanationText = document.querySelector(".explanation-text");
+  const prevButton = document.querySelector(".prev-btn");
+  const nextButton = document.querySelector(".next-btn");
+
   explanationText.classList.add("disabled");
   explanationText.textContent = "";
 
   if (filteredIndices.length === 0) {
     container.innerHTML = "<p>No questions match the current filter.</p>";
     renderPagination();
+
+    prevButton.setAttribute("disabled", "");
+    nextButton.setAttribute("disabled", "");
+
     return;
   }
 
@@ -420,7 +430,7 @@ function renderQuiz(container) {
   if (questionState && !questionState.is_correct) {
     const correctAnswerWrapper =
       answersContainer.querySelectorAll(".answer-wrapper")[
-      question.correct_option
+        question.correct_option
       ];
     correctAnswerWrapper.classList.add("was-correct");
   }
@@ -433,15 +443,13 @@ function renderQuiz(container) {
   questionContainer.appendChild(answersContainer);
   container.appendChild(questionContainer);
 
-  const prevButton = document.querySelector(".prev-btn");
-  const nextButton = document.querySelector(".next-btn");
-
   if (filteredIndices.length <= 1) {
-    prevButton.classList.add("disabled");
-    nextButton.classList.add("disabled");
+    prevButton.setAttribute("disabled", "");
+    nextButton.setAttribute("disabled", "");
   } else {
-    prevButton.classList.remove("disabled");
-    nextButton.classList.remove("disabled");
+    prevButton.removeAttribute("disabled");
+    nextButton.removeAttribute("disabled");
+
     const currentIndexInFiltered =
       filteredIndices.indexOf(currentQuestionIndex);
     prevButton.disabled = currentIndexInFiltered === 0;
@@ -647,6 +655,9 @@ export function initializeQuizView() {
       renderQuiz(questionDisplay);
     }
   });
+
+  prevButton.setAttribute("disabled", "");
+  nextButton.setAttribute("disabled", "");
 
   const leftArrow = document.querySelector(
     ".pagination-display .page-arrow:first-child",
@@ -1010,8 +1021,9 @@ export function showDeleteConfirmationPopup(path, isFolder) {
   confirmationPopup.className = "creation-popup delete-confirmation-popup";
 
   const warningMessage = document.createElement("p");
-  warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"
-    }?`;
+  warningMessage.textContent = `Are you sure you want to delete this ${
+    isFolder ? "folder" : "file"
+  }?`;
   warningMessage.className = "text-center";
   confirmationPopup.appendChild(warningMessage);
 
