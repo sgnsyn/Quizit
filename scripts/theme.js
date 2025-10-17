@@ -4,10 +4,17 @@ const themeRadios = document.querySelectorAll('input[name="theme"]');
 const body = document.body;
 
 function applyTheme(theme) {
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
     if (theme === 'light') {
         body.classList.add('light');
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute('content', '#f2f3f5');
+        }
     } else {
         body.classList.remove('light');
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute('content', '#14161a');
+        }
     }
 }
 

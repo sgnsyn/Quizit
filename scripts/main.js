@@ -17,9 +17,11 @@ import {
   createPopupMenu,
   initializeQuizView,
   toggleNav,
+  setInstallIcon,
 } from "./ui.js";
 import { expandToPath } from "./fileSystem.js";
 import { initTheme } from "./theme.js";
+import { registerWorker } from "./sw-register.js";
 
 let directory = getDirectory();
 if (!directory) {
@@ -47,7 +49,6 @@ const navBackdrop = document.querySelector(".nav-backdrop");
 navExpandBtn.addEventListener("click", toggleNav);
 navCollapseBtn.addEventListener("click", toggleNav);
 navBackdrop.addEventListener("click", toggleNav);
-
 
 function renderFileTree() {
   const directory = getDirectory();
@@ -87,25 +88,11 @@ filetreeContainer.addEventListener("click", (e) => {
   }
 });
 
-
 initializeQuizView();
 initTheme();
+setInstallIcon();
 loadState();
 cleanupState();
 renderFileTree();
 displayFileContent(getSelectedItem());
-
-window.addEventListener('resize', () => {
-    renderFileTree();
-    displayFileContent(getSelectedItem());
-});
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(registration => {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, err => {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
+registerWorker();

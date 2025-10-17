@@ -1,15 +1,15 @@
-# Test Forge
+# Quizit
 
 ---
 
 ## Introduction
 
-Test Forge is a web app that helps you make and take tests. The best part? You can use it offline once you have it on your device. No internet, no problem!
+Quizit is a web app that helps you make and take tests. The best part? You can use it offline once you have it on your device. No internet, no problem!
 
 It works in a few easy steps:
 
 1.  **Prep Your Questions:** Write your own questions and save them in a special JSON file format. (You can also generate your questions using AI, just so you know).
-2.  **Make Your Test:** Upload that file to the program. Test Forge instantly turns it into a live test.
+2.  **Make Your Test:** Upload that file to the program. Quizit instantly turns it into a live test.
 3.  **Take Your Test:** The program automatically saves your progress, tracks your score, and lets you review everything once you're done.
 
 This project was built to make creating tests a breeze, so you can spend less time setting things up and more time actually learning.
@@ -24,9 +24,9 @@ This project was built to make creating tests a breeze, so you can spend less ti
 
 ### How to Run It
 
-This program is ready to go! Just go to [Test Forge](https://sgnsyn.github.io/test_forge/)
+This program is ready to go! Just go to [Quizit](https://sgnsyn.github.io/test_forge/)
 
-If you want to install it, just look for an **"install" button** in your browser's address bar after the page loads. It'll add Test Forge to your home screen or desktop, so you can use it offline anytime.
+If you want to install it, just look for an **"install" button** in your browser's address bar after the page loads. It'll add Quizit to your home screen or desktop, so you can use it offline anytime.
 
 ---
 
@@ -51,9 +51,9 @@ If you want to install it, just look for an **"install" button** in your browser
     }
     ```
 
-    A quick heads-up: when using AI to generate questions, the answers can sometimes be biased towards the same option (like 'B' being the correct answer for every question). To avoid this, Test Forge automatically shuffles the answers you provide.
+    A quick heads-up: when using AI to generate questions, the answers can sometimes be biased towards the same option (like 'B' being the correct answer for every question). To avoid this, Quizit automatically shuffles the answers you provide.
 
-2.  **Upload the JSON file** on the Test Forge page.
+2.  **Upload the JSON file** on the Quizit page.
 3.  **Start your test!** Questions will pop up, and your progress saves automatically, even if you lose your internet connection.
 
 ---

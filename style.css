@@ -85,6 +85,13 @@ body.nav-open nav {
   padding: 1rem;
 }
 
+.add-setting-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
 .nav-collapse {
   transform: rotate(-90deg);
 }
@@ -99,6 +106,7 @@ body.nav-open nav {
   text-transform: uppercase;
   cursor: default;
 }
+
 .about-link {
   font-size: 1.125rem;
   font-weight: bold;
@@ -109,9 +117,11 @@ body.nav-open nav {
   color: var(--primary);
   transition: color 0.1s ease-in-out;
 }
+
 .about-link:hover {
   color: var(--secondary);
 }
+
 main {
   width: 100%;
   height: 100vh;
@@ -127,12 +137,15 @@ main {
   margin-bottom: 1rem;
   font-size: 1.25rem;
   color: var(--text);
+  background-color: var(--bg-dark);
+
   text-align: right;
   display: flex;
   justify-content: space-between;
   overflow: hidden;
   flex-shrink: 0;
   gap: 2rem;
+  z-index: 1;
 }
 
 .directory-display span {
@@ -144,7 +157,6 @@ main {
   text-overflow: ellipsis;
   min-width: 0;
   font-family: Atkin;
-  max-width: 24ch;
 }
 
 .directory-display .path {
@@ -384,6 +396,7 @@ button.three-dot-button {
   cursor: pointer;
   color: var(--text);
 }
+
 .popup-menu li:hover {
   background-color: var(--highlight);
 }
@@ -653,6 +666,7 @@ button.three-dot-button {
   font-family: Cou;
   color: var(--info);
   text-align: justify;
+  line-height: 3ch;
 }
 
 .filter-popup {
@@ -701,6 +715,7 @@ button.three-dot-button {
 .config-label {
   font-weight: bold;
 }
+
 .config-label.save-load {
   margin-top: 1rem;
 }
@@ -1010,6 +1025,7 @@ input[type="radio"] {
     align-items: center;
   }
 }
+
 .text-center {
   text-align: center;
 }

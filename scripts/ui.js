@@ -93,6 +93,21 @@ const uiFunctions = {
   toggleNav,
 };
 
+export function setInstallIcon() {
+  const installBtn = document.getElementById("install-btn");
+  if (installBtn) {
+    const use = installBtn.querySelector("use");
+    if (use) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        use.setAttribute("href", "#mobile-install");
+      } else {
+        use.setAttribute("href", "#desktop-install");
+      }
+    }
+  }
+}
+
 export function toggleNav() {
   document.body.classList.toggle("nav-open");
   const navBackdrop = document.querySelector(".nav-backdrop");
@@ -147,7 +162,8 @@ export function displayFileContent(path) {
             const newContent = contentInput.value;
             const validationResult = validateQuizJSON(newContent);
 
-            const errorContainer = noFileContent.querySelector(".error-container");
+            const errorContainer =
+              noFileContent.querySelector(".error-container");
             if (!validationResult.isValid) {
               errorContainer.textContent = validationResult.error;
               loadingBackdrop.classList.add("disabled");
@@ -169,9 +185,11 @@ export function displayFileContent(path) {
             clearInterval(intervalId);
             displayFileContent(path);
           } catch (e) {
-            console.error("Error processing JSON:", e);
-            const errorContainer = noFileContent.querySelector(".error-container");
-            errorContainer.textContent = "An error occurred while processing the file.";
+            // .error("Error processing JSON:", e);
+            const errorContainer =
+              noFileContent.querySelector(".error-container");
+            errorContainer.textContent =
+              "An error occurred while processing the file.";
             loadingBackdrop.classList.add("disabled");
             clearInterval(intervalId);
           }
@@ -402,7 +420,7 @@ function renderQuiz(container) {
   if (questionState && !questionState.is_correct) {
     const correctAnswerWrapper =
       answersContainer.querySelectorAll(".answer-wrapper")[
-        question.correct_option
+      question.correct_option
       ];
     correctAnswerWrapper.classList.add("was-correct");
   }
@@ -992,9 +1010,8 @@ export function showDeleteConfirmationPopup(path, isFolder) {
   confirmationPopup.className = "creation-popup delete-confirmation-popup";
 
   const warningMessage = document.createElement("p");
-  warningMessage.textContent = `Are you sure you want to delete this ${
-    isFolder ? "folder" : "file"
-  }?`;
+  warningMessage.textContent = `Are you sure you want to delete this ${isFolder ? "folder" : "file"
+    }?`;
   warningMessage.className = "text-center";
   confirmationPopup.appendChild(warningMessage);
 
@@ -1146,7 +1163,7 @@ function copyTextToClipboard(text) {
       navigator.clipboard.writeText(text).then(
         () => resolve(true),
         () => {
-          console.error("Clipboard API failed, falling back.");
+          // .error("Clipboard API failed, falling back.");
           resolve(fallbackCopyTextToClipboard(text));
         },
       );
@@ -1170,7 +1187,7 @@ function fallbackCopyTextToClipboard(text) {
     document.body.removeChild(textArea);
     return successful;
   } catch (err) {
-    console.error("Fallback copy failed: ", err);
+    // .error("Fallback copy failed: ", err);
     document.body.removeChild(textArea);
     return false;
   }

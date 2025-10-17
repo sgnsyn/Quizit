@@ -3,14 +3,31 @@
 
 <head>
   <meta charset="UTF-8" />
+  <!-- fav icon -->
+  <link rel=" icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg" />
+  <link rel="shortcut icon" href="/assets/icons/favicon.ico" />
+
+  <!-- Apple/iOS Support -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Quizit" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- site.webmanifest -->
+  <meta name="theme-color" content="#14161a" />
+  <link rel="manifest" href="/site.webmanifest" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test Forge</title>
-  <meta name="description" content="Create, take, and manage your tests with Test Forge. This installable web app works offline, allowing you to generate tests from JSON files and track your progress anytime, anywhere.">
+  <meta name="description"
+    content="Create, take, and manage your tests with Quizit. This installable web app works offline, allowing you to generate tests from JSON files and track your progress anytime, anywhere." />
+
+  <!-- css -->
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Quizit</title>
 </head>
 
-<body class="light">
+<body class="dark">
   <svg style="display: none">
     <symbol id="copy" viewBox="0 0 24 24">
       <path
@@ -29,7 +46,7 @@
     <symbol id="filter" viewBox="0 0 24 24">
       <path
         d="M3 4.6C3 4.03995 3 3.75992 3.10899 3.54601C3.20487 3.35785 3.35785 3.20487 3.54601 3.10899C3.75992 3 4.03995 3 4.6 3H19.4C19.9601 3 20.2401 3 20.454 3.10899C20.6422 3.20487 20.7951 3.35785 20.891 3.54601C21 3.75992 21 4.03995 21 4.6V6.33726C21 6.58185 21 6.70414 20.9724 6.81923C20.9479 6.92127 20.9075 7.01881 20.8526 7.10828C20.7908 7.2092 20.7043 7.29568 20.5314 7.46863L14.4686 13.5314C14.2957 13.7043 14.2092 13.7908 14.1474 13.8917C14.0925 13.9812 14.0521 14.0787 14.0276 14.1808C14 14.2959 14 14.4182 14 14.6627V17L10 21V14.6627C10 14.4182 10 14.2959 9.97237 14.1808C9.94787 14.0787 9.90747 13.9812 9.85264 13.8917C9.7908 13.7908 9.70432 13.7043 9.53137 13.5314L3.46863 7.46863C3.29568 7.29568 3.2092 7.2092 3.14736 7.10828C3.09253 7.01881 3.05213 6.92127 3.02763 6.81923C3 6.70414 3 6.58185 3 6.33726V4.6Z"
-        stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#00000000" />
+        stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="transparent" />
     </symbol>
     <symbol id="folder-with-files" viewBox="0 0 24 24">
       <path d="M18 10L13 10" stroke="var(--text)" fill="var(--icon-fill, transparent)" stroke-width="1.5"
@@ -78,11 +95,11 @@
     </symbol>
     <symbol id="right-arrow" viewBox="0 0 24 24">
       <path d="M10 7L15 12L10 17" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        fill="#00000000" />
+        fill="transparent" />
     </symbol>
     <symbol id="left-arrow" viewBox="0 0 24 24">
       <path d="M15 6L9 12L15 18" stroke="var(--text)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        fill="#00000000" />
+        fill="transparent" />
     </symbol>
 
     <symbol fill="var(--text)" id="long-left-arrow" viewBox="0 0 32 32">
@@ -101,6 +118,23 @@
         d="M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z"
         fill="var(--text)" />
     </symbol>
+
+    <symbol id="desktop-install" viewBox="0 0 24 24" fill="transparent">
+      <path d="M12 6H7C5.89543 6 5 6.89543 5 8V17H19V13.5" stroke="var(--text)" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+      <path d="M3 17H21V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V17Z" stroke="var(--text)"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M18.5 4V10M18.5 10L16 7.5M18.5 10L21 7.5" stroke="var(--text)" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </symbol>
+
+    <symbol id="mobile-install" viewBox="0 0 24 24" fill="transparent">
+      <path
+        d="M16.0994 3H7.41947C6.63752 3 6 3.63896 6 4.42031V19.58C6 20.3602 6.63752 21 7.41947 21H16.0994C16.8796 21 17.5189 20.3602 17.5189 19.58V15.0438V4.42031C17.5189 3.63896 16.8796 3 16.0994 3ZM11.7592 19.6624C11.5246 19.6624 11.334 19.4714 11.334 19.2364C11.334 19.0015 11.5246 18.8106 11.7592 18.8106C11.9937 18.8106 12.1861 19.0015 12.1861 19.2364C12.1861 19.4715 11.9936 19.6624 11.7592 19.6624ZM16.6322 17.9225H6.88664V5.42951H16.6322V17.9225H16.6322Z"
+        fill="var(--text)" />
+      <path d="M14.0915 11.7913H12.7574V7.81104H10.7613V11.7913H9.42725V11.7916L11.7591 14.7847L14.0915 11.7913Z"
+        fill="var(--text)" />
+    </symbol>
   </svg>
   <nav>
     <div class="nav-header">
@@ -111,18 +145,24 @@
       </button>
 
       <span class="text">files</span>
-      <button class="svg-button settings-btn" aria-label="open settings">
-        <svg>
-          <use href="#setting"></use>
-        </svg>
-      </button>
+      <div class="add-setting-container">
+        <button id="install-btn" class="disabled svg-button">
+
+          <svg>
+            <use href="#mobile-install"></use>
+          </svg>
+          <button class="svg-button settings-btn" aria-label="open settings">
+            <svg>
+              <use href="#setting"></use>
+            </svg>
+          </button>
+      </div>
     </div>
     <div class="filetree"></div>
   </nav>
   <main>
     <div class="directory-display">
-
-      <button class="svg-button nav-expand"aria-label="open navbar">
+      <button class="svg-button nav-expand" aria-label="open navbar">
         <svg>
           <use href="#navbar"></use>
         </svg>
@@ -134,7 +174,6 @@
     <div class="file-content">
       <div class="file-view disabled">
         <div class="score-reset-container">
-
           <div class="total-score">
             <span class="score-text">score</span>
             <span>11/90</span>
@@ -184,16 +223,16 @@
             </div>
             <div class="question-display"></div>
             <p class="explanation-text disabled"></p>
-
           </div>
         </div>
       </div>
       <div class="no-file-content disabled">
         <div class="instruction-container">
-          <div class="json-instruction" <p>
-            You should insert or paste valid json to the input field below.
-            The following prompt can also be used for AI models to generate
-            your questions.
+          <div class="json-instruction">
+            <p>
+              You should insert or paste valid json to the input field below.
+              The following prompt can also be used for AI models to generate
+              your questions.
             </p>
           </div>
           <div class="code-block">
@@ -210,26 +249,25 @@
               below...
             </p>
 
-
             <!-- prettier-ignore-start -->
             <pre>
-{
-  "title": "",
-  "type": "multiple choice",
-  "questions": [
-    {
-      "question": "sample question?",
-      "answers": [
-        "A",
-        "B",
-        "C",
-        "D"
-      ],
-      "correct_option": 1,
-      "explanation": "Why this answer is correct."
-    }
-  ]
-}
+              {
+              "title": "",
+              "type": "multiple choice",
+              "questions": [
+              {
+              "question": "sample question?",
+              "answers": [
+              "A",
+              "B",
+              "C",
+              "D"
+              ],
+              "correct_option": 1,
+              "explanation": "Why this answer is correct."
+              }
+              ]
+              }
             </pre>
             <!-- prettier-ignore-end -->
 
@@ -283,15 +321,15 @@
     <span class="config-label">Theme</span>
     <div class="theme-options">
       <div class="theme-option">
-        <input type="radio" id="light-theme" name="theme" value="light">
+        <input type="radio" id="light-theme" name="theme" value="light" />
         <label for="light-theme">Light</label>
       </div>
       <div class="theme-option">
-        <input type="radio" id="dark-theme" name="theme" value="dark">
+        <input type="radio" id="dark-theme" name="theme" value="dark" />
         <label for="dark-theme">Dark</label>
       </div>
       <div class="theme-option">
-        <input type="radio" id="system-theme" name="theme" value="system" checked>
+        <input type="radio" id="system-theme" name="theme" value="system" checked />
         <label for="system-theme">System</label>
       </div>
     </div>
