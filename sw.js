@@ -171,7 +171,10 @@ async function handleRequest(event) {
     request = new Request(url.href + "index.html");
   }
 
-  const cachedResponse = await caches.match(request);
+  const cachedResponse =
+    (await caches.match(request)) ||
+    (await caches.match(url.pathname)) || // fallback to relative path
+    (await caches.match(url.pathname.replace(/^\//, "./"))); // handle ./ variant
 
   if (cachedResponse) {
     // Stale-while-revalidate: return cached response and update in background
