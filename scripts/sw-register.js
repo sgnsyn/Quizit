@@ -7,7 +7,7 @@ export function registerWorker() {
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js").then(
+      navigator.serviceWorker.register("./sw.js").then(
         () => {
           // service worker registered
         },
