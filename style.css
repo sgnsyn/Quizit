@@ -1045,3 +1045,11 @@ input[type="radio"] {
 .copy-feedback {
   color: var(--primary);
 }
+
+.dragging {
+  opacity: 0.5;
+}
+
+.drag-over {
+  background-color: var(--highlight);
+}
