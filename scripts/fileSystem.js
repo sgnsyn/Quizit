@@ -233,7 +233,7 @@ export function renameItem(
 
       affectedPaths.forEach((p) => {
         const newP = p.replace(oldPath, newPath);
-        if (content[p]) {
+        if (content.hasOwnProperty(p)) {
           content[newP] = content[p];
           delete content[p];
         }
@@ -270,4 +270,120 @@ export function renameItem(
       uiFunctions.closePopupMenu();
     }
   }
+}
+
+export function moveItem(
+  sourcePath,
+  targetFolderPath,
+  directory,
+  content,
+  uiFunctions,
+) {
+  if (!sourcePath || !targetFolderPath || sourcePath === targetFolderPath) {
+    return;
+  }
+
+  const sourceName = sourcePath.split("/").pop();
+  const targetFolder = findFolder(targetFolderPath, directory);
+
+  if (!targetFolder || targetFolder.type !== "folder") {
+    return;
+  }
+
+  if (targetFolderPath.startsWith(sourcePath)) {
+    return;
+  }
+
+  const nameExists = targetFolder.children.some(
+    (child) => child.name === sourceName,
+  );
+  if (nameExists) {
+    return;
+  }
+
+  const sourceParentFolder = findParentFolder(sourcePath, directory);
+  if (!sourceParentFolder) {
+    return;
+  }
+
+  const sourceIndex = sourceParentFolder.children.findIndex(
+    (child) => `${sourceParentFolder.name}/${child.name}` === sourcePath,
+  );
+
+  const itemToMove = sourceParentFolder.children.find(
+    (child) => child.name === sourceName,
+  );
+
+  if (!itemToMove) {
+    return;
+  }
+
+  sourceParentFolder.children.splice(
+    sourceParentFolder.children.indexOf(itemToMove),
+    1,
+  );
+  targetFolder.children.push(itemToMove);
+
+  const oldPath = sourcePath;
+  const newPath = `${targetFolderPath}/${sourceName}`;
+
+  const affectedPaths = [];
+  function collectPaths(item, currentPath) {
+    affectedPaths.push({
+      old: currentPath,
+      new: currentPath.replace(oldPath, newPath),
+    });
+    if (item.type === "folder" && item.children) {
+      item.children.forEach((child) => {
+        collectPaths(child, `${currentPath}/${child.name}`);
+      });
+    }
+  }
+
+  collectPaths(itemToMove, oldPath);
+
+  const newContent = {};
+  const newQuizState = getQuizState();
+
+  affectedPaths.forEach(({ old: oldP, new: newP }) => {
+    if (content.hasOwnProperty(oldP)) {
+      newContent[newP] = content[oldP];
+    }
+    if (newQuizState[oldP]) {
+      newQuizState[newP] = newQuizState[oldP];
+      delete newQuizState[oldP];
+    }
+  });
+
+  Object.keys(content).forEach((key) => {
+    if (!affectedPaths.some(({ old: oldP }) => oldP === key)) {
+      newContent[key] = content[key];
+    }
+  });
+
+  const newOpenFolders = openFolders.map((p) => {
+    const affected = affectedPaths.find(({ old: oldP }) => oldP === p);
+    return affected ? affected.new : p;
+  });
+
+  if (getSelectedItem()) {
+    const affected = affectedPaths.find(
+      ({ old: oldP }) => oldP === getSelectedItem(),
+    );
+    if (affected) {
+      setSelectedItem(affected.new);
+    }
+  }
+
+  openFolders.length = 0;
+  openFolders.push(...newOpenFolders);
+
+  saveDirectory(directory);
+  saveContent(newContent);
+  saveQuizState(newQuizState);
+  saveState();
+
+  const filetreeContainer = document.querySelector(".filetree");
+  filetreeContainer.innerHTML = "";
+  uiFunctions.createFileTree([directory], filetreeContainer);
 }

@@ -30,9 +30,10 @@
 <body class="dark">
   <svg style="display: none">
     <symbol id="copy" viewBox="0 0 24 24">
+      <path d="M0 0h24v24H0V0z" fill="none" />
       <path
-        d="M15 3V6.4C15 6.96005 15 7.24008 15.109 7.45399C15.2049 7.64215 15.3578 7.79513 15.546 7.89101C15.7599 8 16.0399 8 16.6 8H20M10 8H6C4.89543 8 4 8.89543 4 10V19C4 20.1046 4.89543 21 6 21H12C13.1046 21 14 20.1046 14 19V16M16 3H13.2C12.0799 3 11.5198 3 11.092 3.21799C10.7157 3.40973 10.4097 3.71569 10.218 4.09202C10 4.51984 10 5.0799 10 6.2V12.8C10 13.9201 10 14.4802 10.218 14.908C10.4097 15.2843 10.7157 15.5903 11.092 15.782C11.5198 16 12.0799 16 13.2 16H16.8C17.9201 16 18.4802 16 18.908 15.782C19.2843 15.5903 19.5903 15.2843 19.782 14.908C20 14.4802 20 13.9201 20 12.8V7L16 3Z"
-        stroke="var(--text)" stroke-width="2" stroke-linejoin="round" fill="transparent"></path>
+        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+        fill="var(--text)" />
     </symbol>
     <symbol id="close" viewBox="0 0 24 24">
       <path d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" stroke="var(--text)" stroke-width="2"
@@ -147,15 +148,15 @@
       <span class="text">files</span>
       <div class="add-setting-container">
         <button id="install-btn" class="disabled svg-button">
-
           <svg>
             <use href="#mobile-install"></use>
           </svg>
-          <button class="svg-button settings-btn" aria-label="open settings">
-            <svg>
-              <use href="#setting"></use>
-            </svg>
-          </button>
+        </button>
+        <button class="svg-button settings-btn" aria-label="open settings">
+          <svg>
+            <use href="#setting"></use>
+          </svg>
+        </button>
       </div>
     </div>
     <div class="filetree"></div>
@@ -227,69 +228,111 @@
         </div>
       </div>
       <div class="no-file-content disabled">
-        <div class="instruction-container">
-          <div class="json-instruction">
-            <p>
-              You should insert or paste valid json to the input field below.
-              The following prompt can also be used for AI models to generate
-              your questions.
-            </p>
+        <p>
+          You should insert or paste valid json to the input field below. The
+          following prompt can also be used for AI models to generate your
+          questions.
+        </p>
+        <div class="code-block">
+          <div class="copy-container">
+            <span class="copy-feedback disabled">Copied...</span>
+            <button class="svg-button copy-button">
+              <svg>
+                <use href="#copy"></use>
+              </svg>
+            </button>
           </div>
-          <div class="code-block">
-            <div class="copy-container">
-              <span class="copy-feedback disabled">Copied...</span>
-              <button class="svg-button copy-button">
-                <svg>
-                  <use href="#copy"></use>
-                </svg>
-              </button>
-            </div>
-            <p>
-              Generate exercise questions in JSON using the format given
-              below...
-            </p>
+          <h2>1. Your Primary Task</h2>
+          <p>
+            Generate
+            <span class="ph-warn">&lt;number of questions, e.g., 20&gt;</span>
+            multiple-choice questions about the topic:
+            <span class="ph-warn">&lt;your topic here, e.g., "The Solar System"&gt;</span>.
+          </p>
 
-            <!-- prettier-ignore-start -->
-            <pre>
-{
-  "title": "",
-  "type": "multiple choice",
-  "questions": [
-    {
-      "question": "sample question?",
-      "answers": [
-        "A",
-        "B",
-        "C",
-        "D"
-      ],
-      "correct_option": 1,
-      "explanation": "Why this answer is correct."
-    }
-  ]
-}
-            </pre>
-            <!-- prettier-ignore-end -->
+          <hr />
 
-            <p>
-              Make at least
-              <span class="ph-warn">&lt;number of questions (e.g., 20, 30)&gt;</span>
-              about the topic
-              <span class="ph-warn">&lt;your topic here (e.g., supervised learning, English
-                tenses)&gt;</span>.
-            </p>
-            <p>
-              you should return strictly valid JSON with no extra text,
-              comments, or formatting.
-            </p>
-          </div>
+          <h2>2. Source of Information</h2>
+          <ul>
+            <li>
+              <strong>If a file is attached,</strong> all questions, answers,
+              and explanations must be based <strong>exclusively</strong> on
+              the content of that file.
+            </li>
+            <li>
+              <strong>If no file is attached,</strong> use your general
+              knowledge on the topic.
+            </li>
+          </ul>
+
+          <hr />
+
+          <h2>3. Output Requirements</h2>
+          <p>
+            Your entire response <strong>MUST</strong> be a single, raw, and
+            syntactically valid <strong>JSON</strong> object. Do not include
+            any explanatory text, comments, or markdown formatting (like
+            ```json) outside of the JSON structure itself.
+          </p>
+
+          <hr />
+
+          <h2>4. JSON Structure & Field Rules</h2>
+          <p>The JSON object must follow this exact structure:</p>
+          <pre>
+            {
+            "title": "",
+            "type": "multiple choice",
+            "questions": [
+            {
+            "question": "sample question?",
+            "answers": [
+            "A",
+            "B",
+            "C",
+            "D"
+            ],
+            "correct_option": 1,
+            "explanation": "Why this answer is correct."
+            }
+            ]
+            }
+          </pre>
+          <p><strong>Field Definitions:</strong></p>
+          <ul>
+            <li>
+              <strong><code>title</code></strong>: (String) A concise title for the quiz.
+            </li>
+            <li>
+              <strong><code>type</code></strong>: (String) Must always be exactly
+              <code>"multiple choice"</code>.
+            </li>
+            <li>
+              <strong><code>question</code></strong>: (String) The question text.
+            </li>
+            <li>
+              <strong><code>answers</code></strong>: (Array of Strings) The list of possible answer choices.
+            </li>
+            <li>
+              <strong><code>correct_option</code></strong>: (Integer) The <strong>zero-based index</strong> of the
+              correct answer in the <code>answers</code> array. For example,
+              <code>0</code> is the first answer, <code>1</code> is the
+              second, and so on.
+            </li>
+            <li>
+              <strong><code>explanation</code></strong>: (String) A clear and concise reason why the answer is
+              correct.
+            </li>
+          </ul>
         </div>
-        <input type="text" class="content-textarea" placeholder="paste your json here" />
-        <div class="action-container">
-          <div class="error-container"></div>
-          <div class="button-container">
-            <button id="clear-btn">Clear</button>
-            <button id="save-btn">Save</button>
+        <div class="input-action-container">
+          <input type="text" class="content-textarea" placeholder="paste your json here" />
+          <div class="action-container">
+            <div class="error-container"></div>
+            <div class="button-container">
+              <button id="clear-btn">Clear</button>
+              <button id="save-btn">Save</button>
+            </div>
           </div>
         </div>
       </div>

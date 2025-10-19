@@ -727,6 +727,7 @@ export function createFileTree(data, parent, path = "") {
       const currentDirDiv = document.createElement("div");
       currentDirDiv.className = "current-dir";
       currentDirDiv.dataset.path = currentPath;
+      currentDirDiv.setAttribute("draggable", true);
 
       const fileFolderInfo = document.createElement("div");
       fileFolderInfo.className = "file-folder-info";
@@ -812,6 +813,7 @@ export function createFileTree(data, parent, path = "") {
       const fileContainer = document.createElement("div");
       fileContainer.className = "file-container";
       fileContainer.dataset.path = currentPath;
+      fileContainer.setAttribute("draggable", true);
 
       const fileFolderInfo = document.createElement("div");
       fileFolderInfo.className = "file-folder-info";

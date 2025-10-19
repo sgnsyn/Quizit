@@ -225,6 +225,7 @@ h6 {
 
 p {
   max-width: 75ch;
+  text-align: justify;
 }
 
 button:hover {
