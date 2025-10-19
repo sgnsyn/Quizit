@@ -228,9 +228,22 @@
         </div>
       </div>
       <div class="no-file-content disabled">
-        <p>
-          You should insert or paste valid json to the input field below. The
-          following prompt can also be used for AI models to generate your
+        <p class="no-file-content-info">
+          You should insert or paste valid json to the input field below.
+        </p>
+
+        <div class="input-action-container">
+          <input type="text" class="content-textarea" placeholder="paste your json here" />
+          <div class="action-container">
+            <div class="error-container"></div>
+            <div class="button-container">
+              <button id="clear-btn">Clear</button>
+              <button id="save-btn">Save</button>
+            </div>
+          </div>
+        </div>
+        <p class="no-file-content-info">
+          The following prompt can also be used for AI models to generate your
           questions.
         </p>
         <div class="code-block">
@@ -252,52 +265,28 @@
 
           <hr />
 
-          <h2>2. Source of Information</h2>
-          <ul>
-            <li>
-              <strong>If a file is attached,</strong> all questions, answers,
-              and explanations must be based <strong>exclusively</strong> on
-              the content of that file.
-            </li>
-            <li>
-              <strong>If no file is attached,</strong> use your general
-              knowledge on the topic.
-            </li>
-          </ul>
-
-          <hr />
-
-          <h2>3. Output Requirements</h2>
-          <p>
-            Your entire response <strong>MUST</strong> be a single, raw, and
-            syntactically valid <strong>JSON</strong> object. Do not include
-            any explanatory text, comments, or markdown formatting (like
-            ```json) outside of the JSON structure itself.
-          </p>
-
-          <hr />
-
-          <h2>4. JSON Structure & Field Rules</h2>
+          <h2>2. JSON Structure & Field Rules</h2>
           <p>The JSON object must follow this exact structure:</p>
-          <pre>
-            {
-            "title": "",
-            "type": "multiple choice",
-            "questions": [
-            {
-            "question": "sample question?",
-            "answers": [
-            "A",
-            "B",
-            "C",
-            "D"
-            ],
-            "correct_option": 1,
-            "explanation": "Why this answer is correct."
+          <p class="json-example">
+            {<br />
+            &nbsp;"title": "",<br />
+            &nbsp;"type": "multiple choice",<br />
+            &nbsp;"questions": [<br />
+            &nbsp;&nbsp;&nbsp;{<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"question": "sample question?",<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"answers": [<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"A",<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"B",<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"C",<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"D"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"correct_option": 1,<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"explanation": "Why this answer is
+            correct."<br />
+            &nbsp;&nbsp;&nbsp;}<br />
+            &nbsp;]<br />
             }
-            ]
-            }
-          </pre>
+          </p>
           <p><strong>Field Definitions:</strong></p>
           <ul>
             <li>
@@ -323,17 +312,40 @@
               <strong><code>explanation</code></strong>: (String) A clear and concise reason why the answer is
               correct.
             </li>
+            <li>
+              <strong>String Formatting</strong>: All string values
+              (<code>title</code>, <code>question</code>,
+              <code>answers</code>, <code>explanation</code>) must be valid
+              JSON strings. This means any double quotes <code>"</code> within
+              a string must be escaped with a backslash, like this:
+              <code>\\"</code>.
+            </li>
           </ul>
-        </div>
-        <div class="input-action-container">
-          <input type="text" class="content-textarea" placeholder="paste your json here" />
-          <div class="action-container">
-            <div class="error-container"></div>
-            <div class="button-container">
-              <button id="clear-btn">Clear</button>
-              <button id="save-btn">Save</button>
-            </div>
-          </div>
+
+          <hr />
+
+          <h2>3. Source of Information</h2>
+          <ul>
+            <li>
+              <strong>If a file is attached,</strong> all questions, answers,
+              and explanations must be based <strong>exclusively</strong> on
+              the content of that file.
+            </li>
+            <li>
+              <strong>If no file is attached,</strong> use your general
+              knowledge on the topic.
+            </li>
+          </ul>
+
+          <hr />
+
+          <h2>4. Output Requirements</h2>
+          <p>
+            Your entire response <strong>MUST</strong> be a single, raw, and
+            syntactically valid <strong>JSON</strong> object. Do not include
+            any explanatory text, comments, or markdown formatting (like
+            ```json) outside of the JSON structure itself.
+          </p>
         </div>
       </div>
       <div class="no-file-selected">

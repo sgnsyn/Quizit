@@ -194,11 +194,15 @@ main {
   height: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   max-width: 80ch;
   gap: 1rem;
   margin-inline: auto;
+}
+
+.no-file-content-info {
+  align-self: flex-start;
 }
 
 pre {
@@ -283,10 +287,9 @@ pre {
   transform: scale(0.8);
 }
 
-pre {
+.json-example {
+  font-family: Cou, monospace;
   color: var(--primary);
-  overflow-x: auto;
-  flex-grow: 1;
 }
 
 .ph-warn {

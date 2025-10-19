@@ -172,8 +172,8 @@ export function initTheme() {
       const overwrite = await showCustomPopup({
         message: "Some data might be overwritten. Do you want to proceed?",
         buttons: [
-          { text: "Overwrite All", value: true, className: "danger-button" },
           { text: "Cancel", value: false },
+          { text: "Overwrite All", value: true, className: "danger-button" },
         ],
         messageClass: "text-center",
       });
