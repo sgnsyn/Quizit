@@ -139,7 +139,7 @@ self.addEventListener("fetch", (event) => {
 // Background cache update
 async function updateCacheInBackground(request) {
   try {
-    const networkResponse = await fetch(request);
+    const networkResponse = await fetch(request, { cache: "reload" });
 
     // Only cache successful responses (status 200–299)
     if (!networkResponse || !networkResponse.ok) return;
@@ -161,6 +161,7 @@ async function handleRequest(event) {
     const cache = await caches.open(CACHE_NAME);
     const cachedResponse = await cache.match(url.pathname + "index.html");
     if (cachedResponse) {
+      updateCacheInBackground(request);
       return cachedResponse;
     }
   }
