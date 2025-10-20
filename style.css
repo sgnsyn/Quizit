@@ -316,7 +316,6 @@ button.three-dot-button {
 }
 
 .dir {
-  display: inline-block;
   min-width: 100%;
 }
 
@@ -327,7 +326,7 @@ button.three-dot-button {
   justify-content: space-between;
   padding-block: 0.25rem;
   padding-inline: 0.5rem;
-  margin: 0.25rem;
+  margin: 0.5rem 0.25rem;
   border-radius: 0.25rem;
   transition: background-color 0.2s ease-in-out;
 }
